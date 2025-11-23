@@ -30,7 +30,7 @@ const ReviewSchema = new Schema<IReview>(
     order: {
       type: Schema.Types.ObjectId,
       ref: 'Order',
-      required: [true, 'Order is required'],
+      required: false,
     },
     rating: {
       type: Number,
