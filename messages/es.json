@@ -1,26 +1,39 @@
 {
   "header": {
-    "search": "Buscar productos...",
+    "search": "Buscar productos naturales...",
     "cart": "Carrito",
     "login": "Iniciar sesión",
     "register": "Registrarse",
-    "account": "Cuenta",
+    "account": "Cuenta y Listas",
     "sellerDashboard": "Panel de vendedor",
-    "becomeASeller": "Convertirse en vendedor"
+    "becomeASeller": "Vender en NaturePharmacy",
+    "deliverTo": "Enviar a",
+    "allCategories": "Todas",
+    "hello": "Hola",
+    "signIn": "Identificarse",
+    "returns": "Devoluciones",
+    "orders": "y Pedidos"
   },
   "nav": {
     "home": "Inicio",
     "products": "Productos",
     "categories": "Categorías",
-    "deals": "Ofertas",
+    "allCategories": "Todas las categorías",
+    "deals": "Ofertas Flash",
     "newArrivals": "Novedades",
-    "sellers": "Vendedores"
+    "bestSellers": "Más vendidos",
+    "organic": "Orgánico",
+    "sellers": "Vendedores",
+    "categories.herbs": "Hierbas y Suplementos",
+    "categories.oils": "Aceites Esenciales",
+    "categories.cosmetics": "Cosméticos Naturales",
+    "categories.foods": "Alimentos Orgánicos"
   },
   "home": {
     "hero": {
-      "title": "Bienvenido a Nature Pharmacy",
-      "subtitle": "Tu marketplace de confianza para productos naturales y orgánicos",
-      "shopNow": "Comprar ahora"
+      "title": "Tu Bienestar Natural",
+      "subtitle": "Descubre nuestra selección de productos naturales y orgánicos certificados",
+      "shopNow": "Comprar"
     },
     "categories": {
       "title": "Comprar por categoría",
@@ -35,14 +48,25 @@
       "description": "Breve descripción del producto...",
       "price": "Precio"
     },
+    "newArrivals": {
+      "title": "Novedades"
+    },
+    "promo": {
+      "organic": "100% Orgánico",
+      "organicDesc": "Productos orgánicos certificados para tu salud",
+      "deals": "Ofertas especiales",
+      "dealsDesc": "Hasta 50% de descuento en seleccionados"
+    },
+    "seeMore": "Ver más",
+    "seeAll": "Ver todo",
     "whyUs": {
       "title": "¿Por qué elegir Nature Pharmacy?",
-      "trustedTitle": "Vendedores de confianza",
-      "trustedDesc": "Todos los vendedores están verificados y calificados por los clientes",
-      "deliveryTitle": "Entrega rápida",
-      "deliveryDesc": "Envío rápido y confiable en todo el mundo",
-      "qualityTitle": "Calidad garantizada",
-      "qualityDesc": "Productos 100% naturales y orgánicos"
+      "trustedTitle": "Vendedores verificados",
+      "trustedDesc": "Todos los vendedores están verificados y calificados por nuestros clientes",
+      "deliveryTitle": "Entrega express",
+      "deliveryDesc": "Envío rápido con seguimiento en tiempo real",
+      "qualityTitle": "Calidad premium",
+      "qualityDesc": "Productos 100% naturales y certificados"
     }
   },
   "products": {

@@ -1,25 +1,38 @@
 {
   "header": {
-    "search": "Search for products...",
+    "search": "Search natural products...",
     "cart": "Cart",
     "login": "Sign In",
     "register": "Sign Up",
-    "account": "Account",
+    "account": "Account & Lists",
     "sellerDashboard": "Seller Dashboard",
-    "becomeASeller": "Become a Seller"
+    "becomeASeller": "Sell on NaturePharmacy",
+    "deliverTo": "Deliver to",
+    "allCategories": "All",
+    "hello": "Hello",
+    "signIn": "Sign in",
+    "returns": "Returns",
+    "orders": "& Orders"
   },
   "nav": {
     "home": "Home",
     "products": "Products",
     "categories": "Categories",
-    "deals": "Deals",
+    "allCategories": "All Categories",
+    "deals": "Flash Deals",
     "newArrivals": "New Arrivals",
-    "sellers": "Sellers"
+    "bestSellers": "Best Sellers",
+    "organic": "Organic",
+    "sellers": "Sellers",
+    "categories.herbs": "Herbs & Supplements",
+    "categories.oils": "Essential Oils",
+    "categories.cosmetics": "Natural Cosmetics",
+    "categories.foods": "Organic Foods"
   },
   "home": {
     "hero": {
-      "title": "Welcome to Nature Pharmacy",
-      "subtitle": "Your trusted online marketplace for natural and organic products",
+      "title": "Your Natural Wellness",
+      "subtitle": "Discover our selection of certified natural and organic products",
       "shopNow": "Shop Now"
     },
     "categories": {
@@ -35,14 +48,25 @@
       "description": "Brief product description...",
       "price": "Price"
     },
+    "newArrivals": {
+      "title": "New Arrivals"
+    },
+    "promo": {
+      "organic": "100% Organic",
+      "organicDesc": "Certified organic products for your health",
+      "deals": "Special Offers",
+      "dealsDesc": "Up to 50% off on selected items"
+    },
+    "seeMore": "See more",
+    "seeAll": "See all",
     "whyUs": {
       "title": "Why Choose Nature Pharmacy?",
-      "trustedTitle": "Trusted Sellers",
-      "trustedDesc": "All sellers are verified and rated by customers",
-      "deliveryTitle": "Fast Delivery",
-      "deliveryDesc": "Quick and reliable shipping worldwide",
-      "qualityTitle": "Guaranteed Quality",
-      "qualityDesc": "100% natural and organic products"
+      "trustedTitle": "Verified Sellers",
+      "trustedDesc": "All sellers are verified and rated by our customers",
+      "deliveryTitle": "Express Delivery",
+      "deliveryDesc": "Fast shipping with real-time tracking",
+      "qualityTitle": "Premium Quality",
+      "qualityDesc": "100% natural and certified products"
     }
   },
   "products": {
