@@ -116,7 +116,7 @@ export default function ProductsPage() {
       {/* Categories */}
       <div>
         <h3 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">
-          {tNav('categories')}
+          {tNav('categories.title')}
         </h3>
         <ul className="space-y-2">
           <li>

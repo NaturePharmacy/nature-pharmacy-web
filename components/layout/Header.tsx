@@ -245,7 +245,7 @@ export default function Header() {
 
             {/* Mobile Categories */}
             <div className="border-t pt-3">
-              <p className="text-xs text-gray-500 uppercase font-semibold mb-2">{tNav('categories')}</p>
+              <p className="text-xs text-gray-500 uppercase font-semibold mb-2">{tNav('categories.title')}</p>
               <div className="grid grid-cols-2 gap-2">
                 {categories.map((cat) => (
                   <Link

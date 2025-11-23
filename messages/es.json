@@ -17,17 +17,19 @@
   "nav": {
     "home": "Inicio",
     "products": "Productos",
-    "categories": "Categorías",
+    "categories": {
+      "title": "Categorías",
+      "herbs": "Hierbas y Suplementos",
+      "oils": "Aceites Esenciales",
+      "cosmetics": "Cosméticos Naturales",
+      "foods": "Alimentos Orgánicos"
+    },
     "allCategories": "Todas las categorías",
     "deals": "Ofertas Flash",
     "newArrivals": "Novedades",
     "bestSellers": "Más vendidos",
     "organic": "Orgánico",
-    "sellers": "Vendedores",
-    "categories.herbs": "Hierbas y Suplementos",
-    "categories.oils": "Aceites Esenciales",
-    "categories.cosmetics": "Cosméticos Naturales",
-    "categories.foods": "Alimentos Orgánicos"
+    "sellers": "Vendedores"
   },
   "home": {
     "hero": {
@@ -55,7 +57,9 @@
       "organic": "100% Orgánico",
       "organicDesc": "Productos orgánicos certificados para tu salud",
       "deals": "Ofertas especiales",
-      "dealsDesc": "Hasta 50% de descuento en seleccionados"
+      "dealsDesc": "Hasta 50% de descuento en seleccionados",
+      "newArrivals": "Novedades",
+      "newArrivalsDesc": "Descubre nuestros últimos productos"
     },
     "seeMore": "Ver más",
     "seeAll": "Ver todo",

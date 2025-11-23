@@ -17,17 +17,19 @@
   "nav": {
     "home": "Home",
     "products": "Products",
-    "categories": "Categories",
+    "categories": {
+      "title": "Categories",
+      "herbs": "Herbs & Supplements",
+      "oils": "Essential Oils",
+      "cosmetics": "Natural Cosmetics",
+      "foods": "Organic Foods"
+    },
     "allCategories": "All Categories",
     "deals": "Flash Deals",
     "newArrivals": "New Arrivals",
     "bestSellers": "Best Sellers",
     "organic": "Organic",
-    "sellers": "Sellers",
-    "categories.herbs": "Herbs & Supplements",
-    "categories.oils": "Essential Oils",
-    "categories.cosmetics": "Natural Cosmetics",
-    "categories.foods": "Organic Foods"
+    "sellers": "Sellers"
   },
   "home": {
     "hero": {
@@ -55,7 +57,9 @@
       "organic": "100% Organic",
       "organicDesc": "Certified organic products for your health",
       "deals": "Special Offers",
-      "dealsDesc": "Up to 50% off on selected items"
+      "dealsDesc": "Up to 50% off on selected items",
+      "newArrivals": "New Arrivals",
+      "newArrivalsDesc": "Discover our latest products"
     },
     "seeMore": "See more",
     "seeAll": "See all",

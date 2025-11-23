@@ -17,17 +17,19 @@
   "nav": {
     "home": "Accueil",
     "products": "Produits",
-    "categories": "Catégories",
+    "categories": {
+      "title": "Catégories",
+      "herbs": "Herbes et Suppléments",
+      "oils": "Huiles Essentielles",
+      "cosmetics": "Cosmétiques Naturels",
+      "foods": "Aliments Biologiques"
+    },
     "allCategories": "Toutes les catégories",
     "deals": "Ventes Flash",
     "newArrivals": "Nouveautés",
     "bestSellers": "Meilleures ventes",
     "organic": "Produits Bio",
-    "sellers": "Vendeurs",
-    "categories.herbs": "Herbes et Suppléments",
-    "categories.oils": "Huiles Essentielles",
-    "categories.cosmetics": "Cosmétiques Naturels",
-    "categories.foods": "Aliments Biologiques"
+    "sellers": "Vendeurs"
   },
   "home": {
     "hero": {
@@ -55,7 +57,9 @@
       "organic": "100% Biologique",
       "organicDesc": "Produits certifiés bio pour votre santé",
       "deals": "Offres spéciales",
-      "dealsDesc": "Jusqu'à -50% sur une sélection"
+      "dealsDesc": "Jusqu'à -50% sur une sélection",
+      "newArrivals": "Nouveautés",
+      "newArrivalsDesc": "Découvrez nos derniers produits"
     },
     "seeMore": "Voir plus",
     "seeAll": "Voir tout",
