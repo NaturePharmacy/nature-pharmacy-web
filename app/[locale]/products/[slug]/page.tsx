@@ -8,6 +8,8 @@ import { useCart } from '@/contexts/CartContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProductReviews from '@/components/products/ProductReviews';
+import WishlistButton from '@/components/wishlist/WishlistButton';
+import ShareButtons from '@/components/social/ShareButtons';
 
 interface Product {
   _id: string;
@@ -270,10 +272,21 @@ export default function ProductDetailPage() {
                 {product.category.name[locale as keyof typeof product.category.name]}
               </Link>
 
-              {/* Title */}
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mt-2">
-                {product.name[locale as keyof typeof product.name]}
-              </h1>
+              {/* Title with Wishlist and Share Buttons */}
+              <div className="flex items-start justify-between gap-4 mt-2">
+                <h1 className="text-2xl lg:text-3xl font-bold text-gray-800">
+                  {product.name[locale as keyof typeof product.name]}
+                </h1>
+                <div className="flex items-center gap-2">
+                  <WishlistButton productId={product._id} size="lg" />
+                  <ShareButtons
+                    url={`${typeof window !== 'undefined' ? window.location.origin : ''}/${locale}/products/${product.slug}`}
+                    title={product.name[locale as keyof typeof product.name]}
+                    description={product.description[locale as keyof typeof product.description]}
+                    image={product.images[0]}
+                  />
+                </div>
+              </div>
 
               {/* Rating */}
               <div className="flex items-center gap-2 mt-3">

@@ -14,6 +14,7 @@ export interface IUser extends Document {
   emailVerificationExpires?: Date;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
+  referredBy?: mongoose.Types.ObjectId;
   address?: {
     street?: string;
     city?: string;
@@ -89,6 +90,10 @@ const UserSchema = new Schema<IUser>(
     resetPasswordExpires: {
       type: Date,
       select: false,
+    },
+    referredBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
     },
     address: {
       street: String,

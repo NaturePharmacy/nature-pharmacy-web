@@ -7,13 +7,14 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useCart } from '@/contexts/CartContext';
 import LanguageSwitcher from './LanguageSwitcher';
+import NotificationBell from '@/components/notifications/NotificationBell';
+import SearchBar from '@/components/search/SearchBar';
 
 export default function Header() {
   const t = useTranslations('header');
   const tNav = useTranslations('nav');
   const locale = useLocale();
   const { data: session } = useSession();
-  const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const { getCartCount } = useCart();
@@ -56,53 +57,7 @@ export default function Header() {
             </div>
 
             {/* Search Bar */}
-            <div className="flex-1 max-w-2xl">
-              <div className="flex">
-                {/* Category Dropdown */}
-                <div className="relative hidden sm:block">
-                  <button
-                    onClick={() => setCategoryOpen(!categoryOpen)}
-                    className="h-10 px-3 bg-gray-100 hover:bg-gray-200 border border-r-0 border-gray-300 rounded-l-lg text-gray-700 text-sm font-medium flex items-center gap-1 transition-colors"
-                  >
-                    {t('allCategories')}
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  {categoryOpen && (
-                    <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-xl border z-50">
-                      {categories.map((cat) => (
-                        <Link
-                          key={cat.key}
-                          href={`/${locale}/products?category=${cat.key}`}
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-green-50 text-gray-700 transition-colors first:rounded-t-lg last:rounded-b-lg"
-                          onClick={() => setCategoryOpen(false)}
-                        >
-                          <span className="text-lg">{cat.icon}</span>
-                          <span>{tNav(`categories.${cat.key}`)}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Search Input */}
-                <input
-                  type="text"
-                  placeholder={t('search')}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 h-10 px-4 text-gray-900 placeholder-gray-400 border border-gray-300 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 sm:rounded-none rounded-l-lg text-sm"
-                />
-
-                {/* Search Button */}
-                <button className="h-10 w-11 bg-green-600 hover:bg-green-700 rounded-r-lg flex items-center justify-center transition-colors">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-              </div>
-            </div>
+            <SearchBar placeholder={t('search')} />
 
             {/* Language Switcher */}
             <div className="hidden md:block">
@@ -125,6 +80,13 @@ export default function Header() {
               </span>
             </Link>
 
+            {/* Notifications */}
+            {session && (
+              <div className="hidden md:block">
+                <NotificationBell />
+              </div>
+            )}
+
             {/* Messages */}
             {session && (
               <Link
@@ -133,6 +95,32 @@ export default function Header() {
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </Link>
+            )}
+
+            {/* Wishlist */}
+            {session && (
+              <Link
+                href={`/${locale}/wishlist`}
+                className="hidden md:flex items-center text-gray-700 hover:text-green-600 px-2 transition-colors"
+                title="Wishlist"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </Link>
+            )}
+
+            {/* Referral */}
+            {session && (
+              <Link
+                href={`/${locale}/referral`}
+                className="hidden md:flex items-center text-gray-700 hover:text-green-600 px-2 transition-colors"
+                title="Referral Program"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </Link>
             )}

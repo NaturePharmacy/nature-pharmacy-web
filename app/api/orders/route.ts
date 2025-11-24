@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Order from '@/models/Order';
 import Product from '@/models/Product';
+import User from '@/models/User';
+import Referral from '@/models/Referral';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { createNotification, NotificationTemplates } from '@/lib/notifications';
 
 // GET /api/orders - Get user's orders or all orders (for admin)
 export async function GET(request: NextRequest) {
@@ -176,6 +179,63 @@ export async function POST(request: NextRequest) {
       .populate('buyer', 'name email')
       .populate('items.product', 'name slug images')
       .populate('items.seller', 'name email sellerInfo');
+
+    // Send notification to buyer
+    const buyerNotification = NotificationTemplates.orderPlaced(order._id.toString());
+    await createNotification({
+      userId: session.user.id,
+      ...buyerNotification,
+    });
+
+    // Send notification to each seller
+    const sellers = new Set(orderItems.map(item => item.seller.toString()));
+    for (const sellerId of sellers) {
+      const sellerNotification = NotificationTemplates.newOrder(
+        order._id.toString(),
+        (populatedOrder as any).buyer.name
+      );
+      await createNotification({
+        userId: sellerId,
+        ...sellerNotification,
+      });
+    }
+
+    // Handle referral rewards if this is user's first purchase
+    const buyer = await User.findById(session.user.id);
+    if (buyer?.referredBy) {
+      // Check if this is the first completed order
+      const previousOrders = await Order.countDocuments({
+        buyer: session.user.id,
+        status: { $in: ['completed', 'delivered'] },
+      });
+
+      // If this is the first order, add referral reward
+      if (previousOrders === 0) {
+        const referral = await Referral.findOne({ referrer: buyer.referredBy });
+        if (referral) {
+          // Calculate reward (5% of order total as an example)
+          const rewardAmount = totalPrice * 0.05;
+
+          await referral.addReward(
+            buyer._id,
+            order._id,
+            rewardAmount
+          );
+
+          // Notify the referrer
+          const referrerNotification = {
+            type: 'referral_reward' as const,
+            title: 'Referral Reward Earned!',
+            message: `You earned ${rewardAmount.toFixed(2)} FCFA from your referral's first purchase!`,
+            link: '/referral',
+          };
+          await createNotification({
+            userId: buyer.referredBy.toString(),
+            ...referrerNotification,
+          });
+        }
+      }
+    }
 
     return NextResponse.json(
       {

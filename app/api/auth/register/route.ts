@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import Referral from '@/models/Referral';
 import { sendEmail, generateVerificationEmail } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, password, role, locale = 'fr' } = body;
+    const { name, email, password, role, referralCode, locale = 'fr' } = body;
 
     // Validation
     if (!name || !email || !password) {
@@ -43,6 +44,19 @@ export async function POST(request: NextRequest) {
       .update(verificationToken)
       .digest('hex');
 
+    // Validate referral code if provided
+    let referrerData = null;
+    if (referralCode) {
+      const referral = await Referral.findOne({
+        referralCode: referralCode.toUpperCase(),
+        isActive: true,
+      });
+
+      if (referral) {
+        referrerData = referral;
+      }
+    }
+
     // Create new user
     const user = await User.create({
       name,
@@ -52,7 +66,13 @@ export async function POST(request: NextRequest) {
       isEmailVerified: false,
       emailVerificationToken: hashedToken,
       emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+      referredBy: referrerData?.referrer,
     });
+
+    // Add user to referrer's referred list
+    if (referrerData) {
+      await referrerData.addReferred(user._id);
+    }
 
     // Send verification email
     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';

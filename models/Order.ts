@@ -23,12 +23,21 @@ export interface IOrder extends Document {
     country: string;
     postalCode: string;
   };
+  shippingZone?: mongoose.Types.ObjectId;
+  coupon?: {
+    code: string;
+    discount: number;
+    couponId: mongoose.Types.ObjectId;
+  };
+  loyaltyPointsUsed?: number;
+  loyaltyPointsEarned?: number;
   paymentMethod: 'stripe' | 'paypal' | 'cash_on_delivery';
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
   paymentId?: string;
   itemsPrice: number;
   shippingPrice: number;
   taxPrice: number;
+  discount: number;
   totalPrice: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   deliveredAt?: Date;
@@ -113,6 +122,34 @@ const OrderSchema = new Schema<IOrder>(
         required: true,
       },
     },
+    shippingZone: {
+      type: Schema.Types.ObjectId,
+      ref: 'ShippingZone',
+    },
+    coupon: {
+      code: {
+        type: String,
+        uppercase: true,
+      },
+      discount: {
+        type: Number,
+        min: [0, 'Discount cannot be negative'],
+      },
+      couponId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Coupon',
+      },
+    },
+    loyaltyPointsUsed: {
+      type: Number,
+      default: 0,
+      min: [0, 'Loyalty points used cannot be negative'],
+    },
+    loyaltyPointsEarned: {
+      type: Number,
+      default: 0,
+      min: [0, 'Loyalty points earned cannot be negative'],
+    },
     paymentMethod: {
       type: String,
       enum: ['stripe', 'paypal', 'cash_on_delivery'],
@@ -142,6 +179,11 @@ const OrderSchema = new Schema<IOrder>(
       required: true,
       min: [0, 'Tax price cannot be negative'],
       default: 0,
+    },
+    discount: {
+      type: Number,
+      default: 0,
+      min: [0, 'Discount cannot be negative'],
     },
     totalPrice: {
       type: Number,

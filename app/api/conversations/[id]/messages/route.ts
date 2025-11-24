@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongodb';
 import Conversation from '@/models/Conversation';
+import User from '@/models/User';
+import { createNotification, NotificationTemplates } from '@/lib/notifications';
 
 // POST /api/conversations/[id]/messages - Send a message
 export async function POST(
@@ -84,6 +86,21 @@ export async function POST(
     });
 
     await conversation.save();
+
+    // Send notification to other participants
+    const sender = await User.findById(session.user.id).select('name');
+    for (const participantId of conversation.participants) {
+      if (participantId.toString() !== session.user.id) {
+        const notification = NotificationTemplates.newMessage(
+          sender?.name || 'Someone',
+          conversation._id.toString()
+        );
+        await createNotification({
+          userId: participantId.toString(),
+          ...notification,
+        });
+      }
+    }
 
     // Return the new message with sender info
     const populatedConversation = await Conversation.findById(id)

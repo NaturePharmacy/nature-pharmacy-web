@@ -6,16 +6,106 @@ import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { useState, useEffect } from 'react';
 
 export default function CartPage() {
   const t = useTranslations('cart');
   const locale = useLocale() as 'fr' | 'en' | 'es';
   const { items, removeFromCart, updateQuantity, getCartTotal } = useCart();
 
+  const [shippingCost, setShippingCost] = useState<number>(0);
+  const [shippingZone, setShippingZone] = useState<any>(null);
+  const [loadingShipping, setLoadingShipping] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState('SN');
+
+  // Coupon state
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState('');
+
   const subtotal = getCartTotal();
-  const shipping = subtotal > 50 ? 0 : 9.99;
   const tax = subtotal * 0.1;
-  const total = subtotal + shipping + tax;
+  const total = subtotal + shippingCost + tax - couponDiscount;
+
+  // Calculate shipping when cart or country changes
+  useEffect(() => {
+    if (subtotal > 0) {
+      calculateShipping();
+    }
+  }, [subtotal, selectedCountry]);
+
+  const calculateShipping = async () => {
+    setLoadingShipping(true);
+    try {
+      const res = await fetch('/api/shipping/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          country: selectedCountry,
+          orderTotal: subtotal,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setShippingCost(data.shippingCost);
+        setShippingZone(data.zone);
+      } else {
+        // If no shipping zone found, set default
+        setShippingCost(0);
+        setShippingZone(null);
+      }
+    } catch (error) {
+      console.error('Error calculating shipping:', error);
+      setShippingCost(0);
+    } finally {
+      setLoadingShipping(false);
+    }
+  };
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) return;
+
+    setCouponLoading(true);
+    setCouponError('');
+
+    try {
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: couponCode,
+          orderTotal: subtotal,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setAppliedCoupon(data.coupon);
+        setCouponDiscount(data.discount);
+        setCouponError('');
+      } else {
+        setCouponError(data.error || 'Invalid coupon code');
+        setAppliedCoupon(null);
+        setCouponDiscount(0);
+      }
+    } catch (error) {
+      console.error('Error applying coupon:', error);
+      setCouponError('Failed to apply coupon');
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setCouponCode('');
+    setAppliedCoupon(null);
+    setCouponDiscount(0);
+    setCouponError('');
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -137,27 +227,110 @@ export default function CartPage() {
                 <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
                   <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
+                  {/* Country Selection */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Shipping Country
+                    </label>
+                    <select
+                      value={selectedCountry}
+                      onChange={(e) => setSelectedCountry(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    >
+                      <option value="SN">Sénégal</option>
+                      <option value="FR">France</option>
+                      <option value="US">United States</option>
+                      <option value="GB">United Kingdom</option>
+                      <option value="DE">Germany</option>
+                      <option value="ES">Spain</option>
+                    </select>
+                  </div>
+
+                  {/* Coupon Section */}
+                  <div className="mb-4 pb-4 border-b">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Have a coupon code?
+                    </label>
+                    {!appliedCoupon ? (
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={couponCode}
+                          onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                          onKeyPress={(e) => e.key === 'Enter' && applyCoupon()}
+                          placeholder="Enter code"
+                          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 uppercase"
+                        />
+                        <button
+                          onClick={applyCoupon}
+                          disabled={couponLoading || !couponCode.trim()}
+                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {couponLoading ? 'Checking...' : 'Apply'}
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <div>
+                          <p className="font-mono font-bold text-green-700">{appliedCoupon.code}</p>
+                          <p className="text-sm text-green-600">
+                            {appliedCoupon.description[locale as keyof typeof appliedCoupon.description]}
+                          </p>
+                        </div>
+                        <button
+                          onClick={removeCoupon}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                    {couponError && (
+                      <p className="text-sm text-red-600 mt-2">{couponError}</p>
+                    )}
+                  </div>
+
                   <div className="space-y-3 mb-6">
                     <div className="flex justify-between text-gray-700">
                       <span>{t('subtotal')}</span>
-                      <span>${subtotal.toFixed(2)}</span>
+                      <span>{subtotal.toLocaleString()} CFA</span>
                     </div>
                     <div className="flex justify-between text-gray-700">
                       <span>{t('shipping')}</span>
-                      <span>{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
+                      {loadingShipping ? (
+                        <span className="text-sm text-gray-500">Calculating...</span>
+                      ) : (
+                        <span>{shippingCost === 0 ? 'FREE' : `${shippingCost.toLocaleString()} CFA`}</span>
+                      )}
                     </div>
-                    {shipping === 0 && (
+                    {shippingCost === 0 && shippingZone?.freeShippingThreshold && (
                       <p className="text-sm text-green-600">
-                        ✓ Free shipping on orders over $50
+                        ✓ Free shipping on orders over {shippingZone.freeShippingThreshold.toLocaleString()} CFA
+                      </p>
+                    )}
+                    {shippingZone?.amountUntilFreeShipping > 0 && (
+                      <p className="text-sm text-orange-600">
+                        Add {shippingZone.amountUntilFreeShipping.toLocaleString()} CFA more for free shipping
+                      </p>
+                    )}
+                    {shippingZone && (
+                      <p className="text-xs text-gray-500">
+                        Estimated delivery: {shippingZone.estimatedDeliveryDays.min}-{shippingZone.estimatedDeliveryDays.max} days
                       </p>
                     )}
                     <div className="flex justify-between text-gray-700">
                       <span>{t('tax')} (10%)</span>
-                      <span>${tax.toFixed(2)}</span>
+                      <span>{tax.toLocaleString()} CFA</span>
                     </div>
+                    {couponDiscount > 0 && (
+                      <div className="flex justify-between text-green-600 font-medium">
+                        <span>Discount</span>
+                        <span>-{couponDiscount.toLocaleString()} CFA</span>
+                      </div>
+                    )}
                     <div className="border-t pt-3 flex justify-between text-lg font-bold">
                       <span>{t('total')}</span>
-                      <span className="text-green-600">${total.toFixed(2)}</span>
+                      <span className="text-green-600">{total.toLocaleString()} CFA</span>
                     </div>
                   </div>
 

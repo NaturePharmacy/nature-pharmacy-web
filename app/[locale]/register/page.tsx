@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,6 +12,7 @@ export default function RegisterPage() {
   const tErrors = useTranslations('auth.errors');
   const locale = useLocale();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -20,9 +21,23 @@ export default function RegisterPage() {
     confirmPassword: '',
     role: 'buyer' as 'buyer' | 'seller',
     agreeToTerms: false,
+    referralCode: '',
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [referralValidation, setReferralValidation] = useState<{
+    valid: boolean;
+    message: string;
+  } | null>(null);
+
+  // Load referral code from URL on mount
+  useEffect(() => {
+    const refCode = searchParams.get('ref');
+    if (refCode) {
+      setFormData((prev) => ({ ...prev, referralCode: refCode.toUpperCase() }));
+      validateReferralCode(refCode);
+    }
+  }, [searchParams]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = e.target as HTMLInputElement;
@@ -33,6 +48,42 @@ export default function RegisterPage() {
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
+
+    // Validate referral code on change
+    if (name === 'referralCode' && value) {
+      validateReferralCode(value);
+    } else if (name === 'referralCode' && !value) {
+      setReferralValidation(null);
+    }
+  };
+
+  const validateReferralCode = async (code: string) => {
+    if (!code || code.length < 3) {
+      setReferralValidation(null);
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/referral', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code.toUpperCase() }),
+      });
+
+      if (res.ok) {
+        setReferralValidation({
+          valid: true,
+          message: 'Valid referral code!',
+        });
+      } else {
+        setReferralValidation({
+          valid: false,
+          message: 'Invalid referral code',
+        });
+      }
+    } catch (error) {
+      setReferralValidation(null);
+    }
   };
 
   const validateForm = () => {
@@ -85,6 +136,7 @@ export default function RegisterPage() {
           email: formData.email,
           password: formData.password,
           role: formData.role,
+          referralCode: formData.referralCode || undefined,
         }),
       });
 
@@ -232,6 +284,39 @@ export default function RegisterPage() {
                 <option value="buyer">{t('buyer')}</option>
                 <option value="seller">{t('seller')}</option>
               </select>
+            </div>
+
+            {/* Referral Code (Optional) */}
+            <div>
+              <label htmlFor="referralCode" className="block text-sm font-medium text-gray-700 mb-1">
+                Referral Code (Optional)
+              </label>
+              <input
+                id="referralCode"
+                name="referralCode"
+                type="text"
+                value={formData.referralCode}
+                onChange={handleChange}
+                className={`appearance-none relative block w-full px-3 py-3 border ${
+                  referralValidation
+                    ? referralValidation.valid
+                      ? 'border-green-500'
+                      : 'border-red-500'
+                    : 'border-gray-300'
+                } placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent uppercase`}
+                placeholder="Enter referral code"
+                maxLength={8}
+              />
+              {referralValidation && (
+                <p
+                  className={`mt-1 text-sm ${
+                    referralValidation.valid ? 'text-green-600' : 'text-red-600'
+                  }`}
+                >
+                  {referralValidation.valid ? '✓ ' : '✗ '}
+                  {referralValidation.message}
+                </p>
+              )}
             </div>
           </div>
 

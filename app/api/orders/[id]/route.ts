@@ -3,6 +3,7 @@ import connectDB from '@/lib/mongodb';
 import Order from '@/models/Order';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { createNotification, NotificationTemplates } from '@/lib/notifications';
 
 // GET /api/orders/[id] - Get a single order
 export async function GET(
@@ -98,6 +99,7 @@ export async function PUT(
 
     // Update allowed fields
     if (status) {
+      const oldStatus = order.status;
       order.status = status;
       if (status === 'delivered') {
         order.deliveredAt = new Date();
@@ -110,6 +112,25 @@ export async function PUT(
           const Product = (await import('@/models/Product')).default;
           await Product.findByIdAndUpdate(item.product, {
             $inc: { stock: item.quantity },
+          });
+        }
+      }
+
+      // Send notification to buyer on status change
+      if (oldStatus !== status) {
+        let notification;
+        if (status === 'processing') {
+          notification = NotificationTemplates.orderProcessing(order._id.toString());
+        } else if (status === 'shipped') {
+          notification = NotificationTemplates.orderShipped(order._id.toString());
+        } else if (status === 'delivered') {
+          notification = NotificationTemplates.orderDelivered(order._id.toString());
+        }
+
+        if (notification) {
+          await createNotification({
+            userId: order.buyer.toString(),
+            ...notification,
           });
         }
       }

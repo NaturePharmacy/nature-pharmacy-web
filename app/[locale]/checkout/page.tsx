@@ -19,22 +19,24 @@ export default function CheckoutPage() {
   const { items, getCartTotal, clearCart } = useCart();
 
   const [loading, setLoading] = useState(false);
+  const [shippingCost, setShippingCost] = useState<number>(0);
+  const [shippingZone, setShippingZone] = useState<any>(null);
+  const [loadingShipping, setLoadingShipping] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     street: '',
     city: '',
     state: '',
-    country: '',
+    country: 'SN',
     postalCode: '',
     paymentMethod: 'stripe',
     notes: '',
   });
 
   const subtotal = getCartTotal();
-  const shipping = subtotal > 50 ? 0 : 9.99;
   const tax = subtotal * 0.1;
-  const total = subtotal + shipping + tax;
+  const total = subtotal + shippingCost + tax;
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -47,6 +49,42 @@ export default function CheckoutPage() {
       router.push(`/${locale}/products`);
     }
   }, [items, status, router, locale]);
+
+  // Calculate shipping when country or cart changes
+  useEffect(() => {
+    if (formData.country && subtotal > 0) {
+      calculateShipping();
+    }
+  }, [formData.country, subtotal]);
+
+  const calculateShipping = async () => {
+    setLoadingShipping(true);
+    try {
+      const res = await fetch('/api/shipping/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          country: formData.country,
+          region: formData.city,
+          orderTotal: subtotal,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setShippingCost(data.shippingCost);
+        setShippingZone(data.zone);
+      } else {
+        setShippingCost(0);
+        setShippingZone(null);
+      }
+    } catch (error) {
+      console.error('Error calculating shipping:', error);
+      setShippingCost(0);
+    } finally {
+      setLoadingShipping(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -74,6 +112,8 @@ export default function CheckoutPage() {
           country: formData.country,
           postalCode: formData.postalCode,
         },
+        shippingCost: shippingCost,
+        shippingZone: shippingZone?._id,
         paymentMethod: formData.paymentMethod,
         notes: formData.notes,
       };
@@ -217,15 +257,21 @@ export default function CheckoutPage() {
                       <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1">
                         {t('country')} *
                       </label>
-                      <input
-                        type="text"
+                      <select
                         id="country"
                         name="country"
                         required
                         value={formData.country}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                      />
+                      >
+                        <option value="SN">Sénégal</option>
+                        <option value="FR">France</option>
+                        <option value="US">United States</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="DE">Germany</option>
+                        <option value="ES">Spain</option>
+                      </select>
                     </div>
 
                     <div>
@@ -338,19 +384,33 @@ export default function CheckoutPage() {
                   <div className="border-t pt-4 space-y-2">
                     <div className="flex justify-between text-gray-700">
                       <span>{tCart('subtotal')}</span>
-                      <span>${subtotal.toFixed(2)}</span>
+                      <span>{subtotal.toLocaleString()} CFA</span>
                     </div>
                     <div className="flex justify-between text-gray-700">
                       <span>{tCart('shipping')}</span>
-                      <span>{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
+                      {loadingShipping ? (
+                        <span className="text-sm text-gray-500">Calculating...</span>
+                      ) : (
+                        <span>{shippingCost === 0 ? 'FREE' : `${shippingCost.toLocaleString()} CFA`}</span>
+                      )}
                     </div>
+                    {shippingCost === 0 && shippingZone?.freeShippingThreshold && (
+                      <p className="text-xs text-green-600">
+                        ✓ Free shipping on orders over {shippingZone.freeShippingThreshold.toLocaleString()} CFA
+                      </p>
+                    )}
+                    {shippingZone && (
+                      <p className="text-xs text-gray-500">
+                        Est. delivery: {shippingZone.estimatedDeliveryDays.min}-{shippingZone.estimatedDeliveryDays.max} days
+                      </p>
+                    )}
                     <div className="flex justify-between text-gray-700">
                       <span>{tCart('tax')}</span>
-                      <span>${tax.toFixed(2)}</span>
+                      <span>{tax.toLocaleString()} CFA</span>
                     </div>
                     <div className="border-t pt-2 flex justify-between text-lg font-bold">
                       <span>{tCart('total')}</span>
-                      <span className="text-green-600">${total.toFixed(2)}</span>
+                      <span className="text-green-600">{total.toLocaleString()} CFA</span>
                     </div>
                   </div>
 

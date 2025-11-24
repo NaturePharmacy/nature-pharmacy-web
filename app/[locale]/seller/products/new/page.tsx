@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import ImageUpload from '@/components/upload/ImageUpload';
 
 interface Category {
   _id: string;
@@ -30,7 +31,7 @@ export default function NewProductPage() {
     compareAtPrice: '',
     stock: '',
     category: '',
-    images: [''],
+    images: [] as string[],
     isOrganic: false,
     isFeatured: false,
     weight: '',
@@ -130,21 +131,8 @@ export default function NewProductPage() {
     }));
   };
 
-  const handleImageChange = (index: number, value: string) => {
-    const newImages = [...formData.images];
-    newImages[index] = value;
-    setFormData(prev => ({ ...prev, images: newImages }));
-  };
-
-  const addImageField = () => {
-    setFormData(prev => ({ ...prev, images: [...prev.images, ''] }));
-  };
-
-  const removeImageField = (index: number) => {
-    if (formData.images.length > 1) {
-      const newImages = formData.images.filter((_, i) => i !== index);
-      setFormData(prev => ({ ...prev, images: newImages }));
-    }
+  const handleImagesChange = (urls: string[]) => {
+    setFormData(prev => ({ ...prev, images: urls }));
   };
 
   if (status === 'loading') {
@@ -373,41 +361,21 @@ export default function NewProductPage() {
           {/* Images */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('productForm.images')}</h2>
-            <p className="text-sm text-gray-500 mb-4">{t('productForm.imagesHint')}</p>
+            <p className="text-sm text-gray-500 mb-4">
+              {locale === 'fr'
+                ? 'Téléchargez les images de votre produit (max 5 images)'
+                : locale === 'es'
+                ? 'Sube las imágenes de tu producto (máx. 5 imágenes)'
+                : 'Upload your product images (max 5 images)'}
+            </p>
 
-            <div className="space-y-3">
-              {formData.images.map((image, index) => (
-                <div key={index} className="flex gap-2">
-                  <input
-                    type="url"
-                    value={image}
-                    onChange={(e) => handleImageChange(index, e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                    className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeImageField(index)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                    disabled={formData.images.length === 1}
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
-                </div>
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={addImageField}
-              className="mt-3 text-green-600 hover:text-green-700 text-sm font-medium inline-flex items-center gap-1"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              {t('productForm.addImage')}
-            </button>
+            <ImageUpload
+              value={formData.images}
+              onChange={handleImagesChange}
+              maxImages={5}
+              folder="nature-pharmacy/products"
+              disabled={loading}
+            />
           </div>
 
           {/* Additional Info */}

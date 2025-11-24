@@ -18,7 +18,22 @@ export async function GET(request: NextRequest) {
     const maxPrice = searchParams.get('maxPrice');
     const isOrganic = searchParams.get('isOrganic');
     const isFeatured = searchParams.get('isFeatured');
-    const sort = searchParams.get('sort') || '-createdAt';
+    const minRating = searchParams.get('minRating');
+    const inStock = searchParams.get('inStock');
+    const sortBy = searchParams.get('sort') || 'newest';
+
+    // Map sort options to MongoDB sort
+    const sortOptions: { [key: string]: any } = {
+      newest: { createdAt: -1 },
+      oldest: { createdAt: 1 },
+      'price-asc': { price: 1 },
+      'price-desc': { price: -1 },
+      'rating': { rating: -1, reviewCount: -1 },
+      'popular': { reviewCount: -1, rating: -1 },
+      'name-asc': { 'name.en': 1 },
+      'name-desc': { 'name.en': -1 },
+    };
+    const sort = sortOptions[sortBy] || sortOptions.newest;
 
     // Build query
     const query: any = { isActive: true };
@@ -50,6 +65,14 @@ export async function GET(request: NextRequest) {
 
     if (isFeatured === 'true') {
       query.isFeatured = true;
+    }
+
+    if (minRating) {
+      query.rating = { $gte: parseFloat(minRating) };
+    }
+
+    if (inStock === 'true') {
+      query.stock = { $gt: 0 };
     }
 
     // Calculate pagination
