@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useSession } from 'next-auth/react';
 import { useCart } from '@/contexts/CartContext';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -55,13 +56,16 @@ interface SimilarProduct {
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const locale = params.locale as string;
   const slug = params.slug as string;
   const t = useTranslations('productDetail');
   const tCommon = useTranslations('common');
   const { addToCart } = useCart();
+  const { data: session } = useSession();
 
   const [product, setProduct] = useState<Product | null>(null);
+  const [contactingLoading, setContactingLoading] = useState(false);
   const [similarProducts, setSimilarProducts] = useState<SimilarProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -112,6 +116,36 @@ export default function ProductDetailPage() {
     const newQuantity = quantity + delta;
     if (newQuantity >= 1 && newQuantity <= product!.stock) {
       setQuantity(newQuantity);
+    }
+  };
+
+  const handleContactSeller = async () => {
+    if (!session) {
+      router.push(`/${locale}/login`);
+      return;
+    }
+
+    if (!product) return;
+
+    setContactingLoading(true);
+    try {
+      const res = await fetch('/api/conversations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sellerId: product.seller._id,
+          productId: product._id,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        router.push(`/${locale}/messages/${data.conversation._id}`);
+      }
+    } catch (error) {
+      console.error('Error starting conversation:', error);
+    } finally {
+      setContactingLoading(false);
     }
   };
 
@@ -407,32 +441,55 @@ export default function ProductDetailPage() {
               {/* Seller Info */}
               <div className="mt-8 border-t pt-6">
                 <h3 className="text-sm font-medium text-gray-900 mb-3">{t('soldBy')}</h3>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                    <span className="text-green-600 font-bold text-lg">
-                      {product.seller.sellerInfo?.storeName?.charAt(0) || product.seller.name.charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-gray-900">
-                        {product.seller.sellerInfo?.storeName || product.seller.name}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                      <span className="text-green-600 font-bold text-lg">
+                        {product.seller.sellerInfo?.storeName?.charAt(0) || product.seller.name.charAt(0)}
                       </span>
-                      {product.seller.sellerInfo?.verified && (
-                        <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-gray-900">
+                          {product.seller.sellerInfo?.storeName || product.seller.name}
+                        </span>
+                        {product.seller.sellerInfo?.verified && (
+                          <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </div>
+                      {product.seller.sellerInfo?.rating && (
+                        <div className="flex items-center gap-1 text-sm text-gray-500">
+                          <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                          {product.seller.sellerInfo.rating.toFixed(1)} {t('sellerRating')}
+                        </div>
                       )}
                     </div>
-                    {product.seller.sellerInfo?.rating && (
-                      <div className="flex items-center gap-1 text-sm text-gray-500">
-                        <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                        {product.seller.sellerInfo.rating.toFixed(1)} {t('sellerRating')}
-                      </div>
-                    )}
                   </div>
+
+                  {/* Contact Seller Button */}
+                  {session?.user?.id !== product.seller._id && (
+                    <button
+                      onClick={handleContactSeller}
+                      disabled={contactingLoading}
+                      className="flex items-center gap-2 px-4 py-2 bg-white border border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors disabled:opacity-50"
+                    >
+                      {contactingLoading ? (
+                        <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                      )}
+                      <span className="text-sm font-medium">{t('contactSeller')}</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

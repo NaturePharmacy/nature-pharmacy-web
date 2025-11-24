@@ -55,10 +55,11 @@ export async function GET(request: NextRequest) {
     // Calculate pagination
     const skip = (page - 1) * limit;
 
-    // Execute query
+    // Execute query with field selection for better performance
     const [products, total] = await Promise.all([
       Product.find(query)
-        .populate('seller', 'name email sellerInfo')
+        .select('name slug images price compareAtPrice stock rating reviewCount isOrganic category seller')
+        .populate('seller', 'name sellerInfo.storeName')
         .populate('category', 'name slug')
         .sort(sort)
         .skip(skip)

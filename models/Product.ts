@@ -170,14 +170,16 @@ const ProductSchema = new Schema<IProduct>(
   }
 );
 
-// Indexes for faster queries
-ProductSchema.index({ slug: 1 });
+// Indexes for faster queries (slug index created automatically by unique: true)
 ProductSchema.index({ seller: 1 });
 ProductSchema.index({ category: 1 });
 ProductSchema.index({ isFeatured: 1, isActive: 1 });
 ProductSchema.index({ price: 1 });
 ProductSchema.index({ rating: -1 });
 ProductSchema.index({ createdAt: -1 });
+ProductSchema.index({ isActive: 1, createdAt: -1 });
+ProductSchema.index({ isActive: 1, category: 1, createdAt: -1 });
+ProductSchema.index({ isOrganic: 1, isActive: 1 });
 
 const Product: Model<IProduct> = mongoose.models.Product || mongoose.model<IProduct>('Product', ProductSchema);
 

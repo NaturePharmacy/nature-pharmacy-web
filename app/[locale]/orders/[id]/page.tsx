@@ -209,6 +209,74 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </span>
             </div>
 
+            {/* Order Timeline */}
+            {order.status !== 'cancelled' && (
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">
+                  {locale === 'fr' ? 'Suivi de la commande' : 'Order Tracking'}
+                </h3>
+                <div className="flex items-center justify-between">
+                  {['pending', 'processing', 'shipped', 'delivered'].map((step, index) => {
+                    const steps = ['pending', 'processing', 'shipped', 'delivered'];
+                    const currentIndex = steps.indexOf(order.status);
+                    const isCompleted = index <= currentIndex;
+                    const isCurrent = index === currentIndex;
+
+                    const stepIcons = {
+                      pending: '📋',
+                      processing: '📦',
+                      shipped: '🚚',
+                      delivered: '✅',
+                    };
+
+                    return (
+                      <div key={step} className="flex-1 flex flex-col items-center relative">
+                        {index > 0 && (
+                          <div
+                            className={`absolute left-0 right-1/2 top-5 h-1 -translate-y-1/2 ${
+                              isCompleted ? 'bg-green-500' : 'bg-gray-200'
+                            }`}
+                          />
+                        )}
+                        {index < 3 && (
+                          <div
+                            className={`absolute left-1/2 right-0 top-5 h-1 -translate-y-1/2 ${
+                              index < currentIndex ? 'bg-green-500' : 'bg-gray-200'
+                            }`}
+                          />
+                        )}
+                        <div
+                          className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-lg ${
+                            isCompleted
+                              ? 'bg-green-500 text-white'
+                              : 'bg-gray-200 text-gray-400'
+                          } ${isCurrent ? 'ring-4 ring-green-100' : ''}`}
+                        >
+                          {isCompleted ? stepIcons[step as keyof typeof stepIcons] : (index + 1)}
+                        </div>
+                        <p className={`mt-2 text-xs text-center font-medium ${isCompleted ? 'text-green-600' : 'text-gray-400'}`}>
+                          {t(step)}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+                {order.deliveredAt && (
+                  <p className="text-center text-sm text-green-600 mt-4">
+                    {locale === 'fr' ? 'Livré le' : 'Delivered on'} {new Date(order.deliveredAt).toLocaleDateString(locale)}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {order.status === 'cancelled' && order.cancelledAt && (
+              <div className="mt-4 p-4 bg-red-50 rounded-lg">
+                <p className="text-red-700">
+                  {locale === 'fr' ? 'Commande annulée le' : 'Order cancelled on'} {new Date(order.cancelledAt).toLocaleDateString(locale)}
+                </p>
+              </div>
+            )}
+
             {order.status === 'pending' && (
               <button
                 onClick={handleCancelOrder}

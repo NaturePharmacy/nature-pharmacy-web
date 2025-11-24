@@ -9,6 +9,11 @@ export interface IUser extends Document {
   role: 'buyer' | 'seller' | 'admin';
   phone?: string;
   avatar?: string;
+  isEmailVerified: boolean;
+  emailVerificationToken?: string;
+  emailVerificationExpires?: Date;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   address?: {
     street?: string;
     city?: string;
@@ -64,6 +69,26 @@ const UserSchema = new Schema<IUser>(
     avatar: {
       type: String,
       default: '/images/default-avatar.png',
+    },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    emailVerificationToken: {
+      type: String,
+      select: false,
+    },
+    emailVerificationExpires: {
+      type: Date,
+      select: false,
+    },
+    resetPasswordToken: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      select: false,
     },
     address: {
       street: String,

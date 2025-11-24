@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import { sendEmail, generateVerificationEmail } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, password, role } = body;
+    const { name, email, password, role, locale = 'fr' } = body;
 
     // Validation
     if (!name || !email || !password) {
@@ -34,12 +36,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Generate email verification token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(verificationToken)
+      .digest('hex');
+
     // Create new user
     const user = await User.create({
       name,
       email: email.toLowerCase(),
       password,
       role: role || 'buyer',
+      isEmailVerified: false,
+      emailVerificationToken: hashedToken,
+      emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+    });
+
+    // Send verification email
+    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const verificationUrl = `${baseUrl}/${locale}/verify-email?token=${verificationToken}`;
+
+    await sendEmail({
+      to: user.email,
+      subject: locale === 'fr' ? 'Vérifiez votre email - Nature Pharmacy' : 'Verify your email - Nature Pharmacy',
+      html: generateVerificationEmail(user.name, verificationUrl, locale),
     });
 
     // Remove password from response
@@ -49,12 +71,13 @@ export async function POST(request: NextRequest) {
       email: user.email,
       role: user.role,
       avatar: user.avatar,
+      isEmailVerified: user.isEmailVerified,
       createdAt: user.createdAt,
     };
 
     return NextResponse.json(
       {
-        message: 'User registered successfully',
+        message: 'User registered successfully. Please check your email to verify your account.',
         user: userResponse,
       },
       { status: 201 }

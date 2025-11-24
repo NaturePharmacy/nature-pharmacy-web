@@ -8,9 +8,20 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
         hostname: '**',
       },
     ],
+    minimumCacheTTL: 60 * 60 * 24 * 30, // Cache images for 30 days
+  },
+  experimental: {
+    staleTimes: {
+      dynamic: 30,
+      static: 180,
+    },
   },
 };
 
