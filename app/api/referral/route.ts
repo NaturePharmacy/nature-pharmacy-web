@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
 
     // Create referral if it doesn't exist
     if (!referral) {
-      referral = await Referral.create({
+      const newReferral = await Referral.create({
         referrer: session.user.id,
         referred: [],
         stats: {
@@ -33,6 +33,12 @@ export async function GET(request: NextRequest) {
         },
         rewards: [],
       });
+
+      // Re-fetch with populate
+      referral = await Referral.findById(newReferral._id)
+        .populate('referred', 'name email createdAt')
+        .populate('rewards.referredUser', 'name email')
+        .lean();
     }
 
     // Calculate pending rewards

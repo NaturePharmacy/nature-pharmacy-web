@@ -4,7 +4,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useCart } from '@/contexts/CartContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import NotificationBell from '@/components/notifications/NotificationBell';
@@ -17,7 +17,12 @@ export default function Header() {
   const { data: session } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const { getCartCount } = useCart();
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: `/${locale}` });
+  };
 
   const categories = [
     { key: 'herbs', icon: '🌿' },
@@ -37,9 +42,9 @@ export default function Header() {
               <Image
                 src={locale === 'en' ? '/logo-en.jpg' : '/logo-fr.jpg'}
                 alt="Nature Pharmacy"
-                width={140}
-                height={45}
-                className="h-10 w-auto"
+                width={200}
+                height={64}
+                className="h-14 w-auto"
                 priority
               />
             </Link>
@@ -64,21 +69,136 @@ export default function Header() {
               <LanguageSwitcher />
             </div>
 
-            {/* Account */}
-            <Link
-              href={session ? `/${locale}/account` : `/${locale}/login`}
-              className="hidden md:flex flex-col text-gray-700 hover:text-green-600 px-2 transition-colors"
-            >
-              <span className="text-xs text-gray-500">
-                {session ? t('hello') : t('signIn')}
-              </span>
-              <span className="text-sm font-semibold flex items-center gap-1">
-                {session ? session.user?.name?.split(' ')[0] : t('account')}
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </span>
-            </Link>
+            {/* Account - with dropdown menu */}
+            <div className="hidden md:block relative">
+              {session ? (
+                <>
+                  <button
+                    onClick={() => setAccountMenuOpen(!accountMenuOpen)}
+                    className="flex flex-col text-gray-700 hover:text-green-600 px-2 transition-colors"
+                  >
+                    <span className="text-xs text-gray-500">{t('hello')}</span>
+                    <span className="text-sm font-semibold flex items-center gap-1">
+                      {session.user?.name?.split(' ')[0]}
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </button>
+
+                  {accountMenuOpen && (
+                    <>
+                      {/* Backdrop to close menu */}
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() => setAccountMenuOpen(false)}
+                      ></div>
+
+                      {/* Dropdown menu */}
+                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20">
+                        <div className="px-4 py-2 border-b border-gray-200">
+                          <p className="text-sm font-semibold text-gray-900">{session.user?.name}</p>
+                          <p className="text-xs text-gray-500">{session.user?.email}</p>
+                        </div>
+
+                        <Link
+                          href={`/${locale}/account`}
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 transition-colors"
+                          onClick={() => setAccountMenuOpen(false)}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                          <span className="text-sm">Mon compte</span>
+                        </Link>
+
+                        <Link
+                          href={`/${locale}/orders`}
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 transition-colors"
+                          onClick={() => setAccountMenuOpen(false)}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                          </svg>
+                          <span className="text-sm">Mes commandes</span>
+                        </Link>
+
+                        <Link
+                          href={`/${locale}/wishlist`}
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 transition-colors"
+                          onClick={() => setAccountMenuOpen(false)}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                          </svg>
+                          <span className="text-sm">Ma liste de souhaits</span>
+                        </Link>
+
+                        <Link
+                          href={`/${locale}/loyalty`}
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 transition-colors"
+                          onClick={() => setAccountMenuOpen(false)}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span className="text-sm">Points de fidélité</span>
+                        </Link>
+
+                        {session.user?.role === 'seller' && (
+                          <Link
+                            href={`/${locale}/seller`}
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 transition-colors"
+                            onClick={() => setAccountMenuOpen(false)}
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            <span className="text-sm">Tableau de bord vendeur</span>
+                          </Link>
+                        )}
+
+                        {session.user?.role === 'admin' && (
+                          <Link
+                            href={`/${locale}/admin`}
+                            className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-green-50 transition-colors"
+                            onClick={() => setAccountMenuOpen(false)}
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span className="text-sm">Administration</span>
+                          </Link>
+                        )}
+
+                        <div className="border-t border-gray-200 my-2"></div>
+
+                        <button
+                          onClick={handleSignOut}
+                          className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 transition-colors w-full"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                          </svg>
+                          <span className="text-sm font-medium">Se déconnecter</span>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </>
+              ) : (
+                <Link
+                  href={`/${locale}/login`}
+                  className="flex flex-col text-gray-700 hover:text-green-600 px-2 transition-colors"
+                >
+                  <span className="text-xs text-gray-500">{t('signIn')}</span>
+                  <span className="text-sm font-semibold flex items-center gap-1">
+                    {t('account')}
+                  </span>
+                </Link>
+              )}
+            </div>
 
             {/* Notifications */}
             {session && (
@@ -234,26 +354,44 @@ export default function Header() {
 
             {/* Mobile Links */}
             <div className="space-y-1">
-              <Link href={session ? `/${locale}/account` : `/${locale}/login`} className="flex items-center gap-3 p-3 hover:bg-green-50 rounded-lg transition-colors">
-                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                <span className="text-gray-700 font-medium">{session ? session.user?.name : t('signIn')}</span>
-              </Link>
-              {session && (
-                <Link href={`/${locale}/messages`} className="flex items-center gap-3 p-3 hover:bg-green-50 rounded-lg transition-colors">
+              {session ? (
+                <>
+                  <Link href={`/${locale}/account`} className="flex items-center gap-3 p-3 hover:bg-green-50 rounded-lg transition-colors">
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span className="text-gray-700 font-medium">{session.user?.name}</span>
+                  </Link>
+                  <Link href={`/${locale}/messages`} className="flex items-center gap-3 p-3 hover:bg-green-50 rounded-lg transition-colors">
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <span className="text-gray-700 font-medium">Messages</span>
+                  </Link>
+                  <Link href={`/${locale}/orders`} className="flex items-center gap-3 p-3 hover:bg-green-50 rounded-lg transition-colors">
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <span className="text-gray-700 font-medium">{t('orders')}</span>
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="flex items-center gap-3 p-3 hover:bg-red-50 rounded-lg transition-colors w-full text-left"
+                  >
+                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span className="text-red-600 font-medium">Se déconnecter</span>
+                  </button>
+                </>
+              ) : (
+                <Link href={`/${locale}/login`} className="flex items-center gap-3 p-3 hover:bg-green-50 rounded-lg transition-colors">
                   <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                   </svg>
-                  <span className="text-gray-700 font-medium">Messages</span>
+                  <span className="text-gray-700 font-medium">{t('signIn')}</span>
                 </Link>
               )}
-              <Link href={`/${locale}/orders`} className="flex items-center gap-3 p-3 hover:bg-green-50 rounded-lg transition-colors">
-                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-                <span className="text-gray-700 font-medium">{t('orders')}</span>
-              </Link>
             </div>
 
             {/* Mobile Categories */}
