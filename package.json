@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "seed:shipping": "npx tsx scripts/seedShippingZones.ts",
-    "seed:products": "npx tsx scripts/seedProducts.ts"
+    "seed:products": "npx tsx scripts/seedProducts.ts",
+    "seed:users": "npx tsx scripts/createTestUsers.ts",
+    "seed:all": "npm run seed:products && npm run seed:users && npm run seed:shipping"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.11.1",
