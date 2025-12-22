@@ -395,5 +395,16 @@
       "loginFailed": "Error al iniciar sesión. Verifica tus credenciales.",
       "registrationFailed": "Error al registrarse. Por favor, inténtalo de nuevo."
     }
+  },
+  "ClientAccess": {
+    "title": "Acceso de Cliente",
+    "description": "Por favor ingrese la contraseña para acceder al sitio de vista previa",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Ingrese la contraseña",
+    "submit": "Acceder al sitio",
+    "verifying": "Verificando...",
+    "invalidPassword": "Contraseña incorrecta. Por favor, inténtelo de nuevo.",
+    "serverError": "Error del servidor. Por favor, inténtelo más tarde.",
+    "footer": "Este sitio está en modo de vista previa y reservado para clientes autorizados."
   }
 }

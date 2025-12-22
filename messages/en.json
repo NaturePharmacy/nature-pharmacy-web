@@ -396,5 +396,16 @@
       "loginFailed": "Login failed. Please check your credentials.",
       "registrationFailed": "Registration failed. Please try again."
     }
+  },
+  "ClientAccess": {
+    "title": "Client Access",
+    "description": "Please enter the password to access the preview site",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter password",
+    "submit": "Access Site",
+    "verifying": "Verifying...",
+    "invalidPassword": "Incorrect password. Please try again.",
+    "serverError": "Server error. Please try again later.",
+    "footer": "This site is in preview mode and reserved for authorized clients."
   }
 }

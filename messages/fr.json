@@ -396,5 +396,16 @@
       "loginFailed": "Échec de la connexion. Vérifiez vos identifiants.",
       "registrationFailed": "Échec de l'inscription. Veuillez réessayer."
     }
+  },
+  "ClientAccess": {
+    "title": "Accès Client",
+    "description": "Veuillez entrer le mot de passe pour accéder au site en prévisualisation",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Entrez le mot de passe",
+    "submit": "Accéder au site",
+    "verifying": "Vérification...",
+    "invalidPassword": "Mot de passe incorrect. Veuillez réessayer.",
+    "serverError": "Erreur serveur. Veuillez réessayer plus tard.",
+    "footer": "Ce site est en prévisualisation et réservé aux clients autorisés."
   }
 }
