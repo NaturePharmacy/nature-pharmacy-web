@@ -99,25 +99,21 @@ export default function ReferralPage() {
 
   if (!referralData) {
     return (
-      <div className="min-h-screen flex flex-col">
-                <main className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Unable to Load Referral Data</h2>
-            <Link href={`/${locale}`} className="text-green-600 hover:text-green-700">
-              Back to Home
-            </Link>
-          </div>
-        </main>
-              </div>
+      <main className="flex-1 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Unable to Load Referral Data</h2>
+          <Link href={`/${locale}`} className="text-green-600 hover:text-green-700">
+            Back to Home
+          </Link>
+        </div>
+      </main>
     );
   }
 
   const referralUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/${locale}/register?ref=${referralData.referralCode}`;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      
-      <main className="flex-1 py-8">
+    <main className="flex-1 py-8 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
           <div className="mb-8">
@@ -316,8 +312,6 @@ export default function ReferralPage() {
             </div>
           )}
         </div>
-      </main>
-
-          </div>
+    </main>
   );
 }

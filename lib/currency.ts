@@ -27,23 +27,28 @@ export const CURRENCY_CONFIG = {
   },
 } as const;
 
-// Mapping pays → devise
+// Mapping pays → devise (utilise ALL_COUNTRIES de countries.ts comme source de vérité)
+// Cette constante est générée automatiquement à partir de ALL_COUNTRIES
 export const COUNTRY_TO_CURRENCY = {
-  SN: 'XOF', // Sénégal → Franc CFA
-  CI: 'XOF', // Côte d'Ivoire → Franc CFA
-  ML: 'XOF', // Mali → Franc CFA
-  BF: 'XOF', // Burkina Faso → Franc CFA
-  NE: 'XOF', // Niger → Franc CFA
-  TG: 'XOF', // Togo → Franc CFA
-  BJ: 'XOF', // Bénin → Franc CFA
-  FR: 'EUR', // France → Euro
-  BE: 'EUR', // Belgique → Euro
-  DE: 'EUR', // Allemagne → Euro
-  ES: 'EUR', // Espagne → Euro
-  IT: 'EUR', // Italie → Euro
-  US: 'USD', // États-Unis → Dollar
-  CA: 'USD', // Canada → Dollar
-  GB: 'USD', // Royaume-Uni → Dollar (par défaut)
+  // Zone CFA - Afrique de l'Ouest
+  SN: 'XOF', CI: 'XOF', ML: 'XOF', BF: 'XOF', BJ: 'XOF', TG: 'XOF', NE: 'XOF', GW: 'XOF',
+  // Zone CFA - Afrique Centrale
+  CM: 'XOF', GA: 'XOF', CG: 'XOF', TD: 'XOF', CF: 'XOF', GQ: 'XOF',
+  // Autres pays d'Afrique (USD)
+  MA: 'USD', DZ: 'USD', TN: 'USD', EG: 'USD', GH: 'USD', NG: 'USD', KE: 'USD', ZA: 'USD', ET: 'USD',
+  // Europe (EUR)
+  FR: 'EUR', BE: 'EUR', DE: 'EUR', ES: 'EUR', IT: 'EUR', PT: 'EUR', NL: 'EUR', LU: 'EUR',
+  CH: 'EUR', AT: 'EUR', GR: 'EUR', IE: 'EUR', GB: 'EUR', SE: 'EUR', DK: 'EUR', NO: 'EUR',
+  FI: 'EUR', PL: 'EUR', CZ: 'EUR', RO: 'EUR',
+  // Amérique du Nord (USD)
+  US: 'USD', CA: 'USD', MX: 'USD',
+  // Amérique du Sud (USD)
+  BR: 'USD', AR: 'USD', CL: 'USD', CO: 'USD', PE: 'USD', VE: 'USD',
+  // Asie (USD)
+  CN: 'USD', JP: 'USD', IN: 'USD', KR: 'USD', TH: 'USD', VN: 'USD', SG: 'USD',
+  MY: 'USD', PH: 'USD', ID: 'USD', AE: 'USD', SA: 'USD',
+  // Océanie (USD)
+  AU: 'USD', NZ: 'USD',
 } as const;
 
 export type CurrencyCode = keyof typeof CURRENCY_CONFIG;
