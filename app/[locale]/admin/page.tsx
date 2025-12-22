@@ -5,8 +5,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 interface Stats {
   totalUsers: number;
@@ -158,8 +156,7 @@ export default function AdminDashboard() {
   if (session?.user?.role !== 'admin') {
     return (
       <div className="min-h-screen flex flex-col bg-gray-50">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
+                <main className="flex-1 flex items-center justify-center">
           <div className="text-center p-8">
             <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,15 +170,13 @@ export default function AdminDashboard() {
             </Link>
           </div>
         </main>
-        <Footer />
-      </div>
+              </div>
     );
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <Header />
-
+      
       <main className="flex-1 py-8">
         <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
@@ -392,7 +387,6 @@ export default function AdminDashboard() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

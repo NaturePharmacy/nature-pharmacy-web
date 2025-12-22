@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
-import Header from '@/components/layout/Header';
 
 interface Message {
   _id: string;
@@ -196,8 +195,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
   if (!conversation) {
     return (
       <div className="min-h-screen flex flex-col bg-gray-50">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
+                <main className="flex-1 flex items-center justify-center">
           <p className="text-gray-500">Conversation not found</p>
         </main>
       </div>

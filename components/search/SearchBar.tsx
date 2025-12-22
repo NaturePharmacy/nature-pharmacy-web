@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
+import { useCurrency } from '@/hooks/useCurrency';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -28,6 +29,7 @@ interface SearchBarProps {
 export default function SearchBar({ placeholder, onSearch }: SearchBarProps) {
   const router = useRouter();
   const locale = useLocale();
+  const { formatPrice } = useCurrency();
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -197,7 +199,7 @@ export default function SearchBar({ placeholder, onSearch }: SearchBarProps) {
                       {product.name[locale as keyof typeof product.name]}
                     </p>
                     <p className="text-sm font-bold text-green-600">
-                      ${product.price.toFixed(2)}
+                      {formatPrice(product.price)}
                     </p>
                   </div>
                 </Link>

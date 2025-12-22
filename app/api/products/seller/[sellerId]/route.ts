@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
-import Product from '@/models/Product';
+import { Product, Category } from '@/lib/models';
 
 // GET /api/products/seller/[sellerId] - Get all products from a specific seller
 export async function GET(

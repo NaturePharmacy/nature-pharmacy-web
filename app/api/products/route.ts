@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
-import Product from '@/models/Product';
+import { Product, Category, User } from '@/lib/models';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
@@ -21,6 +21,14 @@ export async function GET(request: NextRequest) {
     const minRating = searchParams.get('minRating');
     const inStock = searchParams.get('inStock');
     const sortBy = searchParams.get('sort') || 'newest';
+
+    // Nouveaux filtres médecine traditionnelle
+    const therapeuticCategory = searchParams.get('therapeuticCategory');
+    const form = searchParams.get('form');
+    const indication = searchParams.get('indication');
+    const certifications = searchParams.get('certifications');
+    const safePregnancy = searchParams.get('safePregnancy');
+    const safeChildren = searchParams.get('safeChildren');
 
     // Map sort options to MongoDB sort
     const sortOptions: { [key: string]: any } = {
@@ -73,6 +81,38 @@ export async function GET(request: NextRequest) {
 
     if (inStock === 'true') {
       query.stock = { $gt: 0 };
+    }
+
+    // Filtres médecine traditionnelle
+    if (therapeuticCategory) {
+      query.therapeuticCategory = therapeuticCategory;
+    }
+
+    if (form) {
+      query.form = form;
+    }
+
+    if (indication) {
+      // Recherche dans les indications dans toutes les langues
+      query.$or = query.$or || [];
+      query.$or.push(
+        { 'indications.fr': { $regex: indication, $options: 'i' } },
+        { 'indications.en': { $regex: indication, $options: 'i' } },
+        { 'indications.es': { $regex: indication, $options: 'i' } }
+      );
+    }
+
+    if (certifications) {
+      const certArray = certifications.split(',');
+      query.certifications = { $all: certArray };
+    }
+
+    if (safePregnancy === 'true') {
+      query['warnings.pregnancy'] = { $ne: true };
+    }
+
+    if (safeChildren === 'true') {
+      query['warnings.children'] = { $ne: true };
     }
 
     // Calculate pagination
@@ -131,6 +171,7 @@ export async function POST(request: NextRequest) {
       category,
       images,
       price,
+      basePrice,
       compareAtPrice,
       stock,
       sku,
@@ -139,6 +180,20 @@ export async function POST(request: NextRequest) {
       isOrganic,
       isFeatured,
       tags,
+      // Nouveaux champs médecine traditionnelle
+      therapeuticCategory,
+      indications,
+      traditionalUses,
+      contraindications,
+      dosage,
+      preparationMethod,
+      activeIngredients,
+      origin,
+      harvestMethod,
+      certifications,
+      form,
+      concentration,
+      warnings,
     } = body;
 
     // Validation
@@ -174,6 +229,31 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Calculate basePrice and commission if not provided
+    const { calculatePriceWithCommission } = await import('@/lib/commission');
+    let finalPrice = price;
+    let finalBasePrice = basePrice;
+    let commission = 0;
+
+    if (basePrice && !price) {
+      // Si basePrice fourni mais pas price, calculer le prix avec commission
+      const calculated = calculatePriceWithCommission(basePrice);
+      finalPrice = calculated.price;
+      commission = calculated.commission;
+      finalBasePrice = basePrice;
+    } else if (price && !basePrice) {
+      // Si price fourni mais pas basePrice, c'est l'ancien système
+      // On considère que price est le prix final
+      finalPrice = price;
+      finalBasePrice = price; // Temporaire, à ajuster
+      commission = 0;
+    } else if (price && basePrice) {
+      // Les deux fournis, on les utilise
+      finalPrice = price;
+      finalBasePrice = basePrice;
+      commission = price - basePrice;
+    }
+
     // Create product
     const product = await Product.create({
       name,
@@ -182,7 +262,9 @@ export async function POST(request: NextRequest) {
       seller: session.user.id,
       category,
       images,
-      price,
+      basePrice: finalBasePrice,
+      price: finalPrice,
+      commission,
       compareAtPrice,
       stock,
       sku,
@@ -191,6 +273,25 @@ export async function POST(request: NextRequest) {
       isOrganic: isOrganic || false,
       isFeatured: isFeatured || false,
       tags: tags || [],
+      // Champs médecine traditionnelle
+      therapeuticCategory,
+      indications,
+      traditionalUses,
+      contraindications,
+      dosage,
+      preparationMethod,
+      activeIngredients,
+      origin,
+      harvestMethod,
+      certifications: certifications || [],
+      form,
+      concentration,
+      warnings: warnings || {
+        pregnancy: false,
+        breastfeeding: false,
+        children: false,
+        prescriptionRequired: false,
+      },
     });
 
     const populatedProduct = await Product.findById(product._id)

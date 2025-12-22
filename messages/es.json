@@ -1,6 +1,6 @@
 {
   "header": {
-    "search": "Buscar productos naturales...",
+    "search": "Buscar remedios naturales...",
     "cart": "Carrito",
     "login": "Iniciar sesión",
     "register": "Registrarse",
@@ -19,30 +19,34 @@
     "products": "Productos",
     "categories": {
       "title": "Categorías",
-      "herbs": "Hierbas y Suplementos",
-      "oils": "Aceites Esenciales",
-      "cosmetics": "Cosméticos Naturales",
-      "foods": "Alimentos Orgánicos"
+      "medicinal-plants": "Plantas Medicinales",
+      "essential-oils": "Aceites Esenciales",
+      "traditional-remedies": "Remedios Tradicionales",
+      "herbal-teas": "Tisanas Terapéuticas",
+      "supplements": "Suplementos Naturales",
+      "natural-cosmetics": "Cosméticos Naturales"
     },
     "allCategories": "Todas las categorías",
     "deals": "Ofertas Flash",
     "newArrivals": "Novedades",
     "bestSellers": "Más vendidos",
-    "organic": "Orgánico",
+    "organic": "Certificado Orgánico",
     "sellers": "Vendedores"
   },
   "home": {
     "hero": {
-      "title": "Tu Bienestar Natural",
-      "subtitle": "Descubre nuestra selección de productos naturales y orgánicos certificados",
-      "shopNow": "Comprar"
+      "title": "Medicina Natural y Tradicional",
+      "subtitle": "Descubre remedios naturales y tradicionales para tu salud y bienestar",
+      "shopNow": "Descubrir Remedios"
     },
     "categories": {
       "title": "Comprar por categoría",
-      "herbs": "Hierbas y Suplementos",
-      "oils": "Aceites Esenciales",
-      "cosmetics": "Cosméticos Naturales",
-      "foods": "Alimentos Orgánicos"
+      "medicinal-plants": "Plantas Medicinales",
+      "essential-oils": "Aceites Esenciales",
+      "traditional-remedies": "Remedios Tradicionales",
+      "herbal-teas": "Tisanas Terapéuticas",
+      "supplements": "Suplementos Naturales",
+      "natural-cosmetics": "Cosméticos Naturales"
     },
     "featured": {
       "title": "Productos destacados",
@@ -65,12 +69,12 @@
     "seeAll": "Ver todo",
     "whyUs": {
       "title": "¿Por qué elegir Nature Pharmacy?",
-      "trustedTitle": "Vendedores verificados",
-      "trustedDesc": "Todos los vendedores están verificados y calificados por nuestros clientes",
-      "deliveryTitle": "Entrega express",
-      "deliveryDesc": "Envío rápido con seguimiento en tiempo real",
-      "qualityTitle": "Calidad premium",
-      "qualityDesc": "Productos 100% naturales y certificados"
+      "trustedTitle": "Practicantes verificados",
+      "trustedDesc": "Todos nuestros vendedores están verificados y ofrecen remedios auténticos",
+      "deliveryTitle": "Entrega segura",
+      "deliveryDesc": "Envío rápido y seguro con seguimiento en tiempo real",
+      "qualityTitle": "Remedios auténticos",
+      "qualityDesc": "Medicina tradicional y plantas medicinales certificadas"
     }
   },
   "products": {
@@ -179,7 +183,7 @@
     "becomeSeller": "Convertirse en vendedor",
     "sellerDashboard": "Panel de vendedor",
     "sellerGuide": "Guía del vendedor",
-    "description": "Tu marketplace en línea de confianza para productos naturales y orgánicos de vendedores de todo el mundo."
+    "description": "Tu marketplace en línea de confianza para medicina tradicional y remedios naturales de practicantes de todo el mundo."
   },
   "productDetail": {
     "notFound": "Producto no encontrado",

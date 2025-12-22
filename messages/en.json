@@ -1,6 +1,6 @@
 {
   "header": {
-    "search": "Search natural products...",
+    "search": "Search natural remedies...",
     "cart": "Cart",
     "login": "Sign In",
     "register": "Sign Up",
@@ -19,30 +19,34 @@
     "products": "Products",
     "categories": {
       "title": "Categories",
-      "herbs": "Herbs & Supplements",
-      "oils": "Essential Oils",
-      "cosmetics": "Natural Cosmetics",
-      "foods": "Organic Foods"
+      "medicinal-plants": "Medicinal Plants",
+      "essential-oils": "Essential Oils",
+      "traditional-remedies": "Traditional Remedies",
+      "herbal-teas": "Herbal Teas",
+      "supplements": "Natural Supplements",
+      "natural-cosmetics": "Natural Cosmetics"
     },
     "allCategories": "All Categories",
     "deals": "Flash Deals",
     "newArrivals": "New Arrivals",
     "bestSellers": "Best Sellers",
-    "organic": "Organic",
+    "organic": "Certified Organic",
     "sellers": "Sellers"
   },
   "home": {
     "hero": {
-      "title": "Your Natural Wellness",
-      "subtitle": "Discover our selection of certified natural and organic products",
-      "shopNow": "Shop Now"
+      "title": "Natural & Traditional Medicine",
+      "subtitle": "Discover natural and traditional remedies for your health and wellness",
+      "shopNow": "Discover Remedies"
     },
     "categories": {
       "title": "Shop by Category",
-      "herbs": "Herbs & Supplements",
-      "oils": "Essential Oils",
-      "cosmetics": "Natural Cosmetics",
-      "foods": "Organic Foods"
+      "medicinal-plants": "Medicinal Plants",
+      "essential-oils": "Essential Oils",
+      "traditional-remedies": "Traditional Remedies",
+      "herbal-teas": "Herbal Teas",
+      "supplements": "Natural Supplements",
+      "natural-cosmetics": "Natural Cosmetics"
     },
     "featured": {
       "title": "Featured Products",
@@ -65,12 +69,12 @@
     "seeAll": "See all",
     "whyUs": {
       "title": "Why Choose Nature Pharmacy?",
-      "trustedTitle": "Verified Sellers",
-      "trustedDesc": "All sellers are verified and rated by our customers",
-      "deliveryTitle": "Express Delivery",
-      "deliveryDesc": "Fast shipping with real-time tracking",
-      "qualityTitle": "Premium Quality",
-      "qualityDesc": "100% natural and certified products"
+      "trustedTitle": "Verified Practitioners",
+      "trustedDesc": "All our sellers are verified and offer authentic remedies",
+      "deliveryTitle": "Secure Delivery",
+      "deliveryDesc": "Fast and safe shipping with real-time tracking",
+      "qualityTitle": "Authentic Remedies",
+      "qualityDesc": "Traditional medicine and certified medicinal plants"
     }
   },
   "products": {

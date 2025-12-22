@@ -5,8 +5,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 interface TicketMessage {
   sender: {
@@ -133,8 +131,7 @@ export default function TicketDetailPage() {
   if (!ticket) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
+                <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Ticket Not Found</h2>
             <Link
@@ -145,8 +142,7 @@ export default function TicketDetailPage() {
             </Link>
           </div>
         </main>
-        <Footer />
-      </div>
+              </div>
     );
   }
 
@@ -154,8 +150,7 @@ export default function TicketDetailPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
-
+      
       <main className="flex-1 py-8">
         <div className="max-w-5xl mx-auto px-4">
           {/* Back Button */}
@@ -288,7 +283,6 @@ export default function TicketDetailPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

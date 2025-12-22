@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
+import { useCurrency } from '@/hooks/useCurrency';
 import WishlistButton from '@/components/wishlist/WishlistButton';
 
 interface Product {
@@ -34,6 +35,7 @@ export default function WishlistPage() {
   const locale = useLocale();
   const tCommon = useTranslations('common');
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -190,9 +192,9 @@ export default function WishlistPage() {
 
                     {/* Price */}
                     <div className="flex items-baseline gap-2 mb-3">
-                      <span className="text-lg font-bold text-green-600">${product.price.toFixed(2)}</span>
+                      <span className="text-lg font-bold text-green-600">{formatPrice(product.price)}</span>
                       {product.compareAtPrice && (
-                        <span className="text-sm text-gray-400 line-through">${product.compareAtPrice.toFixed(2)}</span>
+                        <span className="text-sm text-gray-400 line-through">{formatPrice(product.compareAtPrice)}</span>
                       )}
                     </div>
 

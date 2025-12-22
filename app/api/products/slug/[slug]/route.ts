@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
-import Product from '@/models/Product';
-import Category from '@/models/Category';
-import User from '@/models/User';
+import { Product, Category, User } from '@/lib/models';
 
 // GET /api/products/slug/[slug] - Récupérer un produit par son slug
 export async function GET(

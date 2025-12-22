@@ -3,9 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import ProductCard from '@/components/products/ProductCard';
+import AdvancedFilters from '@/components/products/AdvancedFilters';
 
 interface Product {
   _id: string;
@@ -44,15 +43,24 @@ export default function ProductsPage() {
     maxPrice: '',
     isOrganic: searchParams.get('organic') === 'true',
     category: searchParams.get('category') || '',
+    // Nouveaux filtres médecine traditionnelle
+    therapeuticCategory: '',
+    form: '',
+    indication: '',
+    certifications: [] as string[],
+    safePregnancy: false,
+    safeChildren: false,
   });
 
   const [searchInput, setSearchInput] = useState(filters.search);
 
   const categories = [
-    { key: 'herbs', slug: 'herbs' },
-    { key: 'oils', slug: 'oils' },
-    { key: 'cosmetics', slug: 'cosmetics' },
-    { key: 'foods', slug: 'foods' },
+    { key: 'medicinal-plants', slug: 'medicinal-plants' },
+    { key: 'essential-oils', slug: 'essential-oils' },
+    { key: 'traditional-remedies', slug: 'traditional-remedies' },
+    { key: 'herbal-teas', slug: 'herbal-teas' },
+    { key: 'supplements', slug: 'supplements' },
+    { key: 'natural-cosmetics', slug: 'natural-cosmetics' },
   ];
 
   const fetchProducts = async (page = 1) => {
@@ -69,6 +77,14 @@ export default function ProductsPage() {
       if (filters.maxPrice) params.append('maxPrice', filters.maxPrice);
       if (filters.isOrganic) params.append('isOrganic', 'true');
       if (filters.category) params.append('category', filters.category);
+
+      // Nouveaux filtres médecine traditionnelle
+      if (filters.therapeuticCategory) params.append('therapeuticCategory', filters.therapeuticCategory);
+      if (filters.form) params.append('form', filters.form);
+      if (filters.indication) params.append('indication', filters.indication);
+      if (filters.certifications.length > 0) params.append('certifications', filters.certifications.join(','));
+      if (filters.safePregnancy) params.append('safePregnancy', 'true');
+      if (filters.safeChildren) params.append('safeChildren', 'true');
 
       const res = await fetch(`/api/products?${params}`);
       const data = await res.json();
@@ -101,8 +117,18 @@ export default function ProductsPage() {
       maxPrice: '',
       isOrganic: false,
       category: '',
+      therapeuticCategory: '',
+      form: '',
+      indication: '',
+      certifications: [],
+      safePregnancy: false,
+      safeChildren: false,
     });
     setSearchInput('');
+  };
+
+  const handleAdvancedFilterChange = (newFilters: any) => {
+    setFilters((prev) => ({ ...prev, ...newFilters }));
   };
 
   const handleLoadMore = () => {
@@ -199,8 +225,7 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <Header />
-
+      
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-6">
           {/* Breadcrumb & Title */}
@@ -231,6 +256,22 @@ export default function ProductsPage() {
 
             {/* Products Area */}
             <div className="flex-1 min-w-0">
+              {/* Advanced Filters */}
+              <div className="mb-4">
+                <AdvancedFilters
+                  filters={{
+                    therapeuticCategory: filters.therapeuticCategory,
+                    form: filters.form,
+                    indication: filters.indication,
+                    certifications: filters.certifications,
+                    safePregnancy: filters.safePregnancy,
+                    safeChildren: filters.safeChildren,
+                  }}
+                  onFilterChange={handleAdvancedFilterChange}
+                  onClearFilters={clearFilters}
+                />
+              </div>
+
               {/* Top Bar */}
               <div className="bg-white rounded-lg shadow-sm p-4 mb-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                 {/* Search */}
@@ -386,7 +427,6 @@ export default function ProductsPage() {
         </div>
       )}
 
-      <Footer />
-    </div>
+          </div>
   );
 }

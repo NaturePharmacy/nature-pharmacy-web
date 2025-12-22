@@ -1,5 +1,6 @@
-import connectDB from '@/lib/mongodb';
-import ShippingZone from '@/models/ShippingZone';
+import 'dotenv/config';
+import connectDB from '../lib/mongodb';
+import ShippingZone from '../models/ShippingZone';
 
 const shippingZones = [
   {

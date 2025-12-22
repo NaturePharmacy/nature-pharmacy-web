@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 interface LoyaltyData {
   loyalty: {
@@ -100,19 +98,16 @@ export default function LoyaltyPage() {
   if (!data) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
+                <main className="flex-1 flex items-center justify-center">
           <p className="text-gray-600">Failed to load loyalty data</p>
         </main>
-        <Footer />
-      </div>
+              </div>
     );
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
-
+      
       <main className="flex-1 py-8">
         <div className="max-w-6xl mx-auto px-4">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Loyalty Rewards</h1>
@@ -276,7 +271,6 @@ export default function LoyaltyPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

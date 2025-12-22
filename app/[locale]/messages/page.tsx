@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 interface Conversation {
   _id: string;
@@ -120,8 +118,7 @@ export default function MessagesPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
-
+      
       <main className="flex-1 py-8">
         <div className="max-w-3xl mx-auto px-4">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">{tr.title}</h1>
@@ -221,7 +218,6 @@ export default function MessagesPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

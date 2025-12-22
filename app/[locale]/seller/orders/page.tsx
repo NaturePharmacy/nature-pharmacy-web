@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useCurrency } from '@/hooks/useCurrency';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -43,6 +44,7 @@ export default function SellerOrdersPage() {
   const params = useParams();
   const locale = params.locale as string;
   const t = useTranslations('sellerDashboard');
+  const { formatPrice } = useCurrency();
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -258,12 +260,12 @@ export default function SellerOrdersPage() {
                             {item.product?.name[locale as keyof typeof item.product.name] || 'Product'}
                           </p>
                           <p className="text-sm text-gray-500">
-                            {t('orders.quantity')}: {item.quantity} x ${item.price.toFixed(2)}
+                            {t('orders.quantity')}: {item.quantity} x {formatPrice(item.price)}
                           </p>
                         </div>
                         <div className="text-right">
                           <p className="font-medium text-gray-800">
-                            ${(item.quantity * item.price).toFixed(2)}
+                            {formatPrice(item.quantity * item.price)}
                           </p>
                         </div>
                       </div>

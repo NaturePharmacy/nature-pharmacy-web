@@ -4,6 +4,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
+import { useCurrency } from '@/hooks/useCurrency';
 
 interface Product {
   _id: string;
@@ -30,6 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const t = useTranslations('product');
   const locale = useLocale() as 'fr' | 'en' | 'es';
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
 
   const discount = product.compareAtPrice
     ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
@@ -122,16 +124,16 @@ export default function ProductCard({ product }: ProductCardProps) {
               </svg>
             ))}
           </div>
-          <span className="text-xs text-gray-500">({product.reviewCount || 0})</span>
+          <span className="text-xs text-gray-700 font-medium">({product.reviewCount || 0})</span>
         </div>
 
         {/* Price */}
         <div className="mt-auto">
           <div className="flex items-baseline gap-2 mb-2">
-            <span className="text-xl md:text-2xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
+            <span className="text-xl md:text-2xl font-bold text-gray-900">{formatPrice(product.price)}</span>
             {product.compareAtPrice && (
-              <span className="text-xs md:text-sm text-gray-400 line-through">
-                ${product.compareAtPrice.toFixed(2)}
+              <span className="text-xs md:text-sm text-gray-600 font-medium line-through">
+                {formatPrice(product.compareAtPrice)}
               </span>
             )}
           </div>

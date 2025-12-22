@@ -5,8 +5,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 interface OrderItem {
   productName: string;
@@ -127,8 +125,7 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-
+      
       <main className="flex-1 bg-gray-50 py-8">
         <div className="container mx-auto px-4">
           <div className="mb-8">
@@ -264,7 +261,6 @@ export default function OrdersPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

@@ -7,8 +7,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import { useCurrency } from '@/hooks/useCurrency';
 
 export default function CheckoutPage() {
   const { data: session, status } = useSession();
@@ -17,6 +16,7 @@ export default function CheckoutPage() {
   const t = useTranslations('checkout');
   const tCart = useTranslations('cart');
   const { items, getCartTotal, clearCart } = useCart();
+  const { formatPrice } = useCurrency();
 
   const [loading, setLoading] = useState(false);
   const [shippingCost, setShippingCost] = useState<number>(0);
@@ -164,8 +164,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-
+      
       <main className="flex-1 bg-gray-50 py-8">
         <div className="container mx-auto px-4 max-w-6xl">
           <h1 className="text-3xl font-bold mb-8">{t('title')}</h1>
@@ -373,7 +372,7 @@ export default function CheckoutPage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium truncate">{item.name[locale]}</p>
                           <p className="text-sm text-gray-600">
-                            {item.quantity} × ${item.price.toFixed(2)}
+                            {item.quantity} × {formatPrice(item.price)}
                           </p>
                         </div>
                       </div>
@@ -382,42 +381,42 @@ export default function CheckoutPage() {
 
                   {/* Totals */}
                   <div className="border-t pt-4 space-y-2">
-                    <div className="flex justify-between text-gray-700">
-                      <span>{tCart('subtotal')}</span>
-                      <span>{subtotal.toLocaleString()} CFA</span>
+                    <div className="flex justify-between text-gray-800">
+                      <span className="font-medium">{tCart('subtotal')}</span>
+                      <span className="font-semibold">{formatPrice(subtotal)}</span>
                     </div>
-                    <div className="flex justify-between text-gray-700">
-                      <span>{tCart('shipping')}</span>
+                    <div className="flex justify-between text-gray-800">
+                      <span className="font-medium">{tCart('shipping')}</span>
                       {loadingShipping ? (
-                        <span className="text-sm text-gray-500">Calculating...</span>
+                        <span className="text-sm text-gray-600">Calculating...</span>
                       ) : (
-                        <span>{shippingCost === 0 ? 'FREE' : `${shippingCost.toLocaleString()} CFA`}</span>
+                        <span className="font-semibold">{shippingCost === 0 ? 'FREE' : formatPrice(shippingCost)}</span>
                       )}
                     </div>
                     {shippingCost === 0 && shippingZone?.freeShippingThreshold && (
-                      <p className="text-xs text-green-600">
-                        ✓ Free shipping on orders over {shippingZone.freeShippingThreshold.toLocaleString()} CFA
+                      <p className="text-xs text-green-600 font-medium">
+                        ✓ Free shipping on orders over {formatPrice(shippingZone.freeShippingThreshold)}
                       </p>
                     )}
                     {shippingZone && (
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-600">
                         Est. delivery: {shippingZone.estimatedDeliveryDays.min}-{shippingZone.estimatedDeliveryDays.max} days
                       </p>
                     )}
-                    <div className="flex justify-between text-gray-700">
-                      <span>{tCart('tax')}</span>
-                      <span>{tax.toLocaleString()} CFA</span>
+                    <div className="flex justify-between text-gray-800">
+                      <span className="font-medium">{tCart('tax')}</span>
+                      <span className="font-semibold">{formatPrice(tax)}</span>
                     </div>
                     <div className="border-t pt-2 flex justify-between text-lg font-bold">
-                      <span>{tCart('total')}</span>
-                      <span className="text-green-600">{total.toLocaleString()} CFA</span>
+                      <span className="text-gray-900">{tCart('total')}</span>
+                      <span className="text-green-600">{formatPrice(total)}</span>
                     </div>
                   </div>
 
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                   >
                     {loading ? t('processing') : t('placeOrder')}
                   </button>
@@ -435,7 +434,6 @@ export default function CheckoutPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

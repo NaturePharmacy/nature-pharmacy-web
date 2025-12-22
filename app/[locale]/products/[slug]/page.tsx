@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useSession } from 'next-auth/react';
 import { useCart } from '@/contexts/CartContext';
+import { useCurrency } from '@/hooks/useCurrency';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProductReviews from '@/components/products/ProductReviews';
 import WishlistButton from '@/components/wishlist/WishlistButton';
 import ShareButtons from '@/components/social/ShareButtons';
+import MedicalInformation from '@/components/product/MedicalInformation';
 
 interface Product {
   _id: string;
@@ -64,6 +66,7 @@ export default function ProductDetailPage() {
   const t = useTranslations('productDetail');
   const tCommon = useTranslations('common');
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
   const { data: session } = useSession();
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -135,7 +138,7 @@ export default function ProductDetailPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sellerId: product.seller._id,
+          recipientId: product.seller._id,
           productId: product._id,
         }),
       });
@@ -314,11 +317,11 @@ export default function ProductDetailPage() {
               {/* Price */}
               <div className="mt-4 flex items-baseline gap-3">
                 <span className="text-3xl font-bold text-green-600">
-                  ${product.price.toFixed(2)}
+                  {formatPrice(product.price)}
                 </span>
                 {product.compareAtPrice && (
-                  <span className="text-xl text-gray-400 line-through">
-                    ${product.compareAtPrice.toFixed(2)}
+                  <span className="text-xl text-gray-500 line-through">
+                    {formatPrice(product.compareAtPrice)}
                   </span>
                 )}
               </div>
@@ -509,6 +512,11 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
+        {/* Medical Information Section */}
+        <div className="mt-12">
+          <MedicalInformation product={product} />
+        </div>
+
         {/* Reviews Section */}
         <ProductReviews productId={product._id} locale={locale} />
 
@@ -555,10 +563,10 @@ export default function ProductDetailPage() {
                       <span className="text-xs text-gray-500">{item.rating.toFixed(1)}</span>
                     </div>
                     <div className="mt-2 flex items-baseline gap-2">
-                      <span className="text-lg font-bold text-green-600">${item.price.toFixed(2)}</span>
+                      <span className="text-lg font-bold text-green-600">{formatPrice(item.price)}</span>
                       {item.compareAtPrice && (
-                        <span className="text-sm text-gray-400 line-through">
-                          ${item.compareAtPrice.toFixed(2)}
+                        <span className="text-sm text-gray-600 line-through">
+                          {formatPrice(item.compareAtPrice)}
                         </span>
                       )}
                     </div>

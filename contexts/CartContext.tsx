@@ -112,7 +112,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const getCartCount = () => {
-    return items.reduce((count, item) => count + item.quantity, 0);
+    return items.length; // Nombre de produits différents, pas le total d'articles
   };
 
   return (

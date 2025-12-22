@@ -2,8 +2,6 @@
 
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 export default function SellerGuidePage() {
   const locale = useLocale() as 'fr' | 'en' | 'es';
@@ -426,8 +424,7 @@ export default function SellerGuidePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
-
+      
       <main className="flex-1">
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-16">
@@ -594,7 +591,6 @@ export default function SellerGuidePage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

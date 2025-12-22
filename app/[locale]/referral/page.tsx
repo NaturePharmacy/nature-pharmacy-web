@@ -5,8 +5,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import ShareButtons from '@/components/social/ShareButtons';
 
 interface ReferredUser {
@@ -102,8 +100,7 @@ export default function ReferralPage() {
   if (!referralData) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
+                <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Unable to Load Referral Data</h2>
             <Link href={`/${locale}`} className="text-green-600 hover:text-green-700">
@@ -111,8 +108,7 @@ export default function ReferralPage() {
             </Link>
           </div>
         </main>
-        <Footer />
-      </div>
+              </div>
     );
   }
 
@@ -120,8 +116,7 @@ export default function ReferralPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
-
+      
       <main className="flex-1 py-8">
         <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
@@ -323,7 +318,6 @@ export default function ReferralPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

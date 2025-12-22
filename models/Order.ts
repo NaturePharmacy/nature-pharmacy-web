@@ -6,7 +6,9 @@ export interface IOrderItem {
   productImage: string;
   seller: mongoose.Types.ObjectId;
   quantity: number;
-  price: number;
+  price: number; // Prix final payé par le client (avec commission)
+  basePrice: number; // Prix de base (ce que le vendeur reçoit)
+  commission: number; // Commission par unité
 }
 
 export interface IOrder extends Document {
@@ -89,6 +91,17 @@ const OrderSchema = new Schema<IOrder>(
           type: Number,
           required: true,
           min: [0, 'Price cannot be negative'],
+        },
+        basePrice: {
+          type: Number,
+          required: true,
+          min: [0, 'Base price cannot be negative'],
+        },
+        commission: {
+          type: Number,
+          required: true,
+          default: 0,
+          min: [0, 'Commission cannot be negative'],
         },
       },
     ],

@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
+import { useCurrency } from '@/hooks/useCurrency';
 import Link from 'next/link';
 import Image from 'next/image';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 interface Product {
   _id: string;
@@ -32,6 +31,7 @@ interface Product {
 
 export default function DealsPage() {
   const locale = useLocale() as 'fr' | 'en' | 'es';
+  const { formatPrice } = useCurrency();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -110,8 +110,7 @@ export default function DealsPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
-
+      
       <main className="flex-1 py-8">
         <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
@@ -191,11 +190,11 @@ export default function DealsPage() {
                       {/* Prices */}
                       <div className="flex items-baseline gap-2 mb-3">
                         <span className="text-xl font-bold text-green-600">
-                          {product.price.toFixed(2)} FCFA
+                          {formatPrice(product.price)}
                         </span>
                         {product.compareAtPrice && (
-                          <span className="text-sm text-gray-400 line-through">
-                            {product.compareAtPrice.toFixed(2)} FCFA
+                          <span className="text-sm text-gray-500 line-through">
+                            {formatPrice(product.compareAtPrice)}
                           </span>
                         )}
                       </div>
@@ -203,7 +202,7 @@ export default function DealsPage() {
                       {/* Savings */}
                       {discount > 0 && (
                         <div className="bg-red-50 text-red-700 text-xs font-semibold px-2 py-1 rounded mb-3">
-                          {t.discount}: {((product.compareAtPrice || 0) - product.price).toFixed(2)} FCFA
+                          {t.discount}: {formatPrice((product.compareAtPrice || 0) - product.price)}
                         </div>
                       )}
 
@@ -234,7 +233,6 @@ export default function DealsPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

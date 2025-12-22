@@ -1,8 +1,6 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 export default function TermsPage() {
   const locale = useLocale() as 'fr' | 'en' | 'es';
@@ -395,8 +393,7 @@ export default function TermsPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
-
+      
       <main className="flex-1 py-12">
         <div className="max-w-4xl mx-auto px-4">
           {/* Header */}
@@ -425,7 +422,6 @@ export default function TermsPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

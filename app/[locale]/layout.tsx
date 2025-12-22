@@ -4,6 +4,9 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import SessionProvider from '@/components/providers/SessionProvider';
 import { CartProvider } from '@/contexts/CartContext';
+import FloatingCart from '@/components/cart/FloatingCart';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 import "../globals.css";
 
 const geistSans = Geist({
@@ -39,7 +42,12 @@ export default async function RootLayout({
         <SessionProvider>
           <NextIntlClientProvider messages={messages}>
             <CartProvider>
-              {children}
+              <Header />
+              <main>
+                {children}
+              </main>
+              <Footer />
+              <FloatingCart />
             </CartProvider>
           </NextIntlClientProvider>
         </SessionProvider>

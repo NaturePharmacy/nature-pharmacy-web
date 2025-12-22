@@ -2,8 +2,6 @@
 
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 export default function ReturnsPage() {
   const locale = useLocale() as 'fr' | 'en' | 'es';
@@ -408,8 +406,7 @@ export default function ReturnsPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
-
+      
       <main className="flex-1 py-12">
         <div className="max-w-6xl mx-auto px-4">
           {/* Header */}
@@ -589,7 +586,6 @@ export default function ReturnsPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import mongoose from 'mongoose';
 import connectDB from '../lib/mongodb';
 import Product from '../models/Product';
@@ -62,7 +63,8 @@ const sampleProducts = [
     isOrganic: true,
     isFeatured: true,
     stock: 50,
-    weight: '250g',
+    weight: 250,
+    unit: 'g',
     ingredients: {
       fr: 'Feuilles de moringa séchées et broyées',
       en: 'Dried and ground moringa leaves',
@@ -88,7 +90,8 @@ const sampleProducts = [
     isOrganic: true,
     isFeatured: true,
     stock: 30,
-    weight: '100ml',
+    weight: 100,
+    unit: 'ml',
     usage: {
       fr: 'Appliquer quelques gouttes sur la peau ou les cheveux',
       en: 'Apply a few drops to skin or hair',
@@ -109,7 +112,8 @@ const sampleProducts = [
     categorySlug: 'cosmetiques-naturels',
     isOrganic: true,
     stock: 100,
-    weight: '125g',
+    weight: 125,
+    unit: 'g',
     ingredients: {
       fr: 'Beurre de karité, huile de coco, huile d\'olive',
       en: 'Shea butter, coconut oil, olive oil',
@@ -129,7 +133,8 @@ const sampleProducts = [
     categorySlug: 'aliments-bio',
     isOrganic: true,
     stock: 45,
-    weight: '500g',
+    weight: 500,
+    unit: 'g',
     usage: {
       fr: '1 cuillère à soupe par jour, seul ou dans du thé',
       en: '1 tablespoon per day, alone or in tea',
@@ -149,7 +154,8 @@ const sampleProducts = [
     categorySlug: 'herbes-medicinales',
     isOrganic: true,
     stock: 75,
-    weight: '100g',
+    weight: 100,
+    unit: 'g',
     usage: {
       fr: 'Infuser 1 sachet dans de l\'eau chaude pendant 5 minutes',
       en: 'Steep 1 bag in hot water for 5 minutes',

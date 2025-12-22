@@ -4,14 +4,14 @@ import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import { useCurrency } from '@/hooks/useCurrency';
 import { useState, useEffect } from 'react';
 
 export default function CartPage() {
   const t = useTranslations('cart');
   const locale = useLocale() as 'fr' | 'en' | 'es';
   const { items, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const { formatPrice } = useCurrency();
 
   const [shippingCost, setShippingCost] = useState<number>(0);
   const [shippingZone, setShippingZone] = useState<any>(null);
@@ -109,11 +109,10 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-
+      
       <main className="flex-1 bg-gray-50 py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold mb-8">{t('title')}</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">{t('title')}</h1>
 
           {items.length === 0 ? (
             <div className="bg-white rounded-lg shadow-md p-12 text-center">
@@ -170,11 +169,11 @@ export default function CartPage() {
                     <div className="flex-1">
                       <Link
                         href={`/${locale}/products/${item.slug}`}
-                        className="font-semibold text-lg hover:text-green-600 transition"
+                        className="font-semibold text-lg text-gray-900 hover:text-green-600 transition"
                       >
                         {item.name[locale]}
                       </Link>
-                      <p className="text-gray-600 mt-1">${item.price.toFixed(2)} each</p>
+                      <p className="text-gray-700 font-medium mt-1">{formatPrice(item.price)} each</p>
 
                       {/* Quantity controls */}
                       <div className="flex items-center gap-4 mt-4">
@@ -215,7 +214,7 @@ export default function CartPage() {
                     {/* Item total */}
                     <div className="text-right">
                       <p className="text-xl font-bold text-green-600">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {formatPrice(item.price * item.quantity)}
                       </p>
                     </div>
                   </div>
@@ -225,17 +224,17 @@ export default function CartPage() {
               {/* Order summary */}
               <div className="lg:col-span-1">
                 <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
-                  <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+                  <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
 
                   {/* Country Selection */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-800 mb-2">
                       Shipping Country
                     </label>
                     <select
                       value={selectedCountry}
                       onChange={(e) => setSelectedCountry(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 font-medium"
                     >
                       <option value="SN">Sénégal</option>
                       <option value="FR">France</option>
@@ -248,7 +247,7 @@ export default function CartPage() {
 
                   {/* Coupon Section */}
                   <div className="mb-4 pb-4 border-b">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-800 mb-2">
                       Have a coupon code?
                     </label>
                     {!appliedCoupon ? (
@@ -259,7 +258,7 @@ export default function CartPage() {
                           onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                           onKeyPress={(e) => e.key === 'Enter' && applyCoupon()}
                           placeholder="Enter code"
-                          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 uppercase"
+                          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 uppercase text-gray-900 placeholder:text-gray-500"
                         />
                         <button
                           onClick={applyCoupon}
@@ -291,46 +290,46 @@ export default function CartPage() {
                   </div>
 
                   <div className="space-y-3 mb-6">
-                    <div className="flex justify-between text-gray-700">
-                      <span>{t('subtotal')}</span>
-                      <span>{subtotal.toLocaleString()} CFA</span>
+                    <div className="flex justify-between text-gray-800">
+                      <span className="font-medium">{t('subtotal')}</span>
+                      <span className="font-semibold">{formatPrice(subtotal)}</span>
                     </div>
-                    <div className="flex justify-between text-gray-700">
-                      <span>{t('shipping')}</span>
+                    <div className="flex justify-between text-gray-800">
+                      <span className="font-medium">{t('shipping')}</span>
                       {loadingShipping ? (
-                        <span className="text-sm text-gray-500">Calculating...</span>
+                        <span className="text-sm text-gray-600">Calculating...</span>
                       ) : (
-                        <span>{shippingCost === 0 ? 'FREE' : `${shippingCost.toLocaleString()} CFA`}</span>
+                        <span className="font-semibold">{shippingCost === 0 ? 'FREE' : formatPrice(shippingCost)}</span>
                       )}
                     </div>
                     {shippingCost === 0 && shippingZone?.freeShippingThreshold && (
                       <p className="text-sm text-green-600">
-                        ✓ Free shipping on orders over {shippingZone.freeShippingThreshold.toLocaleString()} CFA
+                        ✓ Free shipping on orders over {formatPrice(shippingZone.freeShippingThreshold)}
                       </p>
                     )}
                     {shippingZone?.amountUntilFreeShipping > 0 && (
                       <p className="text-sm text-orange-600">
-                        Add {shippingZone.amountUntilFreeShipping.toLocaleString()} CFA more for free shipping
+                        Add {formatPrice(shippingZone.amountUntilFreeShipping)} more for free shipping
                       </p>
                     )}
                     {shippingZone && (
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-600">
                         Estimated delivery: {shippingZone.estimatedDeliveryDays.min}-{shippingZone.estimatedDeliveryDays.max} days
                       </p>
                     )}
-                    <div className="flex justify-between text-gray-700">
-                      <span>{t('tax')} (10%)</span>
-                      <span>{tax.toLocaleString()} CFA</span>
+                    <div className="flex justify-between text-gray-800">
+                      <span className="font-medium">{t('tax')} (10%)</span>
+                      <span className="font-semibold">{formatPrice(tax)}</span>
                     </div>
                     {couponDiscount > 0 && (
-                      <div className="flex justify-between text-green-600 font-medium">
+                      <div className="flex justify-between text-green-600 font-semibold">
                         <span>Discount</span>
-                        <span>-{couponDiscount.toLocaleString()} CFA</span>
+                        <span>-{formatPrice(couponDiscount)}</span>
                       </div>
                     )}
                     <div className="border-t pt-3 flex justify-between text-lg font-bold">
-                      <span>{t('total')}</span>
-                      <span className="text-green-600">{total.toLocaleString()} CFA</span>
+                      <span className="text-gray-900">{t('total')}</span>
+                      <span className="text-green-600">{formatPrice(total)}</span>
                     </div>
                   </div>
 
@@ -354,7 +353,6 @@ export default function CartPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

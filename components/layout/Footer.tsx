@@ -55,7 +55,7 @@ export default function Footer() {
               <h3 className="text-gray-900 font-bold text-sm mb-4">{t('forSellers')}</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href={`/${locale}/register?role=seller`} className="text-gray-600 hover:text-green-600 transition-colors">
+                  <Link href={`/${locale}/become-seller`} className="text-gray-600 hover:text-green-600 transition-colors">
                     {t('becomeSeller')}
                   </Link>
                 </li>

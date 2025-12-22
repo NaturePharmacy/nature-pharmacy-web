@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import { useLocale } from 'next-intl';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 export default function ContactPage() {
   const locale = useLocale() as 'fr' | 'en' | 'es';
@@ -99,8 +97,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
-
+      
       <main className="flex-1 py-12">
         <div className="max-w-6xl mx-auto px-4">
           {/* Header */}
@@ -258,7 +255,6 @@ export default function ContactPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

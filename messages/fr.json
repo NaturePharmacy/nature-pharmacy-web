@@ -1,6 +1,6 @@
 {
   "header": {
-    "search": "Rechercher des produits naturels...",
+    "search": "Rechercher des remèdes naturels...",
     "cart": "Panier",
     "login": "Se connecter",
     "register": "S'inscrire",
@@ -19,30 +19,34 @@
     "products": "Produits",
     "categories": {
       "title": "Catégories",
-      "herbs": "Herbes et Suppléments",
-      "oils": "Huiles Essentielles",
-      "cosmetics": "Cosmétiques Naturels",
-      "foods": "Aliments Biologiques"
+      "medicinal-plants": "Plantes Médicinales",
+      "essential-oils": "Huiles Essentielles",
+      "traditional-remedies": "Remèdes Traditionnels",
+      "herbal-teas": "Tisanes Thérapeutiques",
+      "supplements": "Compléments Naturels",
+      "natural-cosmetics": "Cosmétiques Naturels"
     },
     "allCategories": "Toutes les catégories",
     "deals": "Ventes Flash",
     "newArrivals": "Nouveautés",
     "bestSellers": "Meilleures ventes",
-    "organic": "Produits Bio",
+    "organic": "Certifié Bio",
     "sellers": "Vendeurs"
   },
   "home": {
     "hero": {
-      "title": "Votre Bien-être au Naturel",
-      "subtitle": "Découvrez notre sélection de produits naturels et biologiques certifiés",
-      "shopNow": "Découvrir"
+      "title": "Médecine Naturelle & Traditionnelle",
+      "subtitle": "Découvrez des remèdes naturels et traditionnels pour votre santé et bien-être",
+      "shopNow": "Découvrir nos remèdes"
     },
     "categories": {
       "title": "Acheter par catégorie",
-      "herbs": "Herbes et Suppléments",
-      "oils": "Huiles Essentielles",
-      "cosmetics": "Cosmétiques Naturels",
-      "foods": "Aliments Biologiques"
+      "medicinal-plants": "Plantes Médicinales",
+      "essential-oils": "Huiles Essentielles",
+      "traditional-remedies": "Remèdes Traditionnels",
+      "herbal-teas": "Tisanes Thérapeutiques",
+      "supplements": "Compléments Naturels",
+      "natural-cosmetics": "Cosmétiques Naturels"
     },
     "featured": {
       "title": "Produits en vedette",
@@ -65,12 +69,12 @@
     "seeAll": "Voir tout",
     "whyUs": {
       "title": "Pourquoi choisir Nature Pharmacie ?",
-      "trustedTitle": "Vendeurs vérifiés",
-      "trustedDesc": "Tous les vendeurs sont vérifiés et notés par nos clients",
-      "deliveryTitle": "Livraison express",
-      "deliveryDesc": "Expédition rapide et suivi en temps réel",
-      "qualityTitle": "Qualité premium",
-      "qualityDesc": "Produits 100% naturels et certifiés"
+      "trustedTitle": "Praticiens vérifiés",
+      "trustedDesc": "Tous nos vendeurs sont vérifiés et proposent des remèdes authentiques",
+      "deliveryTitle": "Livraison sécurisée",
+      "deliveryDesc": "Expédition rapide et suivi en temps réel de vos remèdes",
+      "qualityTitle": "Remèdes authentiques",
+      "qualityDesc": "Médecine traditionnelle et plantes médicinales certifiées"
     }
   },
   "products": {
@@ -179,7 +183,7 @@
     "becomeSeller": "Devenir vendeur",
     "sellerDashboard": "Tableau de bord vendeur",
     "sellerGuide": "Guide du vendeur",
-    "description": "Votre marketplace de confiance en ligne pour les produits naturels et biologiques provenant de vendeurs du monde entier."
+    "description": "Votre marketplace de confiance en ligne pour la médecine traditionnelle et les remèdes naturels provenant de praticiens du monde entier."
   },
   "productDetail": {
     "notFound": "Produit non trouvé",

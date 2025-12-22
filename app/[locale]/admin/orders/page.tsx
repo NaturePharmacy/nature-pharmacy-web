@@ -5,8 +5,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 interface Order {
   _id: string;
@@ -151,8 +149,7 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <Header />
-
+      
       <main className="flex-1 py-8">
         <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
@@ -284,7 +281,6 @@ export default function AdminOrdersPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

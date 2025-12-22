@@ -3,8 +3,9 @@
  * Utilisation: npx tsx scripts/createTestUsers.ts
  */
 
-import { connectDB } from '@/lib/db';
-import User from '@/models/User';
+import 'dotenv/config';
+import connectDB from '../lib/mongodb';
+import User from '../models/User';
 import bcrypt from 'bcryptjs';
 
 const testUsers = [

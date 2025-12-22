@@ -4,9 +4,8 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
+import { useCurrency } from '@/hooks/useCurrency';
 import Link from 'next/link';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 interface Order {
   _id: string;
@@ -46,6 +45,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const locale = useLocale();
   const t = useTranslations('orders');
   const tCheckout = useTranslations('checkout');
+  const { formatPrice } = useCurrency();
 
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -158,8 +158,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   if (!order) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
+                <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Order not found</h1>
             <Link href={`/${locale}/orders`} className="text-green-600 hover:underline">
@@ -167,15 +166,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             </Link>
           </div>
         </main>
-        <Footer />
-      </div>
+              </div>
     );
   }
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-
+      
       <main className="flex-1 bg-gray-50 py-8">
         <div className="container mx-auto px-4 max-w-4xl">
           {/* Back button */}
@@ -334,12 +331,12 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   <div className="flex-1">
                     <h3 className="font-medium mb-1">{item.productName}</h3>
                     <p className="text-sm text-gray-600">
-                      Quantity: {item.quantity} × ${item.price.toFixed(2)}
+                      Quantity: {item.quantity} × {formatPrice(item.price)}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">
-                      ${(item.quantity * item.price).toFixed(2)}
+                      {formatPrice(item.quantity * item.price)}
                     </p>
                   </div>
                 </div>
@@ -353,19 +350,19 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             <div className="space-y-2">
               <div className="flex justify-between text-gray-700">
                 <span>Subtotal</span>
-                <span>${order.itemsPrice.toFixed(2)}</span>
+                <span>{formatPrice(order.itemsPrice)}</span>
               </div>
               <div className="flex justify-between text-gray-700">
                 <span>Shipping</span>
-                <span>${order.shippingPrice.toFixed(2)}</span>
+                <span>{formatPrice(order.shippingPrice)}</span>
               </div>
               <div className="flex justify-between text-gray-700">
                 <span>Tax</span>
-                <span>${order.taxPrice.toFixed(2)}</span>
+                <span>{formatPrice(order.taxPrice)}</span>
               </div>
               <div className="border-t pt-2 mt-2 flex justify-between text-lg font-bold">
                 <span>{t('total')}</span>
-                <span className="text-green-600">${order.totalPrice.toFixed(2)}</span>
+                <span className="text-green-600">{formatPrice(order.totalPrice)}</span>
               </div>
             </div>
 
@@ -379,7 +376,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

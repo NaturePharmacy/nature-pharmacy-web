@@ -7,13 +7,14 @@ import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useCart } from '@/contexts/CartContext';
 import LanguageSwitcher from './LanguageSwitcher';
+import CountrySwitcher from '@/components/common/CountrySwitcher';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import SearchBar from '@/components/search/SearchBar';
 
 export default function Header() {
   const t = useTranslations('header');
   const tNav = useTranslations('nav');
-  const locale = useLocale();
+  const locale = useLocale() as 'fr' | 'en' | 'es';
   const { data: session } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
@@ -25,10 +26,12 @@ export default function Header() {
   };
 
   const categories = [
-    { key: 'herbs', icon: '🌿' },
-    { key: 'oils', icon: '💧' },
-    { key: 'cosmetics', icon: '✨' },
-    { key: 'foods', icon: '🥗' },
+    { key: 'medicinal-plants', icon: '🌿' },
+    { key: 'essential-oils', icon: '💧' },
+    { key: 'traditional-remedies', icon: '🏺' },
+    { key: 'herbal-teas', icon: '🍵' },
+    { key: 'supplements', icon: '💊' },
+    { key: 'natural-cosmetics', icon: '✨' },
   ];
 
   return (
@@ -49,17 +52,8 @@ export default function Header() {
               />
             </Link>
 
-            {/* Delivery Location */}
-            <div className="hidden lg:flex items-center gap-1 text-gray-700 hover:text-green-600 cursor-pointer transition-colors px-2">
-              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <div className="text-xs">
-                <p className="text-gray-500">{t('deliverTo')}</p>
-                <p className="font-semibold text-gray-900">Sénégal</p>
-              </div>
-            </div>
+            {/* Country Switcher (includes delivery location and currency) */}
+            <CountrySwitcher />
 
             {/* Search Bar */}
             <SearchBar placeholder={t('search')} />
@@ -287,16 +281,16 @@ export default function Header() {
       <nav className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center h-10 gap-1 text-sm overflow-x-auto scrollbar-hide">
-            {/* All Categories Button */}
-            <button
-              onClick={() => setCategoryOpen(!categoryOpen)}
-              className="flex items-center gap-2 px-3 py-1.5 text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all font-medium whitespace-nowrap"
+            {/* All Categories Link */}
+            <Link
+              href={`/${locale}/products`}
+              className="flex items-center gap-2 px-3 py-1.5 text-gray-800 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all font-semibold whitespace-nowrap"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
               {tNav('allCategories')}
-            </button>
+            </Link>
 
             <Link href={`/${locale}/deals`} className="px-3 py-1.5 text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all whitespace-nowrap">
               {tNav('deals')}
@@ -307,7 +301,10 @@ export default function Header() {
             <Link href={`/${locale}/products?new=true`} className="px-3 py-1.5 text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all whitespace-nowrap">
               {tNav('newArrivals')}
             </Link>
-            <Link href={`/${locale}/products?organic=true`} className="px-3 py-1.5 text-green-600 font-medium hover:bg-green-50 rounded-lg transition-all whitespace-nowrap">
+            <Link href={`/${locale}/products?certifications=traditional`} className="px-3 py-1.5 text-green-600 font-medium hover:bg-green-50 rounded-lg transition-all whitespace-nowrap">
+              🏺 {locale === 'fr' ? 'Remèdes Traditionnels' : locale === 'es' ? 'Remedios Tradicionales' : 'Traditional Remedies'}
+            </Link>
+            <Link href={`/${locale}/products?certifications=organic`} className="px-3 py-1.5 text-green-600 font-medium hover:bg-green-50 rounded-lg transition-all whitespace-nowrap">
               🌱 {tNav('organic')}
             </Link>
 
@@ -326,7 +323,7 @@ export default function Header() {
                 {t('sellerDashboard')}
               </Link>
             ) : session?.user?.role !== 'admin' && (
-              <Link href={`/${locale}/register?role=seller`} className="px-3 py-1.5 text-green-600 hover:bg-green-50 rounded-lg transition-all font-medium whitespace-nowrap">
+              <Link href={`/${locale}/become-seller`} className="px-3 py-1.5 text-green-600 hover:bg-green-50 rounded-lg transition-all font-medium whitespace-nowrap">
                 {t('becomeASeller')}
               </Link>
             )}

@@ -3,10 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useLocale } from 'next-intl';
+import { useCurrency } from '@/hooks/useCurrency';
 import Link from 'next/link';
 import Image from 'next/image';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import ShareButtons from '@/components/social/ShareButtons';
 
 interface SellerData {
@@ -46,6 +45,7 @@ interface Product {
 export default function SellerProfilePage() {
   const params = useParams();
   const locale = useLocale() as 'fr' | 'en' | 'es';
+  const { formatPrice } = useCurrency();
   const sellerId = params.id as string;
 
   const [sellerData, setSellerData] = useState<SellerData | null>(null);
@@ -117,22 +117,19 @@ export default function SellerProfilePage() {
   if (!sellerData) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
+                <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Seller Not Found</h2>
             <p className="text-gray-600">The seller you're looking for doesn't exist.</p>
           </div>
         </main>
-        <Footer />
-      </div>
+              </div>
     );
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
-
+      
       <main className="flex-1">
         {/* Banner */}
         <div className="relative h-64 bg-gradient-to-r from-green-600 to-green-700">
@@ -315,11 +312,11 @@ export default function SellerProfilePage() {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-lg font-bold text-green-600">
-                            {product.price.toLocaleString()} CFA
+                            {formatPrice(product.price)}
                           </span>
                           {product.compareAtPrice && product.compareAtPrice > product.price && (
-                            <span className="text-sm text-gray-500 line-through">
-                              {product.compareAtPrice.toLocaleString()} CFA
+                            <span className="text-sm text-gray-600 line-through">
+                              {formatPrice(product.compareAtPrice)}
                             </span>
                           )}
                         </div>
@@ -360,7 +357,6 @@ export default function SellerProfilePage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+          </div>
   );
 }

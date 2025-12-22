@@ -1,8 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import Image from 'next/image';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
 
@@ -37,24 +35,23 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const { featured: featuredProducts, newest: newProducts } = await getProducts();
 
   const categories = [
-    { key: 'herbs', slug: 'herbs', icon: '🌿', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=300&fit=crop' },
-    { key: 'oils', slug: 'oils', icon: '💧', image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=300&h=300&fit=crop' },
-    { key: 'cosmetics', slug: 'cosmetics', icon: '✨', image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=300&fit=crop' },
-    { key: 'foods', slug: 'foods', icon: '🥗', image: 'https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=300&h=300&fit=crop' },
+    { key: 'medicinal-plants', slug: 'medicinal-plants', icon: '🌿', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=300&fit=crop' },
+    { key: 'essential-oils', slug: 'essential-oils', icon: '💧', image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=300&h=300&fit=crop' },
+    { key: 'natural-cosmetics', slug: 'natural-cosmetics', icon: '✨', image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=300&fit=crop' },
+    { key: 'herbal-teas', slug: 'herbal-teas', icon: '🍵', image: 'https://images.unsplash.com/photo-1545045456-50f87ead1d06?w=300&h=300&fit=crop' },
+    { key: 'traditional-remedies', slug: 'traditional-remedies', icon: '🏺', image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=300&h=300&fit=crop' },
+    { key: 'supplements', slug: 'supplements', icon: '💊', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&h=300&fit=crop' },
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Header />
-
-      <main className="flex-1">
-        {/* Hero Banner - Clean white design with green accent */}
-        <div className="bg-gradient-to-r from-green-50 to-white">
+    <>
+      {/* Hero Banner - Clean white design with green accent */}
+      <div className="bg-gradient-to-r from-green-50 to-white">
           <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
                 <span className="inline-block bg-green-100 text-green-700 text-sm font-medium px-3 py-1 rounded-full mb-4">
-                  🌿 {locale === 'fr' ? 'Produits 100% Naturels' : locale === 'es' ? 'Productos 100% Naturales' : '100% Natural Products'}
+                  🏥 {locale === 'fr' ? 'Médecine Naturelle & Traditionnelle' : locale === 'es' ? 'Medicina Natural y Tradicional' : 'Natural & Traditional Medicine'}
                 </span>
                 <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
                   {t('hero.title')}
@@ -73,10 +70,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                     </svg>
                   </Link>
                   <Link
-                    href={`/${locale}/products?organic=true`}
+                    href={`/${locale}/products?certifications=organic`}
                     className="inline-flex items-center gap-2 bg-white border-2 border-green-600 text-green-600 hover:bg-green-50 px-6 py-3 rounded-lg font-semibold transition-all"
                   >
-                    🌱 {locale === 'fr' ? 'Voir Bio' : locale === 'es' ? 'Ver Orgánico' : 'View Organic'}
+                    🌱 {locale === 'fr' ? 'Certifié Bio' : locale === 'es' ? 'Certificado Orgánico' : 'Certified Organic'}
                   </Link>
                 </div>
               </div>
@@ -85,6 +82,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&h=600&fit=crop"
                   alt="Nature Pharmacy"
                   fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                   priority
                 />
@@ -103,6 +101,116 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Find by Health Need - Therapeutic Categories */}
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+              {locale === 'fr' ? 'Trouvez le remède adapté à vos besoins' : locale === 'es' ? 'Encuentre el remedio adecuado para sus necesidades' : 'Find the right remedy for your needs'}
+            </h2>
+            <p className="text-gray-700 font-medium">
+              {locale === 'fr' ? 'Recherchez par système de santé ou indication thérapeutique' : locale === 'es' ? 'Busque por sistema de salud o indicación terapéutica' : 'Search by health system or therapeutic indication'}
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <Link
+              href={`/${locale}/products?therapeuticCategory=digestive`}
+              className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl p-6 hover:shadow-lg hover:border-amber-300 transition-all group"
+            >
+              <div className="text-4xl mb-3">🍽️</div>
+              <h3 className="font-bold text-gray-900 group-hover:text-amber-700 transition-colors">
+                {locale === 'fr' ? 'Système Digestif' : locale === 'es' ? 'Sistema Digestivo' : 'Digestive System'}
+              </h3>
+              <p className="text-xs text-gray-700 font-medium mt-1">
+                {locale === 'fr' ? 'Digestion, ballonnements' : locale === 'es' ? 'Digestión, hinchazón' : 'Digestion, bloating'}
+              </p>
+            </Link>
+            <Link
+              href={`/${locale}/products?therapeuticCategory=respiratory`}
+              className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-xl p-6 hover:shadow-lg hover:border-blue-300 transition-all group"
+            >
+              <div className="text-4xl mb-3">🫁</div>
+              <h3 className="font-bold text-gray-900 group-hover:text-blue-700 transition-colors">
+                {locale === 'fr' ? 'Système Respiratoire' : locale === 'es' ? 'Sistema Respiratorio' : 'Respiratory System'}
+              </h3>
+              <p className="text-xs text-gray-700 font-medium mt-1">
+                {locale === 'fr' ? 'Toux, rhume, bronches' : locale === 'es' ? 'Tos, resfriado, bronquios' : 'Cough, cold, bronchi'}
+              </p>
+            </Link>
+            <Link
+              href={`/${locale}/products?therapeuticCategory=immune`}
+              className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-6 hover:shadow-lg hover:border-green-300 transition-all group"
+            >
+              <div className="text-4xl mb-3">🛡️</div>
+              <h3 className="font-bold text-gray-900 group-hover:text-green-700 transition-colors">
+                {locale === 'fr' ? 'Système Immunitaire' : locale === 'es' ? 'Sistema Inmunitario' : 'Immune System'}
+              </h3>
+              <p className="text-xs text-gray-700 font-medium mt-1">
+                {locale === 'fr' ? 'Défenses naturelles' : locale === 'es' ? 'Defensas naturales' : 'Natural defenses'}
+              </p>
+            </Link>
+            <Link
+              href={`/${locale}/products?therapeuticCategory=nervous`}
+              className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl p-6 hover:shadow-lg hover:border-purple-300 transition-all group"
+            >
+              <div className="text-4xl mb-3">🧠</div>
+              <h3 className="font-bold text-gray-900 group-hover:text-purple-700 transition-colors">
+                {locale === 'fr' ? 'Système Nerveux' : locale === 'es' ? 'Sistema Nervioso' : 'Nervous System'}
+              </h3>
+              <p className="text-xs text-gray-700 font-medium mt-1">
+                {locale === 'fr' ? 'Stress, sommeil, anxiété' : locale === 'es' ? 'Estrés, sueño, ansiedad' : 'Stress, sleep, anxiety'}
+              </p>
+            </Link>
+            <Link
+              href={`/${locale}/products?therapeuticCategory=cardiovascular`}
+              className="bg-gradient-to-br from-red-50 to-pink-50 border-2 border-red-200 rounded-xl p-6 hover:shadow-lg hover:border-red-300 transition-all group"
+            >
+              <div className="text-4xl mb-3">❤️</div>
+              <h3 className="font-bold text-gray-900 group-hover:text-red-700 transition-colors">
+                {locale === 'fr' ? 'Système Cardiovasculaire' : locale === 'es' ? 'Sistema Cardiovascular' : 'Cardiovascular System'}
+              </h3>
+              <p className="text-xs text-gray-700 font-medium mt-1">
+                {locale === 'fr' ? 'Circulation, cœur' : locale === 'es' ? 'Circulación, corazón' : 'Circulation, heart'}
+              </p>
+            </Link>
+            <Link
+              href={`/${locale}/products?therapeuticCategory=skin`}
+              className="bg-gradient-to-br from-pink-50 to-rose-50 border-2 border-pink-200 rounded-xl p-6 hover:shadow-lg hover:border-pink-300 transition-all group"
+            >
+              <div className="text-4xl mb-3">🌸</div>
+              <h3 className="font-bold text-gray-900 group-hover:text-pink-700 transition-colors">
+                {locale === 'fr' ? 'Peau & Beauté' : locale === 'es' ? 'Piel y Belleza' : 'Skin & Beauty'}
+              </h3>
+              <p className="text-xs text-gray-700 font-medium mt-1">
+                {locale === 'fr' ? 'Peau, cheveux, ongles' : locale === 'es' ? 'Piel, cabello, uñas' : 'Skin, hair, nails'}
+              </p>
+            </Link>
+            <Link
+              href={`/${locale}/products?therapeuticCategory=musculoskeletal`}
+              className="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 rounded-xl p-6 hover:shadow-lg hover:border-orange-300 transition-all group"
+            >
+              <div className="text-4xl mb-3">🦴</div>
+              <h3 className="font-bold text-gray-900 group-hover:text-orange-700 transition-colors">
+                {locale === 'fr' ? 'Muscles & Os' : locale === 'es' ? 'Músculos y Huesos' : 'Muscles & Bones'}
+              </h3>
+              <p className="text-xs text-gray-700 font-medium mt-1">
+                {locale === 'fr' ? 'Douleurs, articulations' : locale === 'es' ? 'Dolores, articulaciones' : 'Pain, joints'}
+              </p>
+            </Link>
+            <Link
+              href={`/${locale}/products?therapeuticCategory=general`}
+              className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-xl p-6 hover:shadow-lg hover:border-indigo-300 transition-all group"
+            >
+              <div className="text-4xl mb-3">⚕️</div>
+              <h3 className="font-bold text-gray-900 group-hover:text-indigo-700 transition-colors">
+                {locale === 'fr' ? 'Bien-être Général' : locale === 'es' ? 'Bienestar General' : 'General Wellness'}
+              </h3>
+              <p className="text-xs text-gray-700 font-medium mt-1">
+                {locale === 'fr' ? 'Vitalité, énergie' : locale === 'es' ? 'Vitalidad, energía' : 'Vitality, energy'}
+              </p>
+            </Link>
           </div>
         </div>
 
@@ -210,31 +318,39 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <div className="relative h-64 rounded-2xl overflow-hidden group">
               <Image
                 src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&h=400&fit=crop"
-                alt="Organic"
+                alt="Traditional Medicine"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-green-900/80 to-transparent"></div>
               <div className="absolute inset-0 p-8 flex flex-col justify-center">
-                <h3 className="text-2xl font-bold text-white mb-2">{t('promo.organic')}</h3>
-                <p className="text-green-100 mb-4">{t('promo.organicDesc')}</p>
-                <Link href={`/${locale}/products?organic=true`} className="inline-flex items-center text-white font-semibold hover:underline">
+                <h3 className="text-2xl font-bold text-white mb-2">
+                  {locale === 'fr' ? 'Remèdes Traditionnels' : locale === 'es' ? 'Remedios Tradicionales' : 'Traditional Remedies'}
+                </h3>
+                <p className="text-green-100 mb-4">
+                  {locale === 'fr' ? 'Sagesse ancestrale pour votre santé' : locale === 'es' ? 'Sabiduría ancestral para su salud' : 'Ancestral wisdom for your health'}
+                </p>
+                <Link href={`/${locale}/products?certifications=traditional`} className="inline-flex items-center text-white font-semibold hover:underline">
                   {t('seeMore')} →
                 </Link>
               </div>
             </div>
             <div className="relative h-64 rounded-2xl overflow-hidden group">
               <Image
-                src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&h=400&fit=crop"
-                alt="Deals"
+                src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600&h=400&fit=crop"
+                alt="Medicinal Plants"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-amber-900/80 to-transparent"></div>
               <div className="absolute inset-0 p-8 flex flex-col justify-center">
-                <h3 className="text-2xl font-bold text-white mb-2">{t('promo.deals')}</h3>
-                <p className="text-amber-100 mb-4">{t('promo.dealsDesc')}</p>
-                <Link href={`/${locale}/deals`} className="inline-flex items-center text-white font-semibold hover:underline">
+                <h3 className="text-2xl font-bold text-white mb-2">
+                  {locale === 'fr' ? 'Plantes Médicinales' : locale === 'es' ? 'Plantas Medicinales' : 'Medicinal Plants'}
+                </h3>
+                <p className="text-amber-100 mb-4">
+                  {locale === 'fr' ? 'Le pouvoir de la nature à votre service' : locale === 'es' ? 'El poder de la naturaleza a su servicio' : 'The power of nature at your service'}
+                </p>
+                <Link href={`/${locale}/products?category=medicinal-plants`} className="inline-flex items-center text-white font-semibold hover:underline">
                   {t('seeMore')} →
                 </Link>
               </div>
@@ -319,9 +435,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </div>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+    </>
   );
 }
