@@ -35,12 +35,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const { featured: featuredProducts, newest: newProducts } = await getProducts();
 
   const categories = [
-    { key: 'medicinal-plants', slug: 'medicinal-plants', icon: '🌿', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=300&fit=crop' },
+    { key: 'medicinal-plants', slug: 'medicinal-plants', icon: '🌿', image: 'https://images.unsplash.com/photo-1498654200943-1088dd4438ae?w=300&h=300&fit=crop' },
     { key: 'essential-oils', slug: 'essential-oils', icon: '💧', image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=300&h=300&fit=crop' },
-    { key: 'natural-cosmetics', slug: 'natural-cosmetics', icon: '✨', image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=300&fit=crop' },
-    { key: 'herbal-teas', slug: 'herbal-teas', icon: '🍵', image: 'https://images.unsplash.com/photo-1545045456-50f87ead1d06?w=300&h=300&fit=crop' },
-    { key: 'traditional-remedies', slug: 'traditional-remedies', icon: '🏺', image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=300&h=300&fit=crop' },
-    { key: 'supplements', slug: 'supplements', icon: '💊', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&h=300&fit=crop' },
+    { key: 'natural-cosmetics', slug: 'natural-cosmetics', icon: '✨', image: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=300&h=300&fit=crop' },
+    { key: 'herbal-teas', slug: 'herbal-teas', icon: '🍵', image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=300&h=300&fit=crop' },
+    { key: 'traditional-remedies', slug: 'traditional-remedies', icon: '🏺', image: 'https://images.unsplash.com/photo-1507281549322-7bd535a1a486?w=300&h=300&fit=crop' },
+    { key: 'supplements', slug: 'supplements', icon: '💊', image: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=300&h=300&fit=crop' },
   ];
 
   return (
