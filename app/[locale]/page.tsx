@@ -35,12 +35,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const { featured: featuredProducts, newest: newProducts } = await getProducts();
 
   const categories = [
-    { key: 'medicinal-plants', slug: 'medicinal-plants', icon: '🌿', image: 'https://images.unsplash.com/photo-1498654200943-1088dd4438ae?w=300&h=300&fit=crop' },
-    { key: 'essential-oils', slug: 'essential-oils', icon: '💧', image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=300&h=300&fit=crop' },
-    { key: 'natural-cosmetics', slug: 'natural-cosmetics', icon: '✨', image: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=300&h=300&fit=crop' },
-    { key: 'herbal-teas', slug: 'herbal-teas', icon: '🍵', image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=300&h=300&fit=crop' },
-    { key: 'traditional-remedies', slug: 'traditional-remedies', icon: '🏺', image: 'https://images.unsplash.com/photo-1507281549322-7bd535a1a486?w=300&h=300&fit=crop' },
-    { key: 'supplements', slug: 'supplements', icon: '💊', image: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=300&h=300&fit=crop' },
+    { key: 'medicinal-plants', slug: 'medicinal-plants', icon: '🌿', image: '/1.jpeg' },
+    { key: 'essential-oils', slug: 'essential-oils', icon: '💧', image: '/2.jpeg' },
+    { key: 'natural-cosmetics', slug: 'natural-cosmetics', icon: '✨', image: '/3.jpeg' },
+    { key: 'herbal-teas', slug: 'herbal-teas', icon: '🍵', image: '/4.jpeg' },
+    { key: 'traditional-remedies', slug: 'traditional-remedies', icon: '🏺', image: '/5.jpeg' },
+    { key: 'supplements', slug: 'supplements', icon: '💊', image: '/6.jpeg' },
   ];
 
   return (
@@ -79,7 +79,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </div>
               <div className="relative h-[300px] md:h-[400px] rounded-2xl overflow-hidden shadow-xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&h=600&fit=crop"
+                  src="/11.jpeg"
                   alt="Nature Pharmacy"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -317,7 +317,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div className="grid md:grid-cols-2 gap-6">
             <div className="relative h-64 rounded-2xl overflow-hidden group">
               <Image
-                src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&h=400&fit=crop"
+                src="/7.jpeg"
                 alt="Traditional Medicine"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -337,7 +337,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </div>
             <div className="relative h-64 rounded-2xl overflow-hidden group">
               <Image
-                src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600&h=400&fit=crop"
+                src="/8.jpeg"
                 alt="Medicinal Plants"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
