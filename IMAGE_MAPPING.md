@@ -55,9 +55,12 @@ Ce document décrit l'utilisation de chaque image locale dans le site.
 | `9.jpeg` | 37 KB | ⚪ Réservé | Usage futur |
 | `10.jpeg` | 44 KB | ⚪ Réservé | Usage futur |
 | `11.jpeg` | 137 KB | ✅ | Hero Banner |
+| `12.jpeg` | - | ✅ | Produits (30 produits fictifs) |
+| `13.jpeg` | - | ✅ | Produits (30 produits fictifs) |
+| `14.jpeg` | - | ✅ | Produits (30 produits fictifs) |
 
-**Total**: 11 images
-**Utilisées**: 9 images
+**Total**: 14 images
+**Utilisées**: 12 images (9 homepage + 3 produits)
 **Disponibles**: 2 images (9.jpeg, 10.jpeg)
 
 ---
