@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
+import ProductPrice from '@/components/ProductPrice';
 
 async function getProducts() {
   try {
@@ -299,12 +300,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                       </div>
                       <span className="text-xs text-gray-500">({product.reviewCount || 0})</span>
                     </div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-lg font-bold text-gray-900">${product.price?.toFixed(2)}</span>
-                      {product.compareAtPrice && (
-                        <span className="text-sm text-gray-400 line-through">${product.compareAtPrice.toFixed(2)}</span>
-                      )}
-                    </div>
+                    <ProductPrice
+                      price={product.price || 0}
+                      compareAtPrice={product.compareAtPrice}
+                    />
                   </div>
                 </Link>
               ))}
@@ -391,7 +390,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                       {product.name[locale]}
                     </h3>
                     <div className="mt-2">
-                      <span className="text-lg font-bold text-gray-900">${product.price?.toFixed(2)}</span>
+                      <ProductPrice price={product.price || 0} />
                     </div>
                   </div>
                 </Link>
