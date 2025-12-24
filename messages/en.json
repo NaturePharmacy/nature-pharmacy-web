@@ -69,12 +69,12 @@
     "seeAll": "See all",
     "whyUs": {
       "title": "Why Choose Nature Pharmacy?",
-      "trustedTitle": "Verified Practitioners",
-      "trustedDesc": "All our sellers are verified and offer authentic remedies",
+      "trustedTitle": "Connection Platform",
+      "trustedDesc": "Connect directly with natural product sellers from around the world",
       "deliveryTitle": "Secure Delivery",
-      "deliveryDesc": "Fast and safe shipping with real-time tracking",
-      "qualityTitle": "Authentic Remedies",
-      "qualityDesc": "Traditional medicine and certified medicinal plants"
+      "deliveryDesc": "Fast shipping with real-time tracking of your orders",
+      "qualityTitle": "Wide Selection",
+      "qualityDesc": "Discover a variety of natural and traditional products"
     }
   },
   "products": {

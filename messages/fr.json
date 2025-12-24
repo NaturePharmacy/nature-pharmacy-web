@@ -69,12 +69,12 @@
     "seeAll": "Voir tout",
     "whyUs": {
       "title": "Pourquoi choisir Nature Pharmacie ?",
-      "trustedTitle": "Praticiens vérifiés",
-      "trustedDesc": "Tous nos vendeurs sont vérifiés et proposent des remèdes authentiques",
+      "trustedTitle": "Plateforme de mise en relation",
+      "trustedDesc": "Connectez-vous directement avec des vendeurs de produits naturels du monde entier",
       "deliveryTitle": "Livraison sécurisée",
-      "deliveryDesc": "Expédition rapide et suivi en temps réel de vos remèdes",
-      "qualityTitle": "Remèdes authentiques",
-      "qualityDesc": "Médecine traditionnelle et plantes médicinales certifiées"
+      "deliveryDesc": "Expédition rapide et suivi en temps réel de vos commandes",
+      "qualityTitle": "Large sélection",
+      "qualityDesc": "Découvrez une variété de produits naturels et traditionnels"
     }
   },
   "products": {
