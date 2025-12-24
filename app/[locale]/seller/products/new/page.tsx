@@ -72,14 +72,43 @@ export default function NewProductPage() {
     setError('');
 
     try {
-      // Générer le slug à partir du nom anglais
-      const slug = formData.name.en
+      // Use French as fallback for empty translations
+      const name = {
+        fr: formData.name.fr,
+        en: formData.name.en || formData.name.fr,
+        es: formData.name.es || formData.name.fr,
+      };
+
+      const description = {
+        fr: formData.description.fr,
+        en: formData.description.en || formData.description.fr,
+        es: formData.description.es || formData.description.fr,
+      };
+
+      const ingredients = {
+        fr: formData.ingredients.fr,
+        en: formData.ingredients.en || formData.ingredients.fr,
+        es: formData.ingredients.es || formData.ingredients.fr,
+      };
+
+      const usage = {
+        fr: formData.usage.fr,
+        en: formData.usage.en || formData.usage.fr,
+        es: formData.usage.es || formData.usage.fr,
+      };
+
+      // Générer le slug à partir du nom (use EN if available, otherwise FR)
+      const slug = (name.en)
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
 
       const productData = {
         ...formData,
+        name,
+        description,
+        ingredients,
+        usage,
         slug,
         price: parseFloat(formData.price),
         compareAtPrice: formData.compareAtPrice ? parseFloat(formData.compareAtPrice) : undefined,
@@ -187,30 +216,40 @@ export default function NewProductPage() {
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   required
                 />
+                <p className="text-xs text-gray-500 mt-1">Requis - Ce nom sera utilisé si les traductions ne sont pas fournies</p>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('productForm.nameEn')} *
-                </label>
-                <input
-                  type="text"
-                  value={formData.name.en}
-                  onChange={(e) => handleNameChange('en', e.target.value)}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('productForm.nameEs')} *
-                </label>
-                <input
-                  type="text"
-                  value={formData.name.es}
-                  onChange={(e) => handleNameChange('es', e.target.value)}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  required
-                />
+
+              {/* Optional translations */}
+              <div className="border-t pt-4">
+                <p className="text-sm font-medium text-gray-700 mb-3">
+                  Traductions (optionnel)
+                </p>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">
+                      {t('productForm.nameEn')} (optionnel)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.name.en}
+                      onChange={(e) => handleNameChange('en', e.target.value)}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Laissez vide pour utiliser le nom français"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">
+                      {t('productForm.nameEs')} (optionnel)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.name.es}
+                      onChange={(e) => handleNameChange('es', e.target.value)}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Laissez vide pour utiliser le nom français"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -251,30 +290,40 @@ export default function NewProductPage() {
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   required
                 />
+                <p className="text-xs text-gray-500 mt-1">Requis - Cette description sera utilisée si les traductions ne sont pas fournies</p>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('productForm.descriptionEn')} *
-                </label>
-                <textarea
-                  value={formData.description.en}
-                  onChange={(e) => handleDescriptionChange('en', e.target.value)}
-                  rows={3}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('productForm.descriptionEs')} *
-                </label>
-                <textarea
-                  value={formData.description.es}
-                  onChange={(e) => handleDescriptionChange('es', e.target.value)}
-                  rows={3}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  required
-                />
+
+              {/* Optional translations */}
+              <div className="border-t pt-4">
+                <p className="text-sm font-medium text-gray-700 mb-3">
+                  Traductions (optionnel)
+                </p>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">
+                      {t('productForm.descriptionEn')} (optionnel)
+                    </label>
+                    <textarea
+                      value={formData.description.en}
+                      onChange={(e) => handleDescriptionChange('en', e.target.value)}
+                      rows={3}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Laissez vide pour utiliser la description française"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">
+                      {t('productForm.descriptionEs')} (optionnel)
+                    </label>
+                    <textarea
+                      value={formData.description.es}
+                      onChange={(e) => handleDescriptionChange('es', e.target.value)}
+                      rows={3}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Laissez vide pour utiliser la description française"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -389,54 +438,84 @@ export default function NewProductPage() {
 
             {/* Ingredients */}
             <div className="space-y-4 mb-6">
-              <h3 className="text-sm font-medium text-gray-700">{t('productForm.ingredients')}</h3>
-              <input
-                type="text"
-                value={formData.ingredients.fr}
-                onChange={(e) => handleIngredientsChange('fr', e.target.value)}
-                placeholder={t('productForm.ingredientsFr')}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-              <input
-                type="text"
-                value={formData.ingredients.en}
-                onChange={(e) => handleIngredientsChange('en', e.target.value)}
-                placeholder={t('productForm.ingredientsEn')}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-              <input
-                type="text"
-                value={formData.ingredients.es}
-                onChange={(e) => handleIngredientsChange('es', e.target.value)}
-                placeholder={t('productForm.ingredientsEs')}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('productForm.ingredientsFr')} *
+                </label>
+                <input
+                  type="text"
+                  value={formData.ingredients.fr}
+                  onChange={(e) => handleIngredientsChange('fr', e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Requis - Ces ingrédients seront utilisés si les traductions ne sont pas fournies
+                </p>
+              </div>
+
+              <div className="border-t pt-4">
+                <p className="text-sm font-medium text-gray-700 mb-3">
+                  Traductions (optionnel)
+                </p>
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={formData.ingredients.en}
+                    onChange={(e) => handleIngredientsChange('en', e.target.value)}
+                    placeholder="Laissez vide pour utiliser les ingrédients français"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                  <input
+                    type="text"
+                    value={formData.ingredients.es}
+                    onChange={(e) => handleIngredientsChange('es', e.target.value)}
+                    placeholder="Laissez vide pour utiliser les ingrédients français"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Usage */}
             <div className="space-y-4">
-              <h3 className="text-sm font-medium text-gray-700">{t('productForm.usage')}</h3>
-              <input
-                type="text"
-                value={formData.usage.fr}
-                onChange={(e) => handleUsageChange('fr', e.target.value)}
-                placeholder={t('productForm.usageFr')}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-              <input
-                type="text"
-                value={formData.usage.en}
-                onChange={(e) => handleUsageChange('en', e.target.value)}
-                placeholder={t('productForm.usageEn')}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-              <input
-                type="text"
-                value={formData.usage.es}
-                onChange={(e) => handleUsageChange('es', e.target.value)}
-                placeholder={t('productForm.usageEs')}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('productForm.usageFr')} *
+                </label>
+                <input
+                  type="text"
+                  value={formData.usage.fr}
+                  onChange={(e) => handleUsageChange('fr', e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Requis - Ces instructions seront utilisées si les traductions ne sont pas fournies
+                </p>
+              </div>
+
+              <div className="border-t pt-4">
+                <p className="text-sm font-medium text-gray-700 mb-3">
+                  Traductions (optionnel)
+                </p>
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={formData.usage.en}
+                    onChange={(e) => handleUsageChange('en', e.target.value)}
+                    placeholder="Laissez vide pour utiliser les instructions françaises"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                  <input
+                    type="text"
+                    value={formData.usage.es}
+                    onChange={(e) => handleUsageChange('es', e.target.value)}
+                    placeholder="Laissez vide pour utiliser les instructions françaises"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 

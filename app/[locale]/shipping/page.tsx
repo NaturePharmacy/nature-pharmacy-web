@@ -83,7 +83,7 @@ export default function ShippingPage() {
         items: [
           {
             q: 'Puis-je modifier l\'adresse de livraison après avoir passé commande ?',
-            a: 'Oui, vous pouvez modifier l\'adresse avant l\'expédition du colis. Contactez-nous rapidement via le support.',
+            a: 'Oui, vous pouvez modifier l\'adresse avant l\'expédition du colis. ',
           },
           {
             q: 'Que se passe-t-il si je suis absent lors de la livraison ?',
@@ -95,11 +95,11 @@ export default function ShippingPage() {
           },
           {
             q: 'Les frais de livraison sont-ils remboursables ?',
-            a: 'Les frais de livraison ne sont remboursés que si l\'erreur provient de notre part ou du transporteur.',
+            a: 'Les frais de livraison ne sont remboursés que si l\'erreur provient du transporteur.',
           },
           {
             q: 'Livrez-vous à l\'international ?',
-            a: 'Oui, nous livrons dans plusieurs pays d\'Afrique de l\'Ouest. Les délais et tarifs varient selon la destination.',
+            a: 'Oui,les délais et tarifs varient selon la destination.',
           },
         ],
       },
