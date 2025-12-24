@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import cloudinary from '@/lib/cloudinary';
+import { uploadToBluehost } from '@/lib/bluehost-upload';
+import sharp from 'sharp';
 
-// POST /api/upload - Upload image to Cloudinary
+// POST /api/upload - Upload image to Bluehost
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const folder = formData.get('folder') as string || 'nature-pharmacy';
+    const folder = formData.get('folder') as string || 'products';
 
     if (!file) {
       return NextResponse.json(
@@ -41,28 +42,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert file to base64
+    // Convert file to buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const base64File = `data:${file.type};base64,${buffer.toString('base64')}`;
 
-    // Upload to Cloudinary
-    const result = await cloudinary.uploader.upload(base64File, {
-      folder: folder,
-      resource_type: 'image',
-      transformation: [
-        { width: 1200, height: 1200, crop: 'limit' }, // Max dimensions
-        { quality: 'auto' }, // Automatic quality optimization
-        { fetch_format: 'auto' }, // Automatic format selection
-      ],
-    });
+    // Optimize image with sharp (resize, compress, convert to WebP)
+    const optimizedBuffer = await sharp(buffer)
+      .resize(1200, 1200, {
+        fit: 'inside',
+        withoutEnlargement: true,
+      })
+      .webp({ quality: 85 })
+      .toBuffer();
+
+    // Generate optimized filename
+    const originalName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
+    const optimizedFilename = `${originalName}.webp`;
+
+    // Upload to Bluehost via SFTP
+    const result = await uploadToBluehost(optimizedBuffer, optimizedFilename, folder);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error || 'Failed to upload image to Bluehost' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
-      url: result.secure_url,
-      publicId: result.public_id,
-      width: result.width,
-      height: result.height,
-      format: result.format,
+      url: result.url,
+      publicId: result.url, // Use URL as publicId for consistency
+      width: 1200,
+      height: 1200,
+      format: 'webp',
     });
   } catch (error: any) {
     console.error('Error uploading image:', error);
@@ -73,7 +85,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// DELETE /api/upload - Delete image from Cloudinary
+// DELETE /api/upload - Delete image from Bluehost
 export async function DELETE(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -83,19 +95,20 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const publicId = searchParams.get('publicId');
+    const imageUrl = searchParams.get('publicId'); // Now using URL instead of publicId
 
-    if (!publicId) {
+    if (!imageUrl) {
       return NextResponse.json(
-        { error: 'No publicId provided' },
+        { error: 'No image URL provided' },
         { status: 400 }
       );
     }
 
-    // Delete from Cloudinary
-    const result = await cloudinary.uploader.destroy(publicId);
+    // Delete from Bluehost
+    const { deleteFromBluehost } = await import('@/lib/bluehost-upload');
+    const success = await deleteFromBluehost(imageUrl);
 
-    if (result.result === 'ok') {
+    if (success) {
       return NextResponse.json({ message: 'Image deleted successfully' });
     } else {
       return NextResponse.json(
