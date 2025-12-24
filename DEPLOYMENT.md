@@ -55,7 +55,20 @@ Vercel détecte automatiquement Next.js. Vérifiez que:
 - **Install Command**: `npm install`
 - **Root Directory**: `./`
 
-### Étape 4: Variables d'Environnement
+### Étape 4: Configuration Vercel Blob (Upload d'Images)
+
+**IMPORTANT**: Avant de configurer les variables d'environnement, créez d'abord Vercel Blob:
+
+1. Dans votre projet Vercel, allez dans **Storage** (menu de gauche)
+2. Cliquez sur **"Create Database"**
+3. Sélectionnez **"Blob"**
+4. Cliquez sur **"Create"**
+
+Vercel configure automatiquement la variable `BLOB_READ_WRITE_TOKEN` pour vous.
+
+📖 **Documentation complète**: Voir [VERCEL_BLOB_SETUP.md](VERCEL_BLOB_SETUP.md)
+
+### Étape 5: Variables d'Environnement
 
 Cliquez sur **"Environment Variables"** et ajoutez:
 
@@ -74,8 +87,9 @@ NODE_ENV=production
 **Important**:
 - Utilisez `NEXTAUTH_URL=https://naturepharmacy.com` directement (votre domaine personnalisé)
 - Si vous n'avez pas encore configuré le domaine, utilisez temporairement l'URL Vercel, puis mettez à jour après
+- `BLOB_READ_WRITE_TOKEN` est automatiquement ajouté quand vous créez Vercel Blob (étape 4)
 
-### Étape 5: Déployer
+### Étape 6: Déployer
 
 1. Cliquez sur **"Deploy"**
 2. Attendez 2-3 minutes ⏱️

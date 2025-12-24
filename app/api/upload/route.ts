@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { uploadToBluehost } from '@/lib/bluehost-upload';
+import { uploadToVercelBlob } from '@/lib/vercel-blob-upload';
 import sharp from 'sharp';
 
-// POST /api/upload - Upload image to Bluehost
+// POST /api/upload - Upload image to Vercel Blob Storage
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -59,12 +59,12 @@ export async function POST(request: NextRequest) {
     const originalName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
     const optimizedFilename = `${originalName}.webp`;
 
-    // Upload to Bluehost via SFTP
-    const result = await uploadToBluehost(optimizedBuffer, optimizedFilename, folder);
+    // Upload to Vercel Blob Storage
+    const result = await uploadToVercelBlob(optimizedBuffer, optimizedFilename, folder);
 
     if (!result.success) {
       return NextResponse.json(
-        { error: result.error || 'Failed to upload image to Bluehost' },
+        { error: result.error || 'Failed to upload image' },
         { status: 500 }
       );
     }
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// DELETE /api/upload - Delete image from Bluehost
+// DELETE /api/upload - Delete image from Vercel Blob
 export async function DELETE(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -104,9 +104,9 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Delete from Bluehost
-    const { deleteFromBluehost } = await import('@/lib/bluehost-upload');
-    const success = await deleteFromBluehost(imageUrl);
+    // Delete from Vercel Blob
+    const { deleteFromVercelBlob } = await import('@/lib/vercel-blob-upload');
+    const success = await deleteFromVercelBlob(imageUrl);
 
     if (success) {
       return NextResponse.json({ message: 'Image deleted successfully' });
