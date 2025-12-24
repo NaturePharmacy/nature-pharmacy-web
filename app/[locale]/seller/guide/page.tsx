@@ -1,10 +1,13 @@
 'use client';
 
 import { useLocale } from 'next-intl';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
 export default function SellerGuidePage() {
   const locale = useLocale() as 'fr' | 'en' | 'es';
+  const { data: session } = useSession();
+  const isSeller = session?.user?.role === 'seller' || session?.user?.role === 'admin';
 
   const content = {
     fr: {
@@ -424,21 +427,38 @@ export default function SellerGuidePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      
+
       <main className="flex-1">
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-16">
           <div className="max-w-6xl mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t.hero.title}</h1>
-            <p className="text-xl text-green-50 mb-8 max-w-3xl mx-auto">
-              {t.hero.description}
-            </p>
-            <Link
-              href={`/${locale}/register?role=seller`}
-              className="inline-block px-8 py-4 bg-white text-green-600 rounded-lg hover:bg-green-50 transition-colors font-medium text-lg"
-            >
-              {t.hero.cta}
-            </Link>
+            {isSeller ? (
+              <>
+                <h1 className="text-4xl md:text-5xl font-bold mb-4">{t.title}</h1>
+                <p className="text-xl text-green-50 mb-8 max-w-3xl mx-auto">
+                  {t.subtitle}
+                </p>
+                <Link
+                  href={`/${locale}/seller`}
+                  className="inline-block px-8 py-4 bg-white text-green-600 rounded-lg hover:bg-green-50 transition-colors font-medium text-lg"
+                >
+                  {locale === 'fr' ? 'Retour au tableau de bord' : locale === 'es' ? 'Volver al panel' : 'Back to Dashboard'}
+                </Link>
+              </>
+            ) : (
+              <>
+                <h1 className="text-4xl md:text-5xl font-bold mb-4">{t.hero.title}</h1>
+                <p className="text-xl text-green-50 mb-8 max-w-3xl mx-auto">
+                  {t.hero.description}
+                </p>
+                <Link
+                  href={`/${locale}/register?role=seller`}
+                  className="inline-block px-8 py-4 bg-white text-green-600 rounded-lg hover:bg-green-50 transition-colors font-medium text-lg"
+                >
+                  {t.hero.cta}
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
@@ -567,27 +587,29 @@ export default function SellerGuidePage() {
             </div>
           </div>
 
-          {/* CTA */}
-          <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-lg shadow-md p-8 text-white text-center">
-            <h2 className="text-3xl font-bold mb-4">{t.cta.title}</h2>
-            <p className="text-lg text-green-50 mb-6 max-w-2xl mx-auto">
-              {t.cta.description}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href={`/${locale}/register?role=seller`}
-                className="px-8 py-3 bg-white text-green-600 rounded-lg hover:bg-green-50 transition-colors font-medium"
-              >
-                {t.cta.button}
-              </Link>
-              <Link
-                href={`/${locale}/contact`}
-                className="px-8 py-3 bg-green-700 border-2 border-white text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
-              >
-                {t.cta.contact}
-              </Link>
+          {/* CTA - Only show for non-sellers */}
+          {!isSeller && (
+            <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-lg shadow-md p-8 text-white text-center">
+              <h2 className="text-3xl font-bold mb-4">{t.cta.title}</h2>
+              <p className="text-lg text-green-50 mb-6 max-w-2xl mx-auto">
+                {t.cta.description}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href={`/${locale}/register?role=seller`}
+                  className="px-8 py-3 bg-white text-green-600 rounded-lg hover:bg-green-50 transition-colors font-medium"
+                >
+                  {t.cta.button}
+                </Link>
+                <Link
+                  href={`/${locale}/contact`}
+                  className="px-8 py-3 bg-green-700 border-2 border-white text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                >
+                  {t.cta.contact}
+                </Link>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
 
