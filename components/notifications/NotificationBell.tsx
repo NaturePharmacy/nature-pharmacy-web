@@ -92,7 +92,11 @@ export default function NotificationBell() {
       markAsRead(notification._id);
     }
     if (notification.link) {
-      router.push(notification.link);
+      // Add locale prefix to the link if not already present
+      const linkWithLocale = notification.link.startsWith(`/${locale}`)
+        ? notification.link
+        : `/${locale}${notification.link}`;
+      router.push(linkWithLocale);
     }
     setIsOpen(false);
   };

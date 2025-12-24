@@ -48,7 +48,16 @@ export async function PUT(request: NextRequest) {
     const updateData: any = {};
     if (data.name) updateData.name = data.name;
     if (data.phone) updateData.phone = data.phone;
+    if (data.avatar) updateData.avatar = data.avatar;
     if (data.address) updateData.address = data.address;
+
+    // Update seller info if user is a seller
+    if (data.sellerInfo && (session.user.role === 'seller' || session.user.role === 'admin')) {
+      updateData.sellerInfo = {};
+      if (data.sellerInfo.storeName) updateData.sellerInfo.storeName = data.sellerInfo.storeName;
+      if (data.sellerInfo.storeDescription) updateData.sellerInfo.storeDescription = data.sellerInfo.storeDescription;
+      if (data.sellerInfo.storeLogo) updateData.sellerInfo.storeLogo = data.sellerInfo.storeLogo;
+    }
 
     const user = await User.findByIdAndUpdate(
       session.user.id,

@@ -16,9 +16,20 @@ export async function GET(request: NextRequest) {
 
     await connectDB();
 
+    // Ensure User model is loaded (required for populate)
+    await User.init();
+
     let referral = await Referral.findOne({ referrer: session.user.id })
-      .populate('referred', 'name email createdAt')
-      .populate('rewards.referredUser', 'name email')
+      .populate({
+        path: 'referred',
+        select: 'name email createdAt',
+        options: { strictPopulate: false }
+      })
+      .populate({
+        path: 'rewards.referredUser',
+        select: 'name email',
+        options: { strictPopulate: false }
+      })
       .lean();
 
     // Create referral if it doesn't exist
@@ -36,38 +47,50 @@ export async function GET(request: NextRequest) {
 
       // Re-fetch with populate
       referral = await Referral.findById(newReferral._id)
-        .populate('referred', 'name email createdAt')
-        .populate('rewards.referredUser', 'name email')
+        .populate({
+          path: 'referred',
+          select: 'name email createdAt',
+          options: { strictPopulate: false }
+        })
+        .populate({
+          path: 'rewards.referredUser',
+          select: 'name email',
+          options: { strictPopulate: false }
+        })
         .lean();
     }
 
+    // Safely handle rewards array
+    const rewards = referral?.rewards || [];
+
     // Calculate pending rewards
-    const pendingRewards = referral.rewards
+    const pendingRewards = rewards
       .filter((r: any) => r.status === 'pending')
-      .reduce((sum: number, r: any) => sum + r.amount, 0);
+      .reduce((sum: number, r: any) => sum + (r.amount || 0), 0);
 
     // Calculate paid rewards
-    const paidRewards = referral.rewards
+    const paidRewards = rewards
       .filter((r: any) => r.status === 'paid')
-      .reduce((sum: number, r: any) => sum + r.amount, 0);
+      .reduce((sum: number, r: any) => sum + (r.amount || 0), 0);
 
     return NextResponse.json({
       referral,
       summary: {
-        referralCode: referral.referralCode,
-        totalReferred: referral.stats.totalReferred,
-        totalEarned: referral.stats.totalEarned,
-        conversions: referral.stats.conversions,
+        referralCode: referral?.referralCode || '',
+        totalReferred: referral?.stats?.totalReferred || 0,
+        totalEarned: referral?.stats?.totalEarned || 0,
+        conversions: referral?.stats?.conversions || 0,
         pendingRewards,
         paidRewards,
         conversionRate:
-          referral.stats.totalReferred > 0
-            ? (referral.stats.conversions / referral.stats.totalReferred) * 100
+          (referral?.stats?.totalReferred || 0) > 0
+            ? ((referral?.stats?.conversions || 0) / (referral?.stats?.totalReferred || 1)) * 100
             : 0,
       },
     });
   } catch (error: any) {
     console.error('Error fetching referral data:', error);
+    console.error('Error stack:', error.stack);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch referral data' },
       { status: 500 }

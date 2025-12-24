@@ -11,27 +11,28 @@ export default function ShippingPage() {
       subtitle: 'Tout ce que vous devez savoir sur nos services de livraison',
       zones: {
         title: 'Zones de livraison',
+        description: 'Nature Pharmacy connecte des vendeurs du monde entier. Les frais et délais de livraison varient selon la localisation du vendeur et votre adresse de livraison.',
         items: [
           {
-            title: 'Dakar et Banlieue',
-            time: '24-48 heures',
-            cost: '2 000 FCFA',
-            details: 'Livraison rapide dans toute la région de Dakar',
-          },
-          {
-            title: 'Autres régions du Sénégal',
-            time: '3-5 jours',
-            cost: '3 500 FCFA',
-            details: 'Livraison dans toutes les grandes villes du Sénégal',
-          },
-          {
-            title: 'Afrique de l\'Ouest',
-            time: '7-14 jours',
+            title: 'Livraison locale',
+            time: '1-3 jours',
             cost: 'Variable',
-            details: 'Mali, Côte d\'Ivoire, Guinée, Burkina Faso, etc.',
+            details: 'Lorsque le vendeur est dans votre pays',
+          },
+          {
+            title: 'Livraison régionale',
+            time: '5-10 jours',
+            cost: 'Variable',
+            details: 'Livraison dans la même région (Afrique, Europe, Asie, etc.)',
+          },
+          {
+            title: 'Livraison internationale',
+            time: '10-21 jours',
+            cost: 'Variable',
+            details: 'Livraison entre continents',
           },
         ],
-        free: 'Livraison gratuite pour les commandes supérieures à 50 000 FCFA',
+        note: 'Les frais de livraison sont calculés automatiquement selon la localisation du vendeur et votre adresse. Consultez chaque vendeur pour ses options de livraison gratuite.',
       },
       process: {
         title: 'Processus de livraison',
@@ -65,18 +66,14 @@ export default function ShippingPage() {
         ],
       },
       packaging: {
-        title: 'Emballage',
-        description: 'Nous prenons grand soin de vos commandes',
+        title: 'Emballage et Expédition',
+        description: 'Chaque vendeur est responsable de l\'emballage et de l\'expédition de ses produits',
         features: [
-          'Emballage sécurisé et écologique',
-          'Protection adaptée aux produits fragiles',
-          'Discrétion garantie',
-          'Respect de la chaîne du froid pour les produits sensibles',
+          'Les vendeurs emballent vos commandes avec soin',
+          'Protection adaptée selon le type de produit',
+          'Expédition directe du vendeur vers vous',
+          'Chaque vendeur choisit ses transporteurs de confiance',
         ],
-      },
-      partners: {
-        title: 'Partenaires de livraison',
-        description: 'Nous travaillons avec les meilleurs transporteurs locaux et internationaux pour garantir une livraison fiable et rapide.',
       },
       faq: {
         title: 'Questions fréquentes',
@@ -109,27 +106,28 @@ export default function ShippingPage() {
       subtitle: 'Everything you need to know about our delivery services',
       zones: {
         title: 'Delivery zones',
+        description: 'Nature Pharmacy connects sellers from around the world. Shipping costs and delivery times vary depending on the seller\'s location and your delivery address.',
         items: [
           {
-            title: 'Dakar and Suburbs',
-            time: '24-48 hours',
-            cost: '2,000 FCFA',
-            details: 'Fast delivery throughout the Dakar region',
-          },
-          {
-            title: 'Other regions of Senegal',
-            time: '3-5 days',
-            cost: '3,500 FCFA',
-            details: 'Delivery to all major cities in Senegal',
-          },
-          {
-            title: 'West Africa',
-            time: '7-14 days',
+            title: 'Local delivery',
+            time: '1-3 days',
             cost: 'Variable',
-            details: 'Mali, Ivory Coast, Guinea, Burkina Faso, etc.',
+            details: 'When the seller is in your country',
+          },
+          {
+            title: 'Regional delivery',
+            time: '5-10 days',
+            cost: 'Variable',
+            details: 'Delivery within the same region (Africa, Europe, Asia, etc.)',
+          },
+          {
+            title: 'International delivery',
+            time: '10-21 days',
+            cost: 'Variable',
+            details: 'Delivery between continents',
           },
         ],
-        free: 'Free delivery for orders over 50,000 FCFA',
+        note: 'Shipping costs are automatically calculated based on the seller\'s location and your address. Check each seller for their free shipping options.',
       },
       process: {
         title: 'Delivery process',
@@ -163,18 +161,14 @@ export default function ShippingPage() {
         ],
       },
       packaging: {
-        title: 'Packaging',
-        description: 'We take great care of your orders',
+        title: 'Packaging and Shipping',
+        description: 'Each seller is responsible for packaging and shipping their products',
         features: [
-          'Secure and eco-friendly packaging',
-          'Protection adapted to fragile products',
-          'Guaranteed discretion',
-          'Cold chain respect for sensitive products',
+          'Sellers carefully package your orders',
+          'Protection adapted to product type',
+          'Direct shipping from seller to you',
+          'Each seller chooses their trusted carriers',
         ],
-      },
-      partners: {
-        title: 'Delivery partners',
-        description: 'We work with the best local and international carriers to guarantee reliable and fast delivery.',
       },
       faq: {
         title: 'Frequently asked questions',
@@ -207,27 +201,28 @@ export default function ShippingPage() {
       subtitle: 'Todo lo que necesitas saber sobre nuestros servicios de entrega',
       zones: {
         title: 'Zonas de entrega',
+        description: 'Nature Pharmacy conecta vendedores de todo el mundo. Los costos de envío y tiempos de entrega varían según la ubicación del vendedor y tu dirección de entrega.',
         items: [
           {
-            title: 'Dakar y Suburbios',
-            time: '24-48 horas',
-            cost: '2,000 FCFA',
-            details: 'Entrega rápida en toda la región de Dakar',
-          },
-          {
-            title: 'Otras regiones de Senegal',
-            time: '3-5 días',
-            cost: '3,500 FCFA',
-            details: 'Entrega a todas las ciudades principales de Senegal',
-          },
-          {
-            title: 'África Occidental',
-            time: '7-14 días',
+            title: 'Entrega local',
+            time: '1-3 días',
             cost: 'Variable',
-            details: 'Mali, Costa de Marfil, Guinea, Burkina Faso, etc.',
+            details: 'Cuando el vendedor está en tu país',
+          },
+          {
+            title: 'Entrega regional',
+            time: '5-10 días',
+            cost: 'Variable',
+            details: 'Entrega dentro de la misma región (África, Europa, Asia, etc.)',
+          },
+          {
+            title: 'Entrega internacional',
+            time: '10-21 días',
+            cost: 'Variable',
+            details: 'Entrega entre continentes',
           },
         ],
-        free: 'Envío gratuito para pedidos superiores a 50,000 FCFA',
+        note: 'Los costos de envío se calculan automáticamente según la ubicación del vendedor y tu dirección. Consulta cada vendedor para sus opciones de envío gratuito.',
       },
       process: {
         title: 'Proceso de entrega',
@@ -261,18 +256,14 @@ export default function ShippingPage() {
         ],
       },
       packaging: {
-        title: 'Embalaje',
-        description: 'Cuidamos mucho tus pedidos',
+        title: 'Embalaje y Envío',
+        description: 'Cada vendedor es responsable del embalaje y envío de sus productos',
         features: [
-          'Embalaje seguro y ecológico',
-          'Protección adaptada a productos frágiles',
-          'Discreción garantizada',
-          'Respeto de la cadena de frío para productos sensibles',
+          'Los vendedores embalan tus pedidos con cuidado',
+          'Protección adaptada al tipo de producto',
+          'Envío directo del vendedor a ti',
+          'Cada vendedor elige sus transportistas de confianza',
         ],
-      },
-      partners: {
-        title: 'Socios de entrega',
-        description: 'Trabajamos con los mejores transportistas locales e internacionales para garantizar una entrega confiable y rápida.',
       },
       faq: {
         title: 'Preguntas frecuentes',
@@ -318,6 +309,7 @@ export default function ShippingPage() {
           {/* Delivery Zones */}
           <div className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">{t.zones.title}</h2>
+            <p className="text-gray-600 mb-6">{t.zones.description}</p>
             <div className="grid md:grid-cols-3 gap-6 mb-6">
               {t.zones.items.map((zone, index) => (
                 <div key={index} className="bg-white rounded-lg shadow-md p-6">
@@ -342,12 +334,12 @@ export default function ShippingPage() {
                 </div>
               ))}
             </div>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-center gap-3">
-                <svg className="w-6 h-6 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                <svg className="w-6 h-6 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-green-800 font-medium">{t.zones.free}</p>
+                <p className="text-blue-800 text-sm">{t.zones.note}</p>
               </div>
             </div>
           </div>
@@ -413,7 +405,7 @@ export default function ShippingPage() {
           <div className="mb-12">
             <div className="bg-white rounded-lg shadow-md p-8">
               <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center shrink-0">
                   <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                   </svg>
@@ -435,16 +427,6 @@ export default function ShippingPage() {
                   </ul>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Partners */}
-          <div className="mb-12">
-            <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-lg shadow-md p-8 text-white text-center">
-              <h2 className="text-2xl font-bold mb-4">{t.partners.title}</h2>
-              <p className="text-lg text-green-50 max-w-3xl mx-auto">
-                {t.partners.description}
-              </p>
             </div>
           </div>
 
