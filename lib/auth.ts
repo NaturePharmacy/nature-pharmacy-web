@@ -45,12 +45,30 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      // Initial sign in
       if (user) {
         token.id = user.id;
         token.role = (user as any).role;
         token.avatar = (user as any).avatar;
       }
+
+      // Handle session update (when update() is called)
+      if (trigger === 'update') {
+        // Fetch fresh user data from database
+        try {
+          await connectDB();
+          const freshUser = await User.findById(token.id).select('-password');
+          if (freshUser) {
+            token.role = freshUser.role;
+            token.avatar = freshUser.avatar;
+            token.name = freshUser.name;
+          }
+        } catch (error) {
+          console.error('Error refreshing user data:', error);
+        }
+      }
+
       return token;
     },
     async session({ session, token }) {

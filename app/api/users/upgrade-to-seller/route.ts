@@ -42,6 +42,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if store name already exists
+    const existingStore = await User.findOne({
+      'sellerInfo.storeName': storeName,
+      role: 'seller',
+    });
+
+    if (existingStore) {
+      return NextResponse.json(
+        { error: 'A store with this name already exists. Please choose a different name.' },
+        { status: 400 }
+      );
+    }
+
     // Update user to seller role with seller info
     const updatedUser = await User.findByIdAndUpdate(
       session.user.id,
