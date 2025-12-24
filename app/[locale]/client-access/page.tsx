@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 
 export default function ClientAccessPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('ClientAccess');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,8 +30,8 @@ export default function ClientAccessPage() {
       const data = await response.json();
 
       if (data.success) {
-        // Redirect to homepage on success
-        router.push('/');
+        // Redirect to homepage on success with locale
+        router.push(`/${locale}`);
         router.refresh();
       } else {
         setError(t('invalidPassword'));
