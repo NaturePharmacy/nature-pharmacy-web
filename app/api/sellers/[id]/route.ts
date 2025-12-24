@@ -7,13 +7,15 @@ import Order from '@/models/Order';
 // GET /api/sellers/[id] - Get public seller profile
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await connectDB();
+    
+    const { id } = await params;
+await connectDB();
 
     // Find seller
-    const seller = await User.findById(params.id)
+    const seller = await User.findById(id)
       .select('name email sellerInfo createdAt')
       .lean();
 
@@ -26,7 +28,7 @@ export async function GET(
 
     // Get seller statistics
     const totalProducts = await Product.countDocuments({
-      seller: params.id,
+      seller: id,
       isActive: true,
     });
 
@@ -61,7 +63,7 @@ export async function GET(
 
     // Get recent products
     const recentProducts = await Product.find({
-      seller: params.id,
+      seller: id,
       isActive: true,
     })
       .select('name slug images price compareAtPrice rating reviewCount')

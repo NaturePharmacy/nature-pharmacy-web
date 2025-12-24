@@ -2,15 +2,13 @@
 
 ## 1. SSH
 ```bash
-ssh iboffromy@50.6.19.21
+ssh lbofromy@50.6.19.21
 ```
 
-## 2. Clone
-```bash
-cd /home1/iboffromy
-git clone https://github.com/VOTRE-REPO/nature-pharmacy.git
-cd nature-pharmacy
-```
+## 2. Upload via FileZilla
+
+1. Connectez-vous via FTP à `50.6.19.21`
+2. Uploadez TOUT le projet (avec `.next/` déjà builded) vers `/home1/lbofromy/nature-pharmacy/`
 
 ## 3. Config
 ```bash
@@ -27,10 +25,10 @@ SITE_PASSWORD=clientpreview2024
 
 Sauvegardez: `Ctrl+O`, `Enter`, `Ctrl+X`
 
-## 4. Install & Build
+## 4. Install (sur serveur)
 ```bash
-npm install
-npm run build
+cd /home1/lbofromy/nature-pharmacy
+npm install --production
 ```
 
 ## 5. Démarrer

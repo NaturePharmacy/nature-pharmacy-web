@@ -8,10 +8,12 @@ import { createNotification } from '@/lib/notifications';
 // GET /api/tickets/[id] - Get ticket details
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    
+    const { id } = await params;
+const session = await getServerSession(authOptions);
 
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -19,7 +21,7 @@ export async function GET(
 
     await connectDB();
 
-    const ticket = await Ticket.findById(params.id)
+    const ticket = await Ticket.findById(id)
       .populate('user', 'name email')
       .populate('assignedTo', 'name email')
       .populate('relatedOrder', 'orderNumber')
@@ -55,10 +57,12 @@ export async function GET(
 // PUT /api/tickets/[id] - Update ticket (admin only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    
+    const { id } = await params;
+const session = await getServerSession(authOptions);
 
     if (!session?.user || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -83,7 +87,7 @@ export async function PUT(
       updateData.closedAt = new Date();
     }
 
-    const ticket = await Ticket.findByIdAndUpdate(params.id, updateData, {
+    const ticket = await Ticket.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });
@@ -111,10 +115,12 @@ export async function PUT(
 // POST /api/tickets/[id] - Add message to ticket
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    
+    const { id } = await params;
+const session = await getServerSession(authOptions);
 
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -122,7 +128,7 @@ export async function POST(
 
     await connectDB();
 
-    const ticket = await Ticket.findById(params.id);
+    const ticket = await Ticket.findById(id);
 
     if (!ticket) {
       return NextResponse.json(

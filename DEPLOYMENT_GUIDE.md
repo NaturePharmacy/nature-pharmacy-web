@@ -15,7 +15,7 @@
 
 1. Connectez-vous à votre interface **Bluehost**
 2. Menu **Websites** → Section **Connect over SSH**
-3. Vous verrez votre commande SSH: `ssh iboffromy@50.6.19.21`
+3. Vous verrez votre commande SSH: `ssh lbofromy@50.6.19.21`
 
 ### Depuis Votre Ordinateur
 
@@ -25,7 +25,7 @@ Ouvrez un terminal:
 
 Exécutez:
 ```bash
-ssh iboffromy@50.6.19.21
+ssh lbofromy@50.6.19.21
 ```
 
 Entrez votre mot de passe Bluehost quand demandé.
@@ -34,24 +34,30 @@ Entrez votre mot de passe Bluehost quand demandé.
 
 ## 📤 Étape 2: Uploader les Fichiers
 
-### Option A: Via File Manager (Interface Bluehost/cPanel)
+### Via FileZilla (Recommandé)
 
-1. Dans cPanel, allez dans **Files** → **File Manager**
-2. Naviguez vers `/home1/iboffromy/`
-3. Créez un dossier `nature-pharmacy`
-4. Uploadez tous les fichiers **SAUF**:
-   - `node_modules/` (sera réinstallé)
-   - `.next/` (sera reconstruit)
-   - `.git/` (optionnel)
+**Note**: Buildez le projet LOCALEMENT d'abord (voir étape 2.1), puis uploadez tout.
 
-### Option B: Via Git (Recommandé)
+1. Ouvrez **FileZilla**
+2. Connectez-vous:
+   - **Hôte**: `50.6.19.21`
+   - **Utilisateur**: `lbofromy`
+   - **Mot de passe**: Votre mot de passe Bluehost
+   - **Port**: 21 (FTP) ou 22 (SFTP)
 
-Une fois connecté en SSH:
+3. Naviguez vers `/home1/lbofromy/`
+4. Créez un dossier `nature-pharmacy`
+5. Uploadez **TOUS** les fichiers du projet (incluant `.next/`)
+
+### 2.1 Build Local (AVANT upload)
+
+Sur votre PC:
 ```bash
-cd /home1/iboffromy
-git clone https://github.com/VOTRE-USERNAME/nature-pharmacy.git
-cd nature-pharmacy
+cd "c:\Users\pc\Nature Pharmacy\nature-pharmacy"
+npm run build
 ```
+
+⚠️ **Important**: Le serveur Bluehost n'a pas assez de RAM pour builder. Faites le build localement !
 
 ---
 
@@ -61,7 +67,7 @@ cd nature-pharmacy
 
 En SSH, dans le dossier du projet:
 ```bash
-cd /home1/iboffromy/nature-pharmacy
+cd /home1/lbofromy/nature-pharmacy
 nano .env.production
 ```
 
@@ -82,21 +88,15 @@ SITE_PASSWORD=clientpreview2024
 - `Ctrl+O` puis `Enter` pour sauvegarder
 - `Ctrl+X` pour quitter
 
-### 3.2 Installer les dépendances
+### 3.2 Installer les dépendances (sur serveur)
 
 ```bash
-npm install
+npm install --production
 ```
 
 ⏱️ Cela peut prendre 2-5 minutes.
 
-### 3.3 Build du projet
-
-```bash
-npm run build
-```
-
-⏱️ Cela peut prendre 1-3 minutes.
+**Note**: Pas besoin de `npm run build` - vous l'avez déjà fait localement et uploadé le dossier `.next/` !
 
 ---
 
@@ -174,7 +174,7 @@ Une fois le client satisfait:
 
 1. **Modifier .env.production**:
 ```bash
-nano /home1/iboffromy/nature-pharmacy/.env.production
+nano /home1/lbofromy/nature-pharmacy/.env.production
 ```
 
 2. **Supprimer ou commenter la ligne**:
@@ -218,11 +218,12 @@ npm run build
 
 ### Mettre à jour le site
 
+1. Sur votre PC, buildez: `npm run build`
+2. Uploadez les fichiers modifiés via FileZilla
+3. En SSH:
 ```bash
-cd /home1/iboffromy/nature-pharmacy
-git pull origin master
-npm install
-npm run build
+cd /home1/lbofromy/nature-pharmacy
+npm install --production
 pm2 restart nature-pharmacy
 ```
 

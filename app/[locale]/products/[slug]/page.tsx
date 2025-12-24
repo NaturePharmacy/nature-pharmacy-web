@@ -514,7 +514,7 @@ export default function ProductDetailPage() {
 
         {/* Medical Information Section */}
         <div className="mt-12">
-          <MedicalInformation product={product} />
+          <MedicalInformation product={product as any} />
         </div>
 
         {/* Reviews Section */}

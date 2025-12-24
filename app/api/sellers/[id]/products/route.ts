@@ -6,13 +6,15 @@ import User from '@/models/User';
 // GET /api/sellers/[id]/products - Get seller's products
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
+    const { id } = await params;
+
     // Verify seller exists and is approved
-    const seller = await User.findById(params.id);
+    const seller = await User.findById(id);
     if (!seller || seller.sellerInfo?.status !== 'approved') {
       return NextResponse.json(
         { error: 'Seller not found' },
@@ -29,7 +31,7 @@ export async function GET(
 
     // Build query
     let query: any = {
-      seller: params.id,
+      seller: id,
       isActive: true,
     };
 

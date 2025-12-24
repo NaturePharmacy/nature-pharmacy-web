@@ -106,7 +106,7 @@ export default function SellerDashboard() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800">{t('title')}</h1>
-          <p className="text-gray-600 mt-1">{t('welcome', { name: session?.user?.name })}</p>
+          <p className="text-gray-600 mt-1">{t('welcome', { name: session?.user?.name || 'Vendeur' })}</p>
         </div>
 
         {/* Quick Actions */}

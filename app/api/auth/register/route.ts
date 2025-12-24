@@ -71,7 +71,8 @@ export async function POST(request: NextRequest) {
 
     // Add user to referrer's referred list
     if (referrerData) {
-      await referrerData.addReferred(user._id);
+      referrerData.referred.push(user._id as any);
+      await referrerData.save();
     }
 
     // Send verification email

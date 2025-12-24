@@ -7,12 +7,14 @@ import ShippingZone from '@/models/ShippingZone';
 // GET /api/shipping/zones/[id] - Get single shipping zone
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await connectDB();
+    
+    const { id } = await params;
+await connectDB();
 
-    const zone = await ShippingZone.findById(params.id).lean();
+    const zone = await ShippingZone.findById(id).lean();
 
     if (!zone) {
       return NextResponse.json(
@@ -34,10 +36,12 @@ export async function GET(
 // PUT /api/shipping/zones/[id] - Update shipping zone (admin only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    
+    const { id } = await params;
+const session = await getServerSession(authOptions);
 
     if (!session?.user || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -48,7 +52,7 @@ export async function PUT(
     const data = await request.json();
 
     const zone = await ShippingZone.findByIdAndUpdate(
-      params.id,
+      id,
       data,
       { new: true, runValidators: true }
     );
@@ -76,10 +80,12 @@ export async function PUT(
 // DELETE /api/shipping/zones/[id] - Delete shipping zone (admin only)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    
+    const { id } = await params;
+const session = await getServerSession(authOptions);
 
     if (!session?.user || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -87,7 +93,7 @@ export async function DELETE(
 
     await connectDB();
 
-    const zone = await ShippingZone.findByIdAndDelete(params.id);
+    const zone = await ShippingZone.findByIdAndDelete(id);
 
     if (!zone) {
       return NextResponse.json(

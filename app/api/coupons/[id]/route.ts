@@ -7,7 +7,7 @@ import Coupon from '@/models/Coupon';
 // GET /api/coupons/[id] - Get single coupon (admin only)
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -18,7 +18,8 @@ export async function GET(
 
     await connectDB();
 
-    const coupon = await Coupon.findById(params.id)
+    const { id } = await params;
+    const coupon = await Coupon.findById(id)
       .populate('createdBy', 'name email')
       .lean();
 
@@ -42,7 +43,7 @@ export async function GET(
 // PUT /api/coupons/[id] - Update coupon (admin only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -58,7 +59,8 @@ export async function PUT(
     // Don't allow changing usage count manually
     delete data.usageCount;
 
-    const coupon = await Coupon.findByIdAndUpdate(params.id, data, {
+    const { id } = await params;
+    const coupon = await Coupon.findByIdAndUpdate(id, data, {
       new: true,
       runValidators: true,
     });
@@ -86,7 +88,7 @@ export async function PUT(
 // DELETE /api/coupons/[id] - Delete coupon (admin only)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -97,7 +99,8 @@ export async function DELETE(
 
     await connectDB();
 
-    const coupon = await Coupon.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const coupon = await Coupon.findByIdAndDelete(id);
 
     if (!coupon) {
       return NextResponse.json(
