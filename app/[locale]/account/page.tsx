@@ -312,7 +312,7 @@ export default function AccountPage() {
               <h3 className="text-lg font-semibold text-blue-900 mb-4">Seller Dashboard</h3>
               <div className="flex gap-4">
                 <Link
-                  href={`/${locale}/seller/dashboard`}
+                  href={`/${locale}/seller`}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Go to Seller Dashboard

@@ -35,7 +35,7 @@ export default function BecomeSellerPage() {
     }
 
     if (session?.user?.role === 'seller') {
-      router.push(`/${locale}/seller/dashboard`);
+      router.push(`/${locale}/seller`);
     }
   }, [session, status, router, locale]);
 
@@ -63,7 +63,7 @@ export default function BecomeSellerPage() {
       await update();
 
       setTimeout(() => {
-        router.push(`/${locale}/seller/dashboard`);
+        router.push(`/${locale}/seller`);
       }, 2000);
     } catch (err: any) {
       setError(err.message);
