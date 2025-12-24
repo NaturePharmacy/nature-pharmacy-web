@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import SessionProvider from '@/components/providers/SessionProvider';
 import { CartProvider } from '@/contexts/CartContext';
+import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import FloatingCart from '@/components/cart/FloatingCart';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -41,14 +42,16 @@ export default async function RootLayout({
       >
         <SessionProvider>
           <NextIntlClientProvider messages={messages}>
-            <CartProvider>
-              <Header />
-              <main>
-                {children}
-              </main>
-              <Footer />
-              <FloatingCart />
-            </CartProvider>
+            <CurrencyProvider>
+              <CartProvider>
+                <Header />
+                <main>
+                  {children}
+                </main>
+                <Footer />
+                <FloatingCart />
+              </CartProvider>
+            </CurrencyProvider>
           </NextIntlClientProvider>
         </SessionProvider>
       </body>

@@ -27,24 +27,6 @@ const nextConfig: NextConfig = {
       static: 180,
     },
   },
-  webpack: (config, { isServer }) => {
-    // Exclude ssh2 and native modules from bundle (not used in production)
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-        crypto: false,
-      };
-    }
-    config.externals = config.externals || [];
-    config.externals.push({
-      'ssh2-sftp-client': 'commonjs ssh2-sftp-client',
-      'ssh2': 'commonjs ssh2',
-    });
-    return config;
-  },
 };
 
 export default withNextIntl(nextConfig);
