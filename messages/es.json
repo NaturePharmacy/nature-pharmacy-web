@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "Nature Pharmacy - Tu marketplace en línea de productos naturales",
+    "description": "Descubre y compra productos naturales de vendedores de confianza de todo el mundo"
+  },
   "header": {
     "search": "Buscar remedios naturales...",
     "cart": "Carrito",
@@ -172,17 +176,25 @@
     "estimatedDelivery": "Entrega estimada"
   },
   "footer": {
+    "backToTop": "Volver arriba",
+    "getToKnowUs": "Conócenos",
     "aboutUs": "Sobre nosotros",
     "contactUs": "Contáctanos",
-    "termsOfService": "Términos de servicio",
-    "privacyPolicy": "Política de privacidad",
-    "help": "Centro de ayuda",
-    "followUs": "Síguenos",
-    "copyright": "© 2025 Nature Pharmacy. Todos los derechos reservados.",
+    "careers": "Empleo",
     "forSellers": "Para vendedores",
     "becomeSeller": "Convertirse en vendedor",
     "sellerDashboard": "Panel de vendedor",
     "sellerGuide": "Guía del vendedor",
+    "yourAccount": "Tu cuenta",
+    "account": "Cuenta",
+    "orders": "Pedidos",
+    "wishlist": "Lista de deseos",
+    "termsOfService": "Términos de servicio",
+    "privacyPolicy": "Política de privacidad",
+    "cookies": "Política de cookies",
+    "help": "Centro de ayuda",
+    "followUs": "Síguenos",
+    "copyright": "© 2025 Nature Pharmacy. Todos los derechos reservados.",
     "description": "Tu marketplace en línea de confianza para medicina tradicional y remedios naturales de practicantes de todo el mundo."
   },
   "productDetail": {

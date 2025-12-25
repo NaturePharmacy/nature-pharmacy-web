@@ -45,7 +45,6 @@ export default function LoginPage() {
         setError(tErrors('loginFailed'));
       } else {
         router.push(`/${locale}`);
-        router.refresh();
       }
     } catch (err) {
       setError(tErrors('loginFailed'));

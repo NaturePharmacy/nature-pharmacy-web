@@ -19,7 +19,7 @@ export default function Footer() {
         onClick={scrollToTop}
         className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 text-sm font-medium transition-colors"
       >
-        {locale === 'fr' ? 'Retour en haut' : locale === 'es' ? 'Volver arriba' : 'Back to top'}
+        {t('backToTop')}
       </button>
 
       {/* Main Footer */}
@@ -29,7 +29,7 @@ export default function Footer() {
             {/* Get to Know Us */}
             <div>
               <h3 className="text-gray-900 font-bold text-sm mb-4">
-                {locale === 'fr' ? 'Mieux nous connaître' : locale === 'es' ? 'Conócenos' : 'Get to Know Us'}
+                {t('getToKnowUs')}
               </h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
@@ -44,7 +44,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link href={`/${locale}/careers`} className="text-gray-600 hover:text-green-600 transition-colors">
-                    {locale === 'fr' ? 'Carrières' : locale === 'es' ? 'Empleo' : 'Careers'}
+                    {t('careers')}
                   </Link>
                 </li>
               </ul>
@@ -72,28 +72,23 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Help */}
+            {/* Your Account */}
             <div>
-              <h3 className="text-gray-900 font-bold text-sm mb-4">{t('help')}</h3>
+              <h3 className="text-gray-900 font-bold text-sm mb-4">{t('yourAccount')}</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
                   <Link href={`/${locale}/account`} className="text-gray-600 hover:text-green-600 transition-colors">
-                    {locale === 'fr' ? 'Votre compte' : locale === 'es' ? 'Tu cuenta' : 'Your Account'}
+                    {t('account')}
                   </Link>
                 </li>
                 <li>
                   <Link href={`/${locale}/orders`} className="text-gray-600 hover:text-green-600 transition-colors">
-                    {locale === 'fr' ? 'Vos commandes' : locale === 'es' ? 'Tus pedidos' : 'Your Orders'}
+                    {t('orders')}
                   </Link>
                 </li>
                 <li>
-                  <Link href={`/${locale}/shipping`} className="text-gray-600 hover:text-green-600 transition-colors">
-                    {locale === 'fr' ? 'Livraison' : locale === 'es' ? 'Envío' : 'Shipping'}
-                  </Link>
-                </li>
-                <li>
-                  <Link href={`/${locale}/returns`} className="text-gray-600 hover:text-green-600 transition-colors">
-                    {locale === 'fr' ? 'Retours' : locale === 'es' ? 'Devoluciones' : 'Returns'}
+                  <Link href={`/${locale}/wishlist`} className="text-gray-600 hover:text-green-600 transition-colors">
+                    {t('wishlist')}
                   </Link>
                 </li>
               </ul>
@@ -101,9 +96,7 @@ export default function Footer() {
 
             {/* Legal */}
             <div>
-              <h3 className="text-gray-900 font-bold text-sm mb-4">
-                {locale === 'fr' ? 'Mentions légales' : locale === 'es' ? 'Legal' : 'Legal'}
-              </h3>
+              <h3 className="text-gray-900 font-bold text-sm mb-4">{t('help')}</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
                   <Link href={`/${locale}/terms`} className="text-gray-600 hover:text-green-600 transition-colors">
@@ -117,7 +110,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link href={`/${locale}/cookies`} className="text-gray-600 hover:text-green-600 transition-colors">
-                    {locale === 'fr' ? 'Cookies' : locale === 'es' ? 'Cookies' : 'Cookies'}
+                    {t('cookies')}
                   </Link>
                 </li>
               </ul>

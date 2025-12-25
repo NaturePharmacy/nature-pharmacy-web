@@ -161,7 +161,6 @@ export default function RegisterPage() {
       } else {
         // Both registration and login succeeded
         router.push(`/${locale}`);
-        router.refresh();
       }
     } catch (err) {
       setError(tErrors('registrationFailed'));

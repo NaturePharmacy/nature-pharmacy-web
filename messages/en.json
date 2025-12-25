@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "Nature Pharmacy - Your Online Marketplace for Natural Products",
+    "description": "Discover and buy natural products from trusted sellers worldwide"
+  },
   "header": {
     "search": "Search natural remedies...",
     "cart": "Cart",
@@ -172,17 +176,25 @@
     "estimatedDelivery": "Estimated Delivery"
   },
   "footer": {
+    "backToTop": "Back to top",
+    "getToKnowUs": "Get to Know Us",
     "aboutUs": "About Us",
     "contactUs": "Contact Us",
-    "termsOfService": "Terms of Service",
-    "privacyPolicy": "Privacy Policy",
-    "help": "Help Center",
-    "followUs": "Follow Us",
-    "copyright": "© 2025 Nature Pharmacy. All rights reserved.",
+    "careers": "Careers",
     "forSellers": "For Sellers",
     "becomeSeller": "Become a Seller",
     "sellerDashboard": "Seller Dashboard",
     "sellerGuide": "Seller Guide",
+    "yourAccount": "Your Account",
+    "account": "Account",
+    "orders": "Orders",
+    "wishlist": "Wishlist",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "help": "Help Center",
+    "followUs": "Follow Us",
+    "copyright": "© 2025 Nature Pharmacy. All rights reserved.",
     "description": "Your trusted online marketplace for natural and organic products from sellers worldwide."
   },
   "productDetail": {

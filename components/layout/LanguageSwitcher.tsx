@@ -1,13 +1,14 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const handleChange = (newLocale: string) => {
@@ -17,14 +18,21 @@ export default function LanguageSwitcher() {
     const segments = pathname.split('/').filter(Boolean);
     const pathWithoutLocale = segments.slice(1).join('/'); // Remove first segment (locale)
 
-    // Build new path with new locale
-    const newPath = `/${newLocale}${pathWithoutLocale ? `/${pathWithoutLocale}` : ''}`;
+    // Preserve query strings
+    const queryString = searchParams.toString();
+    const queryPart = queryString ? `?${queryString}` : '';
+
+    // Build new path with new locale and query strings
+    const newPath = `/${newLocale}${pathWithoutLocale ? `/${pathWithoutLocale}` : ''}${queryPart}`;
 
     // Use startTransition for smoother navigation
+    // Note: router.refresh() removed - next-intl handles translation updates automatically
     startTransition(() => {
       router.push(newPath);
-      router.refresh(); // Force refresh to reload translations
     });
+
+    // Set cookie to remember language preference
+    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
   };
 
   return (
