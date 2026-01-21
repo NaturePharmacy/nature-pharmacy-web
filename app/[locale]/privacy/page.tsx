@@ -1,458 +1,328 @@
-'use client';
-
-import { useLocale } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
+import { Metadata } from 'next';
 import Link from 'next/link';
 
-export default function PrivacyPage() {
-  const locale = useLocale() as 'fr' | 'en' | 'es';
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'privacy' });
 
-  const content = {
-    fr: {
-      title: 'Politique de Confidentialité',
-      lastUpdated: 'Dernière mise à jour : 1er décembre 2025',
-      intro: 'Nature Pharmacy s\'engage à protéger votre vie privée. Cette politique explique comment nous collectons, utilisons et protégeons vos informations personnelles.',
-      sections: [
-        {
-          title: '1. Informations que nous collectons',
-          subsections: [
-            {
-              title: 'Informations fournies par vous',
-              items: [
-                'Nom complet et coordonnées (email, téléphone)',
-                'Adresse de livraison et de facturation',
-                'Informations de paiement (traitées par nos partenaires sécurisés)',
-                'Historique d\'achats et préférences',
-                'Communications avec notre service client',
-              ],
-            },
-            {
-              title: 'Informations collectées automatiquement',
-              items: [
-                'Adresse IP et données de localisation',
-                'Type de navigateur et appareil utilisé',
-                'Pages visitées et temps passé sur le site',
-                'Cookies et technologies similaires',
-              ],
-            },
-          ],
-        },
-        {
-          title: '2. Comment nous utilisons vos informations',
-          items: [
-            'Traiter et livrer vos commandes',
-            'Communiquer avec vous concernant vos achats',
-            'Améliorer nos services et l\'expérience utilisateur',
-            'Envoyer des offres promotionnelles (avec votre consentement)',
-            'Prévenir la fraude et assurer la sécurité',
-            'Respecter nos obligations légales',
-          ],
-        },
-        {
-          title: '3. Partage de vos informations',
-          content: 'Nous ne vendons jamais vos informations personnelles. Nous partageons vos données uniquement avec :',
-          items: [
-            'Les vendeurs pour le traitement de vos commandes',
-            'Les partenaires de paiement pour traiter les transactions',
-            'Les transporteurs pour la livraison',
-            'Les prestataires de services techniques (hébergement, analytics)',
-            'Les autorités légales si requis par la loi',
-          ],
-        },
-        {
-          title: '4. Protection de vos données',
-          items: [
-            'Chiffrement SSL/TLS pour toutes les transmissions',
-            'Accès restreint aux données personnelles',
-            'Stockage sécurisé sur des serveurs protégés',
-            'Audits de sécurité réguliers',
-            'Formation du personnel sur la protection des données',
-          ],
-        },
-        {
-          title: '5. Vos droits',
-          content: 'Conformément au RGPD et aux lois locales, vous avez le droit de :',
-          items: [
-            'Accéder à vos données personnelles',
-            'Rectifier des informations inexactes',
-            'Supprimer vos données (droit à l\'oubli)',
-            'Limiter le traitement de vos données',
-            'Vous opposer au traitement',
-            'Recevoir vos données dans un format portable',
-            'Retirer votre consentement à tout moment',
-          ],
-        },
-        {
-          title: '6. Cookies',
-          content: 'Nous utilisons des cookies pour améliorer votre expérience. Types de cookies :',
-          items: [
-            'Cookies essentiels : nécessaires au fonctionnement du site',
-            'Cookies de performance : analyse de l\'utilisation du site',
-            'Cookies de fonctionnalité : mémorisation de vos préférences',
-            'Cookies publicitaires : personnalisation des annonces',
-          ],
-          link: 'Consultez notre politique sur les cookies pour plus de détails.',
-        },
-        {
-          title: '7. Conservation des données',
-          items: [
-            'Données de compte : tant que votre compte est actif',
-            'Historique d\'achats : 10 ans (obligations fiscales)',
-            'Données marketing : jusqu\'à retrait du consentement',
-            'Données de navigation : 13 mois maximum',
-          ],
-        },
-        {
-          title: '8. Transferts internationaux',
-          content: 'Vos données peuvent être transférées et stockées dans d\'autres pays. Nous assurons un niveau de protection adéquat conformément aux réglementations applicables.',
-        },
-        {
-          title: '9. Mineurs',
-          content: 'Notre service n\'est pas destiné aux personnes de moins de 18 ans. Nous ne collectons pas sciemment d\'informations auprès de mineurs.',
-        },
-        {
-          title: '10. Modifications de cette politique',
-          content: 'Nous pouvons mettre à jour cette politique occasionnellement. Les modifications seront publiées sur cette page avec une nouvelle date de mise à jour.',
-        },
-        {
-          title: '11. Contact',
-          content: 'Pour toute question concernant cette politique ou pour exercer vos droits :',
-          contact: {
-            email: 'privacy@naturepharmacy.sn',
-            phone: '+221 XX XXX XX XX',
-            address: 'Délégué à la Protection des Données, Nature Pharmacy, Dakar, Sénégal',
-          },
-        },
-      ],
-    },
-    en: {
-      title: 'Privacy Policy',
-      lastUpdated: 'Last updated: December 1, 2025',
-      intro: 'Nature Pharmacy is committed to protecting your privacy. This policy explains how we collect, use and protect your personal information.',
-      sections: [
-        {
-          title: '1. Information we collect',
-          subsections: [
-            {
-              title: 'Information provided by you',
-              items: [
-                'Full name and contact details (email, phone)',
-                'Delivery and billing address',
-                'Payment information (processed by our secure partners)',
-                'Purchase history and preferences',
-                'Communications with our customer service',
-              ],
-            },
-            {
-              title: 'Information collected automatically',
-              items: [
-                'IP address and location data',
-                'Browser type and device used',
-                'Pages visited and time spent on site',
-                'Cookies and similar technologies',
-              ],
-            },
-          ],
-        },
-        {
-          title: '2. How we use your information',
-          items: [
-            'Process and deliver your orders',
-            'Communicate with you regarding your purchases',
-            'Improve our services and user experience',
-            'Send promotional offers (with your consent)',
-            'Prevent fraud and ensure security',
-            'Comply with our legal obligations',
-          ],
-        },
-        {
-          title: '3. Sharing your information',
-          content: 'We never sell your personal information. We share your data only with:',
-          items: [
-            'Sellers to process your orders',
-            'Payment partners to process transactions',
-            'Carriers for delivery',
-            'Technical service providers (hosting, analytics)',
-            'Legal authorities if required by law',
-          ],
-        },
-        {
-          title: '4. Data protection',
-          items: [
-            'SSL/TLS encryption for all transmissions',
-            'Restricted access to personal data',
-            'Secure storage on protected servers',
-            'Regular security audits',
-            'Staff training on data protection',
-          ],
-        },
-        {
-          title: '5. Your rights',
-          content: 'In accordance with GDPR and local laws, you have the right to:',
-          items: [
-            'Access your personal data',
-            'Rectify inaccurate information',
-            'Delete your data (right to be forgotten)',
-            'Limit data processing',
-            'Object to processing',
-            'Receive your data in a portable format',
-            'Withdraw your consent at any time',
-          ],
-        },
-        {
-          title: '6. Cookies',
-          content: 'We use cookies to improve your experience. Types of cookies:',
-          items: [
-            'Essential cookies: necessary for site operation',
-            'Performance cookies: site usage analysis',
-            'Functionality cookies: memorization of preferences',
-            'Advertising cookies: ad personalization',
-          ],
-          link: 'See our cookie policy for more details.',
-        },
-        {
-          title: '7. Data retention',
-          items: [
-            'Account data: as long as your account is active',
-            'Purchase history: 10 years (tax obligations)',
-            'Marketing data: until consent withdrawal',
-            'Browsing data: 13 months maximum',
-          ],
-        },
-        {
-          title: '8. International transfers',
-          content: 'Your data may be transferred and stored in other countries. We ensure an adequate level of protection in accordance with applicable regulations.',
-        },
-        {
-          title: '9. Minors',
-          content: 'Our service is not intended for persons under 18 years of age. We do not knowingly collect information from minors.',
-        },
-        {
-          title: '10. Changes to this policy',
-          content: 'We may update this policy occasionally. Changes will be posted on this page with a new update date.',
-        },
-        {
-          title: '11. Contact',
-          content: 'For any questions regarding this policy or to exercise your rights:',
-          contact: {
-            email: 'privacy@naturepharmacy.sn',
-            phone: '+221 XX XXX XX XX',
-            address: 'Data Protection Officer, Nature Pharmacy, Dakar, Senegal',
-          },
-        },
-      ],
-    },
-    es: {
-      title: 'Política de Privacidad',
-      lastUpdated: 'Última actualización: 1 de diciembre de 2025',
-      intro: 'Nature Pharmacy se compromete a proteger su privacidad. Esta política explica cómo recopilamos, usamos y protegemos su información personal.',
-      sections: [
-        {
-          title: '1. Información que recopilamos',
-          subsections: [
-            {
-              title: 'Información proporcionada por usted',
-              items: [
-                'Nombre completo y datos de contacto (correo, teléfono)',
-                'Dirección de entrega y facturación',
-                'Información de pago (procesada por nuestros socios seguros)',
-                'Historial de compras y preferencias',
-                'Comunicaciones con nuestro servicio al cliente',
-              ],
-            },
-            {
-              title: 'Información recopilada automáticamente',
-              items: [
-                'Dirección IP y datos de ubicación',
-                'Tipo de navegador y dispositivo usado',
-                'Páginas visitadas y tiempo en el sitio',
-                'Cookies y tecnologías similares',
-              ],
-            },
-          ],
-        },
-        {
-          title: '2. Cómo usamos su información',
-          items: [
-            'Procesar y entregar sus pedidos',
-            'Comunicarnos con usted sobre sus compras',
-            'Mejorar nuestros servicios y experiencia de usuario',
-            'Enviar ofertas promocionales (con su consentimiento)',
-            'Prevenir fraude y garantizar seguridad',
-            'Cumplir con nuestras obligaciones legales',
-          ],
-        },
-        {
-          title: '3. Compartir su información',
-          content: 'Nunca vendemos su información personal. Compartimos sus datos solo con:',
-          items: [
-            'Vendedores para procesar sus pedidos',
-            'Socios de pago para procesar transacciones',
-            'Transportistas para la entrega',
-            'Proveedores de servicios técnicos (alojamiento, análisis)',
-            'Autoridades legales si lo requiere la ley',
-          ],
-        },
-        {
-          title: '4. Protección de datos',
-          items: [
-            'Cifrado SSL/TLS para todas las transmisiones',
-            'Acceso restringido a datos personales',
-            'Almacenamiento seguro en servidores protegidos',
-            'Auditorías de seguridad regulares',
-            'Capacitación del personal en protección de datos',
-          ],
-        },
-        {
-          title: '5. Sus derechos',
-          content: 'De acuerdo con el RGPD y las leyes locales, tiene derecho a:',
-          items: [
-            'Acceder a sus datos personales',
-            'Rectificar información inexacta',
-            'Eliminar sus datos (derecho al olvido)',
-            'Limitar el procesamiento de datos',
-            'Oponerse al procesamiento',
-            'Recibir sus datos en formato portátil',
-            'Retirar su consentimiento en cualquier momento',
-          ],
-        },
-        {
-          title: '6. Cookies',
-          content: 'Usamos cookies para mejorar su experiencia. Tipos de cookies:',
-          items: [
-            'Cookies esenciales: necesarias para el funcionamiento del sitio',
-            'Cookies de rendimiento: análisis del uso del sitio',
-            'Cookies de funcionalidad: memorización de preferencias',
-            'Cookies publicitarias: personalización de anuncios',
-          ],
-          link: 'Consulte nuestra política de cookies para más detalles.',
-        },
-        {
-          title: '7. Retención de datos',
-          items: [
-            'Datos de cuenta: mientras su cuenta esté activa',
-            'Historial de compras: 10 años (obligaciones fiscales)',
-            'Datos de marketing: hasta el retiro del consentimiento',
-            'Datos de navegación: 13 meses máximo',
-          ],
-        },
-        {
-          title: '8. Transferencias internacionales',
-          content: 'Sus datos pueden transferirse y almacenarse en otros países. Aseguramos un nivel adecuado de protección de acuerdo con las regulaciones aplicables.',
-        },
-        {
-          title: '9. Menores',
-          content: 'Nuestro servicio no está destinado a personas menores de 18 años. No recopilamos información de menores a sabiendas.',
-        },
-        {
-          title: '10. Cambios en esta política',
-          content: 'Podemos actualizar esta política ocasionalmente. Los cambios se publicarán en esta página con una nueva fecha de actualización.',
-        },
-        {
-          title: '11. Contacto',
-          content: 'Para cualquier pregunta sobre esta política o para ejercer sus derechos:',
-          contact: {
-            email: 'privacy@naturepharmacy.sn',
-            phone: '+221 XX XXX XX XX',
-            address: 'Oficial de Protección de Datos, Nature Pharmacy, Dakar, Senegal',
-          },
-        },
-      ],
+  return {
+    title: t('title'),
+    description: t('description'),
+    robots: {
+      index: true,
+      follow: true,
     },
   };
+}
 
-  const t = content[locale] || content.fr;
+export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'privacy' });
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      
-      <main className="flex-1 py-12">
-        <div className="max-w-4xl mx-auto px-4">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-3">{t.title}</h1>
-            <p className="text-sm text-gray-500 mb-4">{t.lastUpdated}</p>
-            <p className="text-lg text-gray-700 leading-relaxed">{t.intro}</p>
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-4xl mx-auto px-4">
+        {/* Header */}
+        <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">{t('title')}</h1>
+          <p className="text-gray-600">{t('lastUpdated')}: {new Date().toLocaleDateString(locale)}</p>
+          <div className="mt-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
+            <p className="text-sm text-gray-700">{t('intro')}</p>
           </div>
+        </div>
 
-          {/* Sections */}
-          <div className="space-y-6">
-            {t.sections.map((section, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  {section.title}
-                </h2>
+        {/* Content */}
+        <div className="bg-white rounded-lg shadow-sm p-8 space-y-8">
 
-                {section.content && (
-                  <p className="text-gray-700 mb-3">{section.content}</p>
-                )}
-
-                {section.subsections ? (
-                  <div className="space-y-4">
-                    {section.subsections.map((subsection, subIndex) => (
-                      <div key={subIndex}>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                          {subsection.title}
-                        </h3>
-                        <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                          {subsection.items.map((item, itemIndex) => (
-                            <li key={itemIndex}>{item}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                ) : section.items ? (
-                  <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                    {section.items.map((item, itemIndex) => (
-                      <li key={itemIndex}>{item}</li>
-                    ))}
-                  </ul>
-                ) : null}
-
-                {section.link && (
-                  <p className="text-gray-700 mt-3">
-                    <Link href={`/${locale}/cookies`} className="text-green-600 hover:text-green-700 underline">
-                      {section.link}
-                    </Link>
-                  </p>
-                )}
-
-                {section.contact && (
-                  <div className="mt-4 space-y-2">
-                    <p className="text-gray-700">
-                      <span className="font-semibold">Email:</span> {section.contact.email}
-                    </p>
-                    <p className="text-gray-700">
-                      <span className="font-semibold">{locale === 'fr' ? 'Téléphone' : locale === 'en' ? 'Phone' : 'Teléfono'}:</span> {section.contact.phone}
-                    </p>
-                    <p className="text-gray-700">
-                      <span className="font-semibold">{locale === 'fr' ? 'Adresse' : locale === 'en' ? 'Address' : 'Dirección'}:</span> {section.contact.address}
-                    </p>
-                  </div>
-                )}
+          {/* Section 1: Responsable du traitement */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section1.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 mb-3">{t('section1.content1')}</p>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-gray-700 mb-2">
+                  <strong>{t('section1.companyName')}:</strong> Nature Pharmacy
+                </p>
+                <p className="text-gray-700 mb-2">
+                  <strong>{t('section1.siret')}:</strong> [À COMPLÉTER - 14 chiffres]
+                </p>
+                <p className="text-gray-700 mb-2">
+                  <strong>{t('section1.address')}:</strong> [À COMPLÉTER - Adresse complète]
+                </p>
+                <p className="text-gray-700 mb-2">
+                  <strong>{t('section1.email')}:</strong> contact@nature-pharmacy.com
+                </p>
+                <p className="text-gray-700 mb-2">
+                  <strong>{t('section1.dpo')}:</strong> [À COMPLÉTER - Nom du DPO]
+                </p>
+                <p className="text-gray-700">
+                  <strong>{t('section1.dpoEmail')}:</strong> dpo@nature-pharmacy.com
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
+          </section>
 
-          {/* Footer CTA */}
-          <div className="mt-8 bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-            <p className="text-gray-700 mb-4">
-              {locale === 'fr' && 'Des questions sur notre politique de confidentialité ?'}
-              {locale === 'en' && 'Questions about our privacy policy?'}
-              {locale === 'es' && '¿Preguntas sobre nuestra política de privacidad?'}
-            </p>
-            <Link
-              href={`/${locale}/contact`}
-              className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-            >
-              {locale === 'fr' && 'Contactez-nous'}
-              {locale === 'en' && 'Contact us'}
-              {locale === 'es' && 'Contáctenos'}
+          {/* Section 2: Données collectées */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section2.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 mb-4">{t('section2.content1')}</p>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('section2.categoryIdentity')}</h4>
+                  <p className="text-sm text-gray-700">{t('section2.identityItems')}</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('section2.categoryContact')}</h4>
+                  <p className="text-sm text-gray-700">{t('section2.contactItems')}</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('section2.categoryOrder')}</h4>
+                  <p className="text-sm text-gray-700">{t('section2.orderItems')}</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('section2.categoryPayment')}</h4>
+                  <p className="text-sm text-gray-700">{t('section2.paymentItems')}</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('section2.categoryConnection')}</h4>
+                  <p className="text-sm text-gray-700">{t('section2.connectionItems')}</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('section2.categoryTechnical')}</h4>
+                  <p className="text-sm text-gray-700">{t('section2.technicalItems')}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 3: Finalités du traitement */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section3.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 mb-3">{t('section3.content1')}</p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li className="text-gray-700">{t('section3.purpose1')}</li>
+                <li className="text-gray-700">{t('section3.purpose2')}</li>
+                <li className="text-gray-700">{t('section3.purpose3')}</li>
+                <li className="text-gray-700">{t('section3.purpose4')}</li>
+                <li className="text-gray-700">{t('section3.purpose5')}</li>
+                <li className="text-gray-700">{t('section3.purpose6')}</li>
+                <li className="text-gray-700">{t('section3.purpose7')}</li>
+              </ul>
+            </div>
+          </section>
+
+          {/* Section 4: Base légale du traitement */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section4.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 mb-4">{t('section4.content1')}</p>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('section4.basis1Title')}</h4>
+                  <p className="text-sm text-gray-700">{t('section4.basis1Desc')}</p>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('section4.basis2Title')}</h4>
+                  <p className="text-sm text-gray-700">{t('section4.basis2Desc')}</p>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('section4.basis3Title')}</h4>
+                  <p className="text-sm text-gray-700">{t('section4.basis3Desc')}</p>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('section4.basis4Title')}</h4>
+                  <p className="text-sm text-gray-700">{t('section4.basis4Desc')}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 5: Destinataires des données */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section5.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 mb-3">{t('section5.content1')}</p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li className="text-gray-700">{t('section5.recipient1')}</li>
+                <li className="text-gray-700">{t('section5.recipient2')}</li>
+                <li className="text-gray-700">{t('section5.recipient3')}</li>
+                <li className="text-gray-700">{t('section5.recipient4')}</li>
+                <li className="text-gray-700">{t('section5.recipient5')}</li>
+              </ul>
+              <p className="text-gray-700 mt-3">{t('section5.content2')}</p>
+            </div>
+          </section>
+
+          {/* Section 6: Durée de conservation */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section6.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 mb-3">{t('section6.content1')}</p>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <ul className="list-disc list-inside space-y-2 ml-4">
+                  <li className="text-gray-700">{t('section6.retention1')}</li>
+                  <li className="text-gray-700">{t('section6.retention2')}</li>
+                  <li className="text-gray-700">{t('section6.retention3')}</li>
+                  <li className="text-gray-700">{t('section6.retention4')}</li>
+                  <li className="text-gray-700">{t('section6.retention5')}</li>
+                  <li className="text-gray-700">{t('section6.retention6')}</li>
+                </ul>
+              </div>
+              <p className="text-gray-700 mt-3">{t('section6.content2')}</p>
+            </div>
+          </section>
+
+          {/* Section 7: Vos droits RGPD */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section7.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 mb-4">{t('section7.content1')}</p>
+              <div className="space-y-3">
+                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                  <h4 className="font-semibold text-gray-900 mb-1">{t('section7.right1Title')}</h4>
+                  <p className="text-sm text-gray-700">{t('section7.right1Desc')}</p>
+                </div>
+                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                  <h4 className="font-semibold text-gray-900 mb-1">{t('section7.right2Title')}</h4>
+                  <p className="text-sm text-gray-700">{t('section7.right2Desc')}</p>
+                </div>
+                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                  <h4 className="font-semibold text-gray-900 mb-1">{t('section7.right3Title')}</h4>
+                  <p className="text-sm text-gray-700">{t('section7.right3Desc')}</p>
+                </div>
+                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                  <h4 className="font-semibold text-gray-900 mb-1">{t('section7.right4Title')}</h4>
+                  <p className="text-sm text-gray-700">{t('section7.right4Desc')}</p>
+                </div>
+                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                  <h4 className="font-semibold text-gray-900 mb-1">{t('section7.right5Title')}</h4>
+                  <p className="text-sm text-gray-700">{t('section7.right5Desc')}</p>
+                </div>
+                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                  <h4 className="font-semibold text-gray-900 mb-1">{t('section7.right6Title')}</h4>
+                  <p className="text-sm text-gray-700">{t('section7.right6Desc')}</p>
+                </div>
+                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                  <h4 className="font-semibold text-gray-900 mb-1">{t('section7.right7Title')}</h4>
+                  <p className="text-sm text-gray-700">{t('section7.right7Desc')}</p>
+                </div>
+              </div>
+              <p className="text-gray-700 mt-4">{t('section7.content2')}</p>
+              <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mt-3">
+                <p className="text-gray-700">{t('section7.content3')}</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 8: Sécurité des données */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section8.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 mb-3">{t('section8.content1')}</p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li className="text-gray-700">{t('section8.measure1')}</li>
+                <li className="text-gray-700">{t('section8.measure2')}</li>
+                <li className="text-gray-700">{t('section8.measure3')}</li>
+                <li className="text-gray-700">{t('section8.measure4')}</li>
+                <li className="text-gray-700">{t('section8.measure5')}</li>
+                <li className="text-gray-700">{t('section8.measure6')}</li>
+              </ul>
+            </div>
+          </section>
+
+          {/* Section 9: Cookies */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section9.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 mb-3">{t('section9.content1')}</p>
+              <p className="text-gray-700">
+                {t('section9.content2')} <Link href={`/${locale}/cookies`} className="text-green-600 hover:underline font-medium">{t('section9.cookieLink')}</Link>.
+              </p>
+            </div>
+          </section>
+
+          {/* Section 10: Transferts internationaux */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section10.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700">{t('section10.content1')}</p>
+            </div>
+          </section>
+
+          {/* Section 11: Données des mineurs */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section11.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700">{t('section11.content1')}</p>
+            </div>
+          </section>
+
+          {/* Section 12: Modifications de la politique */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section12.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 mb-3">{t('section12.content1')}</p>
+              <p className="text-gray-700">{t('section12.content2')}</p>
+            </div>
+          </section>
+
+          {/* Section 13: Contact */}
+          <section>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('section13.title')}</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-700 mb-3">{t('section13.content1')}</p>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-gray-700 mb-2">
+                  <strong>{t('section13.emailLabel')}:</strong> contact@nature-pharmacy.com
+                </p>
+                <p className="text-gray-700 mb-2">
+                  <strong>{t('section13.dpoEmailLabel')}:</strong> dpo@nature-pharmacy.com
+                </p>
+                <p className="text-gray-700 mb-2">
+                  <strong>{t('section13.phoneLabel')}:</strong> [À COMPLÉTER]
+                </p>
+                <p className="text-gray-700">
+                  <strong>{t('section13.addressLabel')}:</strong> [À COMPLÉTER]
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* Footer navigation */}
+        <div className="mt-8 bg-white rounded-lg shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('relatedPages')}</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link href={`/${locale}/legal`} className="text-green-600 hover:underline flex items-center">
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+              {t('legalLink')}
+            </Link>
+            <Link href={`/${locale}/terms-of-use`} className="text-green-600 hover:underline flex items-center">
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+              {t('termsLink')}
+            </Link>
+            <Link href={`/${locale}/cookies`} className="text-green-600 hover:underline flex items-center">
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+              {t('cookieLink')}
+            </Link>
+            <Link href={`/${locale}/terms-of-sale`} className="text-green-600 hover:underline flex items-center">
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+              {t('cgvLink')}
             </Link>
           </div>
         </div>
-      </main>
-
-          </div>
+      </div>
+    </div>
   );
 }

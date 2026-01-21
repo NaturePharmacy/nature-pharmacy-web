@@ -34,8 +34,21 @@ export interface IOrder extends Document {
   loyaltyPointsUsed?: number;
   loyaltyPointsEarned?: number;
   paymentMethod: 'stripe' | 'paypal' | 'cash_on_delivery';
-  paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
+  paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded' | 'cancelled';
   paymentId?: string;
+  paymentDetails?: {
+    paymentIntentId?: string;
+    sessionId?: string;
+    paypalOrderId?: string;
+    paypalCaptureId?: string;
+    paidAt?: Date;
+    refundedAt?: Date;
+    amount?: number;
+    refundAmount?: number;
+    currency?: string;
+    failureReason?: string;
+    pendingReason?: string;
+  };
   itemsPrice: number;
   shippingPrice: number;
   taxPrice: number;
@@ -170,11 +183,24 @@ const OrderSchema = new Schema<IOrder>(
     },
     paymentStatus: {
       type: String,
-      enum: ['pending', 'paid', 'failed', 'refunded'],
+      enum: ['pending', 'paid', 'failed', 'refunded', 'cancelled'],
       default: 'pending',
     },
     paymentId: {
       type: String,
+    },
+    paymentDetails: {
+      paymentIntentId: String,
+      sessionId: String,
+      paypalOrderId: String,
+      paypalCaptureId: String,
+      paidAt: Date,
+      refundedAt: Date,
+      amount: Number,
+      refundAmount: Number,
+      currency: String,
+      failureReason: String,
+      pendingReason: String,
     },
     itemsPrice: {
       type: Number,

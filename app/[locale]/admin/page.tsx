@@ -58,9 +58,13 @@ export default function AdminDashboard() {
       recentUsers: 'Nouveaux utilisateurs',
       viewAll: 'Voir tout',
       quickActions: 'Actions rapides',
+      analytics: 'Analytique',
       manageUsers: 'Gérer les utilisateurs',
+      manageSellers: 'Gérer les vendeurs',
+      manageCategories: 'Gérer les catégories',
       manageProducts: 'Gérer les produits',
       manageOrders: 'Gérer les commandes',
+      manageReviews: 'Modérer les avis',
       settings: 'Paramètres',
       noAccess: 'Accès non autorisé',
       noAccessDesc: 'Vous n\'avez pas les permissions pour accéder à cette page.',
@@ -81,9 +85,13 @@ export default function AdminDashboard() {
       recentUsers: 'New Users',
       viewAll: 'View all',
       quickActions: 'Quick Actions',
+      analytics: 'Analytics',
       manageUsers: 'Manage Users',
+      manageSellers: 'Manage Sellers',
+      manageCategories: 'Manage Categories',
       manageProducts: 'Manage Products',
       manageOrders: 'Manage Orders',
+      manageReviews: 'Moderate Reviews',
       settings: 'Settings',
       noAccess: 'Access Denied',
       noAccessDesc: 'You do not have permission to access this page.',
@@ -249,7 +257,16 @@ export default function AdminDashboard() {
           {/* Quick Actions */}
           <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">{tr.quickActions}</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
+              <Link href={`/${locale}/admin/analytics`} className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-green-50 hover:border-green-200 border border-transparent transition group">
+                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-purple-200 transition">
+                  <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium text-gray-700">{tr.analytics}</span>
+              </Link>
+
               <Link href={`/${locale}/admin/users`} className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-green-50 hover:border-green-200 border border-transparent transition group">
                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-blue-200 transition">
                   <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -257,6 +274,24 @@ export default function AdminDashboard() {
                   </svg>
                 </div>
                 <span className="text-sm font-medium text-gray-700">{tr.manageUsers}</span>
+              </Link>
+
+              <Link href={`/${locale}/admin/sellers`} className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-green-50 hover:border-green-200 border border-transparent transition group">
+                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-orange-200 transition">
+                  <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium text-gray-700">{tr.manageSellers}</span>
+              </Link>
+
+              <Link href={`/${locale}/admin/categories`} className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-green-50 hover:border-green-200 border border-transparent transition group">
+                <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-teal-200 transition">
+                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium text-gray-700">{tr.manageCategories}</span>
               </Link>
 
               <Link href={`/${locale}/admin/products`} className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-green-50 hover:border-green-200 border border-transparent transition group">
@@ -275,6 +310,15 @@ export default function AdminDashboard() {
                   </svg>
                 </div>
                 <span className="text-sm font-medium text-gray-700">{tr.manageOrders}</span>
+              </Link>
+
+              <Link href={`/${locale}/admin/reviews`} className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-green-50 hover:border-green-200 border border-transparent transition group">
+                <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-amber-200 transition">
+                  <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium text-gray-700">{tr.manageReviews}</span>
               </Link>
 
               <Link href={`/${locale}/admin/tickets`} className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-green-50 hover:border-green-200 border border-transparent transition group">
@@ -312,6 +356,15 @@ export default function AdminDashboard() {
                   </svg>
                 </div>
                 <span className="text-sm font-medium text-gray-700">{tr.settings}</span>
+              </Link>
+
+              <Link href={`/${locale}/admin/blog`} className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-green-50 hover:border-green-200 border border-transparent transition group">
+                <div className="w-12 h-12 bg-cyan-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-cyan-200 transition">
+                  <svg className="w-6 h-6 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium text-gray-700">Blog / SEO</span>
               </Link>
             </div>
           </div>

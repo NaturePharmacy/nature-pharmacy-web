@@ -4,6 +4,72 @@ import Image from 'next/image';
 import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
 import ProductPrice from '@/components/ProductPrice';
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+
+  const metadata: Record<string, any> = {
+    fr: {
+      title: 'Nature Pharmacy - Plantes Médicinales et Remèdes Naturels',
+      description: 'Découvrez notre sélection de plantes médicinales, huiles essentielles et cosmétiques naturels certifiés bio. Médecine traditionnelle et bien-être naturel.',
+      keywords: 'plantes médicinales, phytothérapie, huiles essentielles, cosmétiques naturels, remèdes traditionnels, bio, santé naturelle, herboristerie',
+    },
+    en: {
+      title: 'Nature Pharmacy - Medicinal Plants and Natural Remedies',
+      description: 'Discover our selection of medicinal plants, essential oils and certified organic natural cosmetics. Traditional medicine and natural wellness.',
+      keywords: 'medicinal plants, phytotherapy, essential oils, natural cosmetics, traditional remedies, organic, natural health, herbalism',
+    },
+    es: {
+      title: 'Nature Pharmacy - Plantas Medicinales y Remedios Naturales',
+      description: 'Descubra nuestra selección de plantas medicinales, aceites esenciales y cosméticos naturales certificados orgánicos. Medicina tradicional y bienestar natural.',
+      keywords: 'plantas medicinales, fitoterapia, aceites esenciales, cosméticos naturales, remedios tradicionales, orgánico, salud natural, herbolaria',
+    },
+  };
+
+  const currentMeta = metadata[locale] || metadata.fr;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+  return {
+    title: currentMeta.title,
+    description: currentMeta.description,
+    keywords: currentMeta.keywords,
+    openGraph: {
+      title: currentMeta.title,
+      description: currentMeta.description,
+      type: 'website',
+      locale: locale,
+      url: `${baseUrl}/${locale}`,
+      siteName: 'Nature Pharmacy',
+      images: [
+        {
+          url: `${baseUrl}/11.jpeg`,
+          width: 1200,
+          height: 630,
+          alt: 'Nature Pharmacy',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: currentMeta.title,
+      description: currentMeta.description,
+      images: [`${baseUrl}/11.jpeg`],
+    },
+    alternates: {
+      canonical: `${baseUrl}/${locale}`,
+      languages: {
+        'fr': `${baseUrl}/fr`,
+        'en': `${baseUrl}/en`,
+        'es': `${baseUrl}/es`,
+      },
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 async function getProducts() {
   try {
@@ -44,8 +110,53 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     { key: 'supplements', slug: 'supplements', icon: '💊', image: '/6.jpeg' },
   ];
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+  // JSON-LD structured data for homepage
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Nature Pharmacy',
+    description: locale === 'fr'
+      ? 'Plantes médicinales et remèdes naturels certifiés bio'
+      : locale === 'es'
+      ? 'Plantas medicinales y remedios naturales certificados orgánicos'
+      : 'Medicinal plants and certified organic natural remedies',
+    url: `${baseUrl}/${locale}`,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${baseUrl}/${locale}/products?search={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
+  const organizationJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Nature Pharmacy',
+    url: `${baseUrl}/${locale}`,
+    logo: `${baseUrl}/11.jpeg`,
+    description: locale === 'fr'
+      ? 'Boutique en ligne spécialisée dans les plantes médicinales, huiles essentielles et cosmétiques naturels certifiés bio'
+      : locale === 'es'
+      ? 'Tienda en línea especializada en plantas medicinales, aceites esenciales y cosméticos naturales certificados orgánicos'
+      : 'Online store specializing in medicinal plants, essential oils and certified organic natural cosmetics',
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+
       {/* Hero Banner - Clean white design with green accent */}
       <div className="bg-gradient-to-r from-green-50 to-white">
           <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">

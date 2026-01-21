@@ -7,6 +7,7 @@ import Referral from '@/models/Referral';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { createNotification, NotificationTemplates } from '@/lib/notifications';
+import { sendOrderConfirmationEmail } from '@/lib/email';
 
 // GET /api/orders - Get user's orders or all orders (for admin)
 export async function GET(request: NextRequest) {
@@ -186,6 +187,19 @@ export async function POST(request: NextRequest) {
       userId: session.user.id,
       ...buyerNotification,
     });
+
+    // Send order confirmation email
+    const buyer = await User.findById(session.user.id);
+    if (buyer) {
+      const locale = (buyer.preferredLanguage || 'fr') as 'fr' | 'en' | 'es';
+      await sendOrderConfirmationEmail(
+        buyer.email,
+        buyer.name,
+        order._id.toString(),
+        totalPrice,
+        locale
+      );
+    }
 
     // Send notification to each seller
     const sellers = new Set(orderItems.map(item => item.seller.toString()));

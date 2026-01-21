@@ -179,6 +179,7 @@
     "backToTop": "Volver arriba",
     "getToKnowUs": "Conócenos",
     "aboutUs": "Sobre nosotros",
+    "blog": "Blog",
     "contactUs": "Contáctanos",
     "careers": "Empleo",
     "forSellers": "Para vendedores",
@@ -189,7 +190,10 @@
     "account": "Cuenta",
     "orders": "Pedidos",
     "wishlist": "Lista de deseos",
+    "legalNotice": "Aviso Legal",
+    "termsOfSale": "Términos de Venta",
     "termsOfService": "Términos de servicio",
+    "termsOfUse": "Términos de Uso",
     "privacyPolicy": "Política de privacidad",
     "cookies": "Política de cookies",
     "help": "Centro de ayuda",
@@ -418,5 +422,688 @@
     "invalidPassword": "Contraseña incorrecta. Por favor, inténtelo de nuevo.",
     "serverError": "Error del servidor. Por favor, inténtelo más tarde.",
     "footer": "Este sitio está en modo de vista previa y reservado para clientes autorizados."
+  },
+  "legal": {
+    "title": "Aviso Legal",
+    "description": "Información legal y detalles del editor del sitio web Nature Pharmacy",
+    "lastUpdated": "Última actualización",
+    "section1": {
+      "title": "1. Editor del sitio web",
+      "companyName": "Razón social",
+      "legalForm": "Forma jurídica",
+      "capital": "Capital social",
+      "siret": "Número de registro de la empresa",
+      "vat": "Número de IVA",
+      "address": "Dirección de la sede social",
+      "phone": "Teléfono",
+      "email": "Correo electrónico",
+      "director": "Director de publicación"
+    },
+    "section2": {
+      "title": "2. Alojamiento del sitio web",
+      "host": "Proveedor de alojamiento",
+      "hostAddress": "Dirección",
+      "website": "Sitio web"
+    },
+    "section3": {
+      "title": "3. Propiedad Intelectual",
+      "content1": "Todo el contenido de este sitio web (textos, imágenes, videos, logotipos, gráficos, etc.) es propiedad exclusiva de Nature Pharmacy o sus socios. Cualquier reproducción, distribución, modificación, adaptación, retransmisión o publicación de estos elementos está estrictamente prohibida sin el consentimiento expreso por escrito de Nature Pharmacy.",
+      "content2": "Las marcas comerciales, logotipos y signos distintivos reproducidos en este sitio son propiedad de Nature Pharmacy o de terceros que han autorizado a Nature Pharmacy a utilizarlos.",
+      "content3": "Cualquier reproducción, representación, modificación o explotación de todo o parte de este sitio o su contenido, por cualquier proceso, sin la autorización previa de Nature Pharmacy está prohibida y constituiría una falsificación sancionada por los artículos L.335-2 y siguientes del Código de Propiedad Intelectual."
+    },
+    "section4": {
+      "title": "4. Protección de Datos Personales",
+      "content1": "Nature Pharmacy se compromete a respetar la confidencialidad de sus datos personales y a procesarlos de acuerdo con el Reglamento General de Protección de Datos (RGPD).",
+      "content2": "Para obtener más información sobre la recopilación y el procesamiento de sus datos personales, consulte nuestra",
+      "privacyLink": "Política de Privacidad",
+      "dpo": "Delegado de Protección de Datos (DPO)",
+      "dpoEmail": "Correo electrónico del DPO"
+    },
+    "section5": {
+      "title": "5. Cookies",
+      "content1": "El sitio web de Nature Pharmacy utiliza cookies para mejorar la experiencia del usuario y analizar el tráfico del sitio.",
+      "content2": "Para obtener más información sobre las cookies utilizadas y gestionar sus preferencias, consulte nuestra",
+      "cookieLink": "Política de Cookies"
+    },
+    "section6": {
+      "title": "6. Limitación de Responsabilidad",
+      "content1": "Nature Pharmacy hace todo lo posible para proporcionar a los usuarios información y/o herramientas disponibles y verificadas, pero no puede ser considerado responsable de errores, falta de disponibilidad de información y/o la presencia de virus en su sitio.",
+      "content2": "La información proporcionada es solo para fines informativos y no puede eximir al usuario de un análisis complementario y personalizado. Nature Pharmacy no puede garantizar la exactitud, integridad o actualidad de la información difundida en su sitio.",
+      "content3": "El uso de información y contenido disponible en todo el sitio no puede en ningún caso comprometer la responsabilidad de Nature Pharmacy, en cualquier capacidad."
+    },
+    "section7": {
+      "title": "7. Ley Aplicable y Jurisdicción",
+      "content1": "Estos avisos legales se rigen por la ley francesa.",
+      "content2": "En caso de disputa y en ausencia de un acuerdo amistoso, la disputa se presentará ante los tribunales franceses de acuerdo con las reglas de jurisdicción aplicables."
+    },
+    "section8": {
+      "title": "8. Mediación de Disputas de Consumidores",
+      "content1": "De conformidad con el artículo L.616-1 del Código del Consumidor, Nature Pharmacy le informa de la posibilidad de utilizar un mediador de consumidores en las condiciones previstas en los artículos L.611-1 a L.612-5 del Código del Consumidor.",
+      "mediator": "Mediador de consumidores",
+      "mediatorName": "Centro de Mediación y Arreglo Amistoso de Funcionarios Judiciales (CM2H)",
+      "mediatorWebsite": "Sitio web",
+      "euPlatform": "Plataforma europea de resolución de disputas en línea"
+    },
+    "relatedPages": "Páginas relacionadas",
+    "cgvLink": "Términos de Venta",
+    "privacyLink": "Política de Privacidad",
+    "termsLink": "Términos de Uso",
+    "cookieLink": "Política de Cookies"
+  },
+  "termsOfSale": {
+    "title": "Términos de Venta",
+    "description": "Términos y condiciones de venta de Nature Pharmacy - Marketplace de productos naturales",
+    "lastUpdated": "Última actualización",
+    "intro": "Por favor, lea atentamente estos términos de venta antes de realizar un pedido en nuestro sitio web.",
+    "article1": {
+      "title": "Artículo 1 - Objeto",
+      "content1": "Estos Términos de Venta rigen la relación contractual entre Nature Pharmacy, en adelante denominado \"el Vendedor\" o \"la Plataforma\", y cualquier persona física o jurídica, en adelante denominada \"el Comprador\" o \"el Cliente\", que desee realizar una compra en el sitio web www.nature-pharmacy.com.",
+      "content2": "Cualquier pedido implica la aceptación sin reservas de estos Términos de Venta que prevalecen sobre cualquier otro documento."
+    },
+    "article2": {
+      "title": "Artículo 2 - Productos y Servicios",
+      "content1": "Los productos ofrecidos en Nature Pharmacy son productos naturales, plantas medicinales, aceites esenciales, cosméticos naturales y suplementos dietéticos ofrecidos por vendedores independientes.",
+      "content2": "Los productos se describen y presentan con la mayor exactitud posible. Sin embargo, pueden ocurrir variaciones menores debido a la naturaleza de los productos.",
+      "content3": "Las fotografías de los productos no son contractuales. Nature Pharmacy no puede ser considerado responsable de las diferencias menores entre las fotos y los productos reales."
+    },
+    "article3": {
+      "title": "Artículo 3 - Precios",
+      "content1": "Los precios se indican en Euros (€) con todos los impuestos incluidos (IVA incluido), incluyendo el IVA aplicable en la fecha del pedido.",
+      "content2": "Los gastos de envío se indican por separado y se añaden al importe total del pedido antes de la validación.",
+      "content3": "Nature Pharmacy se reserva el derecho de modificar sus precios en cualquier momento, pero los productos se facturarán según las tarifas vigentes en el momento de la validación del pedido."
+    },
+    "article4": {
+      "title": "Artículo 4 - Pedidos",
+      "content1": "El proceso de pedido en Nature Pharmacy se desarrolla en varios pasos:",
+      "content2": "Pasos del pedido:",
+      "step1": "Selección de productos y añadir al carrito",
+      "step2": "Validación del carrito",
+      "step3": "Inicio de sesión o creación de cuenta",
+      "step4": "Elección de dirección de entrega y método de envío",
+      "step5": "Elección del método de pago y validación final",
+      "content3": "La validación del pedido constituye la aceptación de estos Términos de Venta y sirve como prueba del contrato de venta. Se enviará un correo electrónico de confirmación a la dirección proporcionada durante el pedido."
+    },
+    "article5": {
+      "title": "Artículo 5 - Pago",
+      "content1": "El pago del pedido se realiza en el momento de la validación. Los métodos de pago aceptados son:",
+      "methodsTitle": "Métodos de pago aceptados:",
+      "method1": "Tarjeta de crédito (Visa, Mastercard, American Express)",
+      "method2": "PayPal",
+      "method3": "Otros métodos de pago según disponibilidad",
+      "content2": "Los pagos están asegurados por nuestros socios de pago (Stripe, PayPal). Nature Pharmacy no almacena ningún dato bancario."
+    },
+    "article6": {
+      "title": "Artículo 6 - Entrega",
+      "content1": "Los productos se entregan en la dirección de entrega indicada durante el pedido. Es responsabilidad del Cliente verificar la exactitud de esta dirección.",
+      "content2": "Los plazos de entrega son indicativos y pueden variar según el destino y el vendedor. En caso de retraso en la entrega superior a 30 días, el Cliente puede cancelar su pedido y obtener un reembolso.",
+      "content3": "Los riesgos relacionados con el transporte son responsabilidad del comprador desde el momento en que los productos son recogidos por el transportista. Es responsabilidad del Cliente verificar el estado del paquete al recibirlo y hacer cualquier reserva con el transportista en caso de daño.",
+      "content4": "En caso de no recepción de un paquete, el Cliente debe informar a Nature Pharmacy dentro de los 7 días siguientes a la fecha de entrega prevista.",
+      "content5": "Para más información sobre zonas de entrega y tarifas, consulte nuestra",
+      "shippingLink": "página de Envío"
+    },
+    "article7": {
+      "title": "Artículo 7 - Derecho de desistimiento (14 días)",
+      "highlight": "Tiene 14 días para cambiar de opinión",
+      "content1": "De conformidad con el Artículo L.221-18 del Código del Consumidor, el Cliente tiene un período de 14 días desde la recepción de los productos para ejercer su derecho de desistimiento sin tener que justificar razones ni pagar penalizaciones.",
+      "content2": "Para ejercer este derecho, el Cliente debe notificar su decisión de desistimiento por correo electrónico a: returns@nature-pharmacy.com. Los productos deben devolverse en su embalaje original, en perfecto estado, acompañados de todos los accesorios y la factura.",
+      "exceptionsTitle": "Excepciones al derecho de desistimiento:",
+      "exception1": "Productos desprecintados que no pueden devolverse por razones de higiene o protección de la salud",
+      "exception2": "Productos personalizados o fabricados según las especificaciones del Cliente",
+      "exception3": "Productos perecederos o susceptibles de deteriorarse rápidamente",
+      "content3": "Los gastos de devolución son responsabilidad del Cliente. El reembolso se realizará en un plazo máximo de 14 días desde la recepción del producto devuelto, por el mismo método de pago utilizado durante la compra."
+    },
+    "article8": {
+      "title": "Artículo 8 - Garantías",
+      "content1": "Todos los productos vendidos en Nature Pharmacy se benefician de la garantía legal de conformidad (artículos L.217-4 y siguientes del Código del Consumidor) y de la garantía contra defectos ocultos (artículos 1641 y siguientes del Código Civil).",
+      "conformityTitle": "Garantía de conformidad (2 años)",
+      "conformityDesc": "El producto debe ser conforme a la descripción dada y poseer las cualidades presentadas. Período de 2 años desde la entrega de los bienes.",
+      "defectsTitle": "Garantía de defectos ocultos (2 años)",
+      "defectsDesc": "Protección contra defectos ocultos que hacen que el producto no sea apto para el uso. Período de 2 años desde el descubrimiento del defecto.",
+      "content2": "En caso de no conformidad o defecto oculto, el Cliente puede solicitar la reparación, el reemplazo del producto o, en su defecto, la reducción del precio o la cancelación de la venta."
+    },
+    "article9": {
+      "title": "Artículo 9 - Responsabilidad",
+      "content1": "Nature Pharmacy actúa como una plataforma que conecta compradores y vendedores independientes. La responsabilidad de los productos vendidos recae en los vendedores.",
+      "content2": "Nature Pharmacy no puede ser considerado responsable del incumplimiento del contrato en caso de fuerza mayor, perturbación o huelga total o parcial, particularmente de los servicios postales y medios de transporte y/o comunicaciones.",
+      "content3": "La responsabilidad de Nature Pharmacy no puede ser comprometida por todas las molestias o daños inherentes al uso de Internet, incluida la interrupción del servicio, la intrusión externa o la presencia de virus informáticos."
+    },
+    "article10": {
+      "title": "Artículo 10 - Datos Personales",
+      "content1": "La información recopilada durante el pedido es necesaria para la gestión del pedido y la relación con el cliente. Está destinada a Nature Pharmacy y sus socios (transportistas, proveedores de pago).",
+      "content2": "De conformidad con el RGPD, tiene derecho a acceder, rectificar, borrar y portar sus datos. Para obtener más información, consulte nuestra",
+      "privacyLink": "Política de Privacidad"
+    },
+    "article11": {
+      "title": "Artículo 11 - Propiedad Intelectual",
+      "content1": "Todos los elementos del sitio web de Nature Pharmacy (textos, imágenes, gráficos, logotipo, iconos, etc.) son propiedad exclusiva de Nature Pharmacy o sus socios.",
+      "content2": "Cualquier reproducción, representación, modificación, publicación, transmisión o explotación total o parcial de estos elementos está prohibida sin autorización previa por escrito de Nature Pharmacy."
+    },
+    "article12": {
+      "title": "Artículo 12 - Fuerza Mayor",
+      "content1": "Nature Pharmacy no puede ser considerado responsable de ningún retraso o incumplimiento de sus obligaciones resultante de un caso de fuerza mayor según lo definido por la jurisprudencia francesa.",
+      "content2": "En caso de fuerza mayor que impida permanentemente la ejecución del pedido, el contrato se resolverá automáticamente y el Cliente será reembolsado."
+    },
+    "article13": {
+      "title": "Artículo 13 - Modificación de los Términos de Venta",
+      "content1": "Nature Pharmacy se reserva el derecho de modificar estos Términos de Venta en cualquier momento. Las nuevas condiciones se pondrán en conocimiento de los Clientes y se aplicarán a cualquier nuevo pedido posterior a su publicación en línea."
+    },
+    "article14": {
+      "title": "Artículo 14 - Ley Aplicable y Jurisdicción",
+      "content1": "Estos Términos de Venta están sujetos a la ley francesa. En caso de disputa, se buscará una solución amistosa antes de cualquier acción legal.",
+      "content2": "A falta de un acuerdo amistoso, la disputa se presentará ante los tribunales franceses competentes, de conformidad con las reglas de jurisdicción aplicables."
+    },
+    "article15": {
+      "title": "Artículo 15 - Mediación del Consumidor",
+      "content1": "De conformidad con los artículos L.616-1 y R.616-1 del Código del Consumidor, Nature Pharmacy ofrece un sistema de mediación del consumidor. La entidad de mediación seleccionada es:",
+      "mediatorLabel": "Mediador del consumidor",
+      "mediatorName": "Centro de Mediación y Arreglo Amistoso de Funcionarios Judiciales (CM2H)",
+      "websiteLabel": "Sitio web"
+    },
+    "article16": {
+      "title": "Artículo 16 - Contacto",
+      "content1": "Para cualquier pregunta o queja sobre su pedido, puede contactarnos:",
+      "emailLabel": "Correo electrónico",
+      "phoneLabel": "Teléfono",
+      "addressLabel": "Dirección"
+    },
+    "relatedPages": "Páginas relacionadas",
+    "legalLink": "Aviso Legal",
+    "privacyLink": "Política de Privacidad",
+    "shippingLink": "Envío y Devoluciones",
+    "contactLink": "Contáctenos"
+  },
+  "privacy": {
+    "title": "Política de Privacidad",
+    "description": "Descubra cómo Nature Pharmacy recopila, usa y protege sus datos personales en cumplimiento del RGPD",
+    "lastUpdated": "Última actualización",
+    "intro": "Nature Pharmacy se compromete a proteger su privacidad y datos personales. Esta política de privacidad le informa sobre cómo recopilamos, usamos, compartimos y protegemos su información de conformidad con el Reglamento General de Protección de Datos (RGPD).",
+    "section1": {
+      "title": "1. Responsable del Tratamiento de Datos",
+      "content1": "El responsable del tratamiento de sus datos personales es:",
+      "companyName": "Razón Social",
+      "siret": "Número SIRET",
+      "address": "Dirección",
+      "email": "Correo electrónico",
+      "dpo": "Delegado de Protección de Datos (DPO)",
+      "dpoEmail": "Contacto DPO"
+    },
+    "section2": {
+      "title": "2. Datos Recopilados",
+      "content1": "Recopilamos los siguientes datos cuando usa nuestra plataforma:",
+      "categoryIdentity": "Datos de Identidad",
+      "identityItems": "Apellido, nombre, fecha de nacimiento, género",
+      "categoryContact": "Datos de Contacto",
+      "contactItems": "Dirección de correo electrónico, número de teléfono, dirección postal",
+      "categoryOrder": "Datos de Pedido",
+      "orderItems": "Historial de compras, carrito, preferencias, reseñas de productos",
+      "categoryPayment": "Datos de Pago",
+      "paymentItems": "Información bancaria (procesada de forma segura por nuestros proveedores de pago)",
+      "categoryConnection": "Datos de Conexión",
+      "connectionItems": "Dirección IP, registros de conexión, cookies, datos de navegación",
+      "categoryTechnical": "Datos Técnicos",
+      "technicalItems": "Tipo de navegador, sistema operativo, páginas visitadas, duración de la visita"
+    },
+    "section3": {
+      "title": "3. Finalidades del Tratamiento",
+      "content1": "Sus datos se recopilan y procesan para los siguientes fines:",
+      "purpose1": "Gestión de su cuenta y relación con el cliente",
+      "purpose2": "Procesamiento y seguimiento de sus pedidos",
+      "purpose3": "Gestión de pagos y facturación",
+      "purpose4": "Prevención de fraude",
+      "purpose5": "Mejora de servicios y personalización de su experiencia",
+      "purpose6": "Envío de comunicaciones de marketing (boletines, ofertas promocionales) con su consentimiento",
+      "purpose7": "Cumplimiento de nuestras obligaciones legales y regulatorias"
+    },
+    "section4": {
+      "title": "4. Base Legal del Tratamiento",
+      "content1": "El tratamiento de sus datos se basa en las siguientes bases legales:",
+      "basis1Title": "Ejecución del Contrato",
+      "basis1Desc": "El procesamiento es necesario para la ejecución del contrato de venta y la prestación de nuestros servicios.",
+      "basis2Title": "Consentimiento",
+      "basis2Desc": "Ha dado su consentimiento para el procesamiento de sus datos para fines específicos (boletín, cookies no esenciales).",
+      "basis3Title": "Interés Legítimo",
+      "basis3Desc": "El procesamiento es necesario para nuestros intereses legítimos (mejora de servicios, prevención de fraude).",
+      "basis4Title": "Obligación Legal",
+      "basis4Desc": "El procesamiento es necesario para cumplir con nuestras obligaciones legales (contabilidad, fiscalidad)."
+    },
+    "section5": {
+      "title": "5. Destinatarios de Datos",
+      "content1": "Sus datos pueden compartirse con los siguientes destinatarios:",
+      "recipient1": "Personal interno autorizado de Nature Pharmacy",
+      "recipient2": "Vendedores socios para procesar sus pedidos",
+      "recipient3": "Proveedores de servicios (alojamiento, pago, entrega, marketing)",
+      "recipient4": "Socios de marketing (con su consentimiento)",
+      "recipient5": "Autoridades administrativas y judiciales (a petición legal)",
+      "content2": "Nos aseguramos de que todos nuestros socios respeten la confidencialidad y seguridad de sus datos de conformidad con el RGPD."
+    },
+    "section6": {
+      "title": "6. Período de Retención",
+      "content1": "Sus datos se conservan durante los siguientes períodos:",
+      "retention1": "Datos de cuenta: Mientras su cuenta esté activa + 3 años después de la última actividad",
+      "retention2": "Datos de pedido: 10 años (obligaciones contables y fiscales)",
+      "retention3": "Datos de pago: Duración necesaria para la transacción + plazo legal de prescripción",
+      "retention4": "Datos de boletín: Hasta el retiro de su consentimiento",
+      "retention5": "Cookies: Duración máxima de 13 meses",
+      "retention6": "Registros de conexión: 12 meses máximo",
+      "content2": "Después de estos períodos, sus datos se eliminan o anonimizan de forma segura."
+    },
+    "section7": {
+      "title": "7. Sus Derechos",
+      "content1": "De conformidad con el RGPD, tiene los siguientes derechos:",
+      "right1Title": "Derecho de Acceso",
+      "right1Desc": "Puede obtener una copia de sus datos personales.",
+      "right2Title": "Derecho de Rectificación",
+      "right2Desc": "Puede solicitar la corrección de datos inexactos o incompletos.",
+      "right3Title": "Derecho al Borrado",
+      "right3Desc": "Puede solicitar la eliminación de sus datos en ciertas condiciones.",
+      "right4Title": "Derecho a la Portabilidad",
+      "right4Desc": "Puede recibir sus datos en un formato estructurado y de uso común.",
+      "right5Title": "Derecho de Oposición",
+      "right5Desc": "Puede oponerse al procesamiento de sus datos por razones legítimas.",
+      "right6Title": "Derecho a la Restricción",
+      "right6Desc": "Puede solicitar la restricción del procesamiento de sus datos en ciertos casos.",
+      "right7Title": "Derecho a Retirar el Consentimiento",
+      "right7Desc": "Puede retirar su consentimiento en cualquier momento para el procesamiento basado en él.",
+      "content2": "Para ejercer sus derechos, contáctenos en: dpo@nature-pharmacy.com",
+      "content3": "También tiene derecho a presentar una queja ante la CNIL (Autoridad Francesa de Protección de Datos): www.cnil.fr"
+    },
+    "section8": {
+      "title": "8. Seguridad de Datos",
+      "content1": "Implementamos medidas técnicas y organizativas apropiadas para proteger sus datos contra pérdida, uso indebido, acceso no autorizado, divulgación, alteración o destrucción:",
+      "measure1": "Cifrado SSL/TLS para todas las comunicaciones",
+      "measure2": "Almacenamiento seguro en servidores protegidos",
+      "measure3": "Control de acceso estricto a datos personales",
+      "measure4": "Monitoreo y detección de incidentes de seguridad",
+      "measure5": "Copias de seguridad regulares y plan de continuidad del negocio",
+      "measure6": "Capacitación y concientización del personal sobre seguridad de datos"
+    },
+    "section9": {
+      "title": "9. Cookies",
+      "content1": "Nuestro sitio utiliza cookies para mejorar su experiencia de navegación y analizar el uso del sitio.",
+      "content2": "Para obtener más información sobre las cookies que utilizamos y cómo gestionarlas, consulte nuestra",
+      "cookieLink": "Política de Cookies"
+    },
+    "section10": {
+      "title": "10. Transferencias Internacionales de Datos",
+      "content1": "Sus datos se almacenan y procesan principalmente dentro de la Unión Europea. Si es necesaria una transferencia fuera de la UE, nos aseguramos de que se implementen las salvaguardias apropiadas de conformidad con el RGPD (cláusulas contractuales estándar, decisión de adecuación)."
+    },
+    "section11": {
+      "title": "11. Datos de Menores",
+      "content1": "Nuestro servicio está destinado a adultos (18 años o más). No recopilamos a sabiendas datos personales de menores sin el consentimiento de los padres. Si cree que un menor nos ha proporcionado datos sin autorización, contáctenos de inmediato."
+    },
+    "section12": {
+      "title": "12. Cambios en la Política",
+      "content1": "Podemos modificar esta política de privacidad ocasionalmente para reflejar cambios en nuestras prácticas o por razones legales. La versión más reciente siempre estará disponible en esta página con la fecha de actualización.",
+      "content2": "En caso de modificación sustancial, le informaremos por correo electrónico o mediante una notificación en el sitio."
+    },
+    "section13": {
+      "title": "13. Contacto",
+      "content1": "Para cualquier pregunta sobre esta política de privacidad o para ejercer sus derechos del RGPD, puede contactarnos:",
+      "emailLabel": "Correo electrónico",
+      "dpoEmailLabel": "Delegado de Protección de Datos",
+      "phoneLabel": "Teléfono",
+      "addressLabel": "Dirección Postal"
+    },
+    "relatedPages": "Páginas relacionadas",
+    "legalLink": "Aviso Legal",
+    "termsLink": "Términos de Uso",
+    "cookieLink": "Política de Cookies",
+    "cgvLink": "Términos de Venta"
+  },
+  "termsOfUse": {
+    "title": "Términos de Uso",
+    "description": "Revise los términos de uso de la plataforma Nature Pharmacy",
+    "lastUpdated": "Última actualización",
+    "intro": "Al acceder y utilizar la plataforma Nature Pharmacy, acepta estar vinculado por estos términos de uso. Por favor, léalos cuidadosamente.",
+    "section1": {
+      "title": "1. Aceptación de los Términos",
+      "content1": "Al acceder a este sitio web y utilizar nuestros servicios, acepta estar vinculado por estos términos de uso y todas las leyes y regulaciones aplicables.",
+      "content2": "Si no acepta alguno de estos términos, no está autorizado para usar o acceder a este sitio.",
+      "content3": "Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios entran en vigor tras su publicación en el sitio."
+    },
+    "section2": {
+      "title": "2. Descripción del Servicio",
+      "content1": "Nature Pharmacy es una plataforma de mercado en línea que conecta:",
+      "item1": "Compradores que buscan productos naturales, plantas medicinales y remedios tradicionales",
+      "item2": "Vendedores independientes que ofrecen estos productos",
+      "content2": "Nature Pharmacy actúa únicamente como intermediario y no es responsable de los productos vendidos por vendedores terceros."
+    },
+    "section3": {
+      "title": "3. Creación de Cuenta",
+      "content1": "Para usar ciertas funciones de la plataforma, debe crear una cuenta. Acepta:",
+      "item1": "Proporcionar información precisa, completa y actualizada",
+      "item2": "Mantener la seguridad de su contraseña",
+      "item3": "Ser responsable de todas las actividades realizadas bajo su cuenta",
+      "item4": "Notificarnos inmediatamente de cualquier uso no autorizado de su cuenta",
+      "content2": "Debe tener al menos 18 años para crear una cuenta y realizar compras en la plataforma."
+    },
+    "section4": {
+      "title": "4. Uso Aceptable",
+      "content1": "Acepta utilizar la plataforma solo con fines legales. Está estrictamente prohibido:",
+      "prohibition1": "Violar cualquier ley local, nacional o internacional",
+      "prohibition2": "Transmitir contenido ilegal, ofensivo, difamatorio o fraudulento",
+      "prohibition3": "Acosar, amenazar o intimidar a otros usuarios",
+      "prohibition4": "Suplantar a otra persona o entidad",
+      "prohibition5": "Distribuir virus, malware o cualquier código dañino",
+      "prohibition6": "Intentar acceso no autorizado a sistemas o redes",
+      "prohibition7": "Recopilar datos personales de otros usuarios sin consentimiento",
+      "prohibition8": "Usar robots, scrapers o herramientas automatizadas sin autorización",
+      "content2": "Cualquier violación de estas reglas puede resultar en la suspensión o terminación inmediata de su cuenta."
+    },
+    "section5": {
+      "title": "5. Contenido del Usuario",
+      "content1": "Conserva todos los derechos sobre el contenido que publica en la plataforma (reseñas, comentarios, fotos, etc.).",
+      "content2": "Al publicar contenido, otorga a Nature Pharmacy una licencia mundial, no exclusiva y gratuita para usar, reproducir, modificar y mostrar este contenido como parte de la prestación de nuestros servicios.",
+      "content3": "Garantiza que:",
+      "item1": "Posee todos los derechos sobre el contenido que publica",
+      "item2": "Su contenido no viola ningún derecho de propiedad intelectual",
+      "item3": "Su contenido cumple con estos términos de uso",
+      "content4": "Nature Pharmacy se reserva el derecho de eliminar cualquier contenido que viole estos términos o se considere inapropiado."
+    },
+    "section6": {
+      "title": "6. Propiedad Intelectual",
+      "content1": "El sitio web, su contenido original, características y funciones son y seguirán siendo propiedad exclusiva de Nature Pharmacy y sus licenciantes.",
+      "content2": "Esto incluye:",
+      "item1": "Código fuente, diseño y estructura del sitio",
+      "item2": "Logotipos, marcas comerciales y nombres de marca",
+      "item3": "Textos originales, imágenes, gráficos e ilustraciones",
+      "item4": "Bases de datos y compilaciones de datos",
+      "content3": "Estos elementos están protegidos por leyes de derechos de autor, marcas comerciales y otras leyes de propiedad intelectual.",
+      "content4": "No está autorizado a reproducir, distribuir, modificar o crear obras derivadas sin nuestro permiso previo por escrito."
+    },
+    "section7": {
+      "title": "7. Transacciones y Pagos",
+      "content1": "Las transacciones en la plataforma se rigen por nuestros Términos de Venta.",
+      "content2": "Al realizar una compra, acepta:",
+      "item1": "Pagar el precio mostrado más las tarifas aplicables",
+      "item2": "Proporcionar información de pago precisa",
+      "item3": "Autorizar el débito del monto total",
+      "content3": "Los pagos se procesan de forma segura por nuestros proveedores de pago externos certificados PCI-DSS.",
+      "content4": "Para más detalles, consulte nuestros",
+      "cgvLink": "Términos de Venta"
+    },
+    "section8": {
+      "title": "8. Limitación de Responsabilidad",
+      "content1": "La plataforma se proporciona \"tal cual\" sin garantía de ningún tipo, expresa o implícita.",
+      "content2": "Nature Pharmacy no garantiza que:",
+      "item1": "El servicio será ininterrumpido, seguro o sin errores",
+      "item2": "Los resultados obtenidos serán precisos o confiables",
+      "item3": "La calidad de los productos vendidos por vendedores terceros cumplirá con sus expectativas",
+      "content3": "Bajo ninguna circunstancia Nature Pharmacy será responsable de daños indirectos, incidentales, especiales, consecuentes o punitivos.",
+      "content4": "Nuestra responsabilidad total no excederá el monto que pagó por el servicio en los últimos 12 meses."
+    },
+    "section9": {
+      "title": "9. Indemnización",
+      "content1": "Acepta indemnizar y eximir de responsabilidad a Nature Pharmacy de:",
+      "item1": "Su violación de estos términos de uso",
+      "item2": "Su violación de los derechos de terceros",
+      "item3": "Su uso inapropiado de la plataforma",
+      "content2": "Esta indemnización cubre todos los daños, pérdidas, reclamaciones, costos y gastos (incluidos los honorarios legales razonables)."
+    },
+    "section10": {
+      "title": "10. Enlaces Externos",
+      "content1": "Nuestra plataforma puede contener enlaces a sitios web de terceros. Estos enlaces se proporcionan para su conveniencia.",
+      "content2": "Nature Pharmacy no tiene control sobre el contenido de estos sitios y no asume responsabilidad por su contenido o prácticas.",
+      "content3": "La inclusión de cualquier enlace no implica nuestro respaldo del sitio vinculado."
+    },
+    "section11": {
+      "title": "11. Terminación",
+      "content1": "Podemos terminar o suspender su cuenta y acceso inmediatamente, sin previo aviso o responsabilidad, por cualquier motivo, incluyendo si viola estos términos.",
+      "content2": "Tras la terminación:",
+      "item1": "Su derecho a usar el servicio cesará inmediatamente",
+      "item2": "Todas las disposiciones que por naturaleza deban sobrevivir a la terminación permanecerán en vigor",
+      "content3": "También puede terminar su cuenta en cualquier momento contactándonos o a través de la configuración de su cuenta."
+    },
+    "section12": {
+      "title": "12. Ley Aplicable y Jurisdicción",
+      "content1": "Estos términos se rigen por la ley francesa, sin tener en cuenta los conflictos de disposiciones legales.",
+      "content2": "Cualquier disputa que surja de o esté relacionada con estos términos estará sujeta a la jurisdicción exclusiva de los tribunales franceses.",
+      "content3": "Si es un consumidor que reside en la Unión Europea, también se beneficia de las protecciones bajo las leyes obligatorias de su país de residencia."
+    },
+    "section13": {
+      "title": "13. Disposiciones Generales",
+      "subsection1Title": "Acuerdo Completo",
+      "subsection1Content": "Estos términos constituyen el acuerdo completo entre usted y Nature Pharmacy con respecto al uso del servicio.",
+      "subsection2Title": "Divisibilidad",
+      "subsection2Content": "Si alguna disposición de estos términos se considera inválida o inaplicable, las demás disposiciones permanecerán en vigor.",
+      "subsection3Title": "Renuncia",
+      "subsection3Content": "El hecho de no ejercer un derecho no constituye una renuncia a ese derecho.",
+      "subsection4Title": "Cesión",
+      "subsection4Content": "No puede ceder estos términos sin nuestro consentimiento previo por escrito. Podemos ceder estos términos en cualquier momento."
+    },
+    "section14": {
+      "title": "14. Contacto",
+      "content1": "Para cualquier pregunta sobre estos términos de uso, contáctenos:",
+      "emailLabel": "Correo electrónico",
+      "phoneLabel": "Teléfono",
+      "addressLabel": "Dirección"
+    },
+    "relatedPages": "Páginas relacionadas",
+    "legalLink": "Aviso Legal",
+    "privacyLink": "Política de Privacidad",
+    "cgvLink": "Términos de Venta",
+    "cookieLink": "Política de Cookies"
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes (FAQ)",
+    "subtitle": "Encuentre respuestas rápidas a sus preguntas más comunes",
+    "searchHint": "💡 Consejo: Use Ctrl+F para buscar una palabra clave específica",
+    "contactPrompt": "¿No encuentra su respuesta?",
+    "contactLink": "Contáctenos",
+    "stillHaveQuestions": "¿Todavía tiene preguntas?",
+    "contactPromptFull": "Nuestro equipo está aquí para ayudarle. No dude en contactarnos por correo electrónico o a través de nuestro sistema de soporte.",
+    "contactButton": "Contáctenos",
+    "supportButton": "Crear un Ticket",
+    "relatedPages": "Páginas relacionadas",
+    "shippingLink": "Información de envío",
+    "returnsLink": "Devoluciones y reembolsos",
+    "cgvLink": "Términos de venta",
+    "categoryGeneral": "Preguntas Generales",
+    "general": {
+      "q1": "¿Qué es Nature Pharmacy?",
+      "a1": "Nature Pharmacy es un mercado en línea especializado en productos naturales, remedios tradicionales y medicina alternativa. Conectamos vendedores de todo el mundo con compradores que buscan soluciones naturales para su salud y bienestar.",
+      "q2": "¿Cómo funciona la plataforma?",
+      "a2": "Nuestra plataforma funciona como un mercado: vendedores independientes ofrecen sus productos, y usted puede navegar, comparar y comprar directamente de ellos. Nature Pharmacy facilita las transacciones y garantiza la seguridad de sus pagos.",
+      "q3": "¿Los productos son auténticos y de buena calidad?",
+      "a3": "Todos nuestros vendedores son cuidadosamente verificados antes de ser aceptados en la plataforma. También alentamos a nuestros clientes a dejar reseñas para mantener un alto nivel de calidad. Los productos orgánicos certificados están claramente identificados.",
+      "q4": "¿Puedo comprar productos desde el extranjero?",
+      "a4": "¡Sí! Nuestra plataforma permite compras internacionales. Los costos de envío y los tiempos de entrega varían según la ubicación del vendedor y su país de destino. Siempre verifique la información de envío antes de realizar un pedido.",
+      "q5": "¿Cómo puedo contactar al servicio al cliente?",
+      "a5": "Puede contactarnos a través de nuestro formulario de contacto, por correo electrónico a contact@nature-pharmacy.com, o creando un ticket en su área de cliente. Nuestro equipo generalmente responde dentro de 24-48 horas."
+    },
+    "categoryAccount": "Cuenta e Inicio de Sesión",
+    "account": {
+      "q1": "¿Cómo creo una cuenta?",
+      "a1": "Haga clic en 'Registrarse' en la parte superior de la página, complete el formulario con su información (nombre, correo electrónico, contraseña), luego verifique su dirección de correo electrónico haciendo clic en el enlace que le enviaremos. Su cuenta se activará entonces.",
+      "q2": "Olvidé mi contraseña, ¿qué debo hacer?",
+      "a2": "Haga clic en 'Olvidé mi contraseña' en la página de inicio de sesión, ingrese su dirección de correo electrónico y recibirá un enlace para restablecer su contraseña. Este enlace es válido por 1 hora por razones de seguridad.",
+      "q3": "¿Cómo cambio mi información personal?",
+      "a3": "Inicie sesión en su cuenta, vaya a 'Mi Cuenta' y luego 'Configuración'. Allí puede cambiar su nombre, correo electrónico, dirección, número de teléfono y preferencias de notificación.",
+      "q4": "¿Puedo eliminar mi cuenta?",
+      "a4": "Sí, puede solicitar la eliminación de su cuenta en la configuración, sección 'Privacidad y seguridad'. Tenga en cuenta que esta acción es irreversible y eliminará todos sus datos personales de acuerdo con el RGPD.",
+      "q5": "¿Cómo aseguro mi cuenta?",
+      "a5": "Use una contraseña fuerte (mínimo 8 caracteres con mayúsculas, minúsculas, números y caracteres especiales). Nunca comparta su contraseña. Cierre sesión después de cada sesión en una computadora compartida. Active la autenticación de dos factores si está disponible."
+    },
+    "categoryOrders": "Pedidos y Seguimiento",
+    "orders": {
+      "q1": "¿Cómo realizo un pedido?",
+      "a1": "Agregue los productos deseados a su carrito, haga clic en 'Carrito' y luego 'Finalizar compra'. Complete su dirección de entrega, elija su método de pago, revise su pedido y valide. Recibirá un correo electrónico de confirmación.",
+      "q2": "¿Puedo modificar o cancelar mi pedido?",
+      "a2": "Puede cancelar su pedido de forma gratuita dentro de los 30 minutos posteriores a la validación, desde su área 'Mis Pedidos'. Más allá de eso, contacte al vendedor directamente a través de la mensajería para cualquier cambio. Una vez enviado, el pedido ya no se puede cancelar.",
+      "q3": "¿Cómo rasteo mi pedido?",
+      "a3": "Inicie sesión en su cuenta y vaya a 'Mis Pedidos'. Encontrará el estado de cada pedido (preparando, enviado, en tránsito, entregado) y el número de seguimiento para entregas rastreadas. También recibirá notificaciones por correo electrónico.",
+      "q4": "No he recibido mi pedido, ¿qué debo hacer?",
+      "a4": "Primero verifique el estado en 'Mis Pedidos' y el seguimiento del paquete. Si el tiempo de entrega ha pasado, contacte al vendedor a través de la mensajería. Si no hay respuesta en 48 horas, cree un ticket de soporte e intervendremos para resolver el problema.",
+      "q5": "¿Puedo hacer un pedido como invitado sin crear una cuenta?",
+      "a5": "No, se requiere una cuenta para realizar un pedido. Esto nos permite asegurar sus transacciones, mantener un historial de sus pedidos y facilitar el seguimiento y el servicio postventa. La creación de cuenta es rápida y gratuita."
+    },
+    "categoryPayment": "Pago y Seguridad",
+    "payment": {
+      "q1": "¿Qué métodos de pago aceptan?",
+      "a1": "Aceptamos: Tarjetas de crédito (Visa, Mastercard, American Express) a través de Stripe, PayPal y pago contra entrega (según vendedores). Todos los pagos en línea están asegurados y encriptados con SSL.",
+      "q2": "¿Mis datos bancarios están seguros?",
+      "a2": "Absolutamente. Utilizamos Stripe y PayPal, procesadores de pago certificados PCI-DSS nivel 1 (el nivel de seguridad más alto). Nunca almacenamos sus datos bancarios en nuestros servidores. Todas las transacciones están encriptadas.",
+      "q3": "¿Cuándo se me cobrará?",
+      "a3": "Para pagos con tarjeta de crédito y PayPal, se le cobra inmediatamente al validar el pedido. Para pago contra entrega, paga directamente al repartidor en efectivo o con tarjeta según las opciones disponibles.",
+      "q4": "¿Puedo obtener una factura?",
+      "a4": "Sí, se genera automáticamente una factura en PDF para cada pedido y está disponible en su área 'Mis Pedidos'. También la recibe por correo electrónico. La factura incluye todos los detalles: productos, montos, IVA e información del vendedor."
+    },
+    "categoryShipping": "Entrega y Envío",
+    "shipping": {
+      "q1": "¿Cuáles son los tiempos de entrega?",
+      "a1": "Los tiempos de entrega varían según el vendedor y su ubicación: Entrega nacional: 2-5 días hábiles. Entrega internacional: 7-21 días hábiles. Los tiempos exactos se indican en la página del producto y se confirman en el pago.",
+      "q2": "¿Cuánto cuesta el envío?",
+      "a2": "Los costos de envío se calculan automáticamente según: el peso y las dimensiones del paquete, su dirección de entrega y el método de envío elegido. Algunos vendedores ofrecen envío gratuito por encima de cierta cantidad de compra.",
+      "q3": "¿Puedo elegir un punto de recogida para la entrega?",
+      "a3": "Depende del vendedor y del transportista utilizado. Al validar su pedido, si la opción 'Punto de recogida' está disponible, puede seleccionar el más cercano en un mapa interactivo.",
+      "q4": "¿Qué pasa si no estoy en casa durante la entrega?",
+      "a4": "El repartidor dejará un aviso en su buzón con instrucciones para recoger su paquete (reentrega, recogida en un punto, etc.). Generalmente tiene 14 días para recoger su paquete antes de que se devuelva al vendedor."
+    },
+    "categoryReturns": "Devoluciones y Reembolsos",
+    "returns": {
+      "q1": "¿Puedo devolver un producto?",
+      "a1": "Sí, de acuerdo con el derecho de retracto, tiene 14 días desde la recepción para devolver un producto, sin tener que justificar un motivo. El producto debe estar en su estado original, sin abrir y sin usar (excepto productos defectuosos).",
+      "q2": "¿Cómo solicito una devolución?",
+      "a2": "Vaya a 'Mis Pedidos', seleccione el pedido relevante y haga clic en 'Solicitar una devolución'. Elija el/los producto(s) y el motivo de la devolución. El vendedor le proporcionará una etiqueta de devolución y la dirección de envío en 48 horas.",
+      "q3": "¿Quién paga el envío de devolución?",
+      "a3": "Para un producto defectuoso o no conforme, el envío de devolución es responsabilidad del vendedor. Para una devolución sin motivo (derecho de retracto), el envío de devolución es generalmente su responsabilidad, a menos que el vendedor ofrezca devoluciones gratuitas.",
+      "q4": "¿Cuándo se me reembolsará?",
+      "a4": "Una vez que el vendedor haya recibido y verificado el producto devuelto (dentro de 48-72 horas), el reembolso se procesa dentro de 5-10 días hábiles. El retraso puede variar según su banco. El reembolso se realiza al mismo método de pago utilizado en la compra."
+    },
+    "categorySeller": "Convertirse en Vendedor",
+    "seller": {
+      "q1": "¿Cómo me convierto en vendedor en Nature Pharmacy?",
+      "a1": "Haga clic en 'Vender en Nature Pharmacy' en el menú, complete el formulario de registro de vendedor con su información profesional, documentos de identidad y datos bancarios. Nuestro equipo revisará su solicitud en 3-5 días hábiles.",
+      "q2": "¿Cuáles son las tarifas por vender en la plataforma?",
+      "a2": "Nature Pharmacy cobra una comisión del 12% en cada venta realizada. No hay tarifa de inscripción ni suscripción mensual. Solo paga cuando vende. Las tarifas de transacción bancaria (Stripe/PayPal) son del 2,9% + 0,25€ por transacción.",
+      "q3": "¿Cómo administro mis ventas e inventario?",
+      "a3": "Tiene un panel de vendedor completo para: agregar y modificar sus productos, administrar su inventario en tiempo real, rastrear sus pedidos y envíos, ver sus estadísticas de ventas y comunicarse con sus clientes a través de mensajería integrada.",
+      "q4": "¿Cuándo y cómo se me paga por mis ventas?",
+      "a4": "Los pagos se procesan a través de Stripe Connect. Recibe sus fondos 7 días después de la entrega confirmada de cada pedido (período de seguridad para posibles devoluciones). Luego puede solicitar una transferencia bancaria a su cuenta desde su panel de vendedor."
+    },
+    "categoryProducts": "Productos y Calidad",
+    "products": {
+      "q1": "¿Cómo sé si un producto está certificado como orgánico?",
+      "a1": "Los productos orgánicos certificados se identifican con una insignia verde 'BIO' en su página de producto. También puede filtrar los resultados de búsqueda para mostrar solo productos orgánicos certificados. Las certificaciones (AB, Ecocert, etc.) se especifican en la descripción.",
+      "q2": "¿Puedo dejar una reseña sobre un producto?",
+      "a2": "Sí, después de recibir su pedido, recibirá un correo electrónico invitándole a dejar una reseña. También puede hacerlo desde 'Mis Pedidos'. Su reseña ayuda a otros clientes y alienta a los vendedores a mantener una alta calidad.",
+      "q3": "¿Cómo denuncio un producto sospechoso o no conforme?",
+      "a3": "Si recibe un producto no conforme, defectuoso o sospechoso, contacte inmediatamente al vendedor a través de la mensajería. Si el problema persiste, cree un ticket de soporte con fotos de apoyo. Tomaremos las medidas necesarias y podemos suspender al vendedor si es necesario."
+    }
+  },
+  "cookieConsent": {
+    "title": "🍪 Gestión de Cookies",
+    "subtitle": "Respetemos juntos su privacidad",
+    "description": "Utilizamos cookies para mejorar su experiencia en nuestro sitio. Estas cookies nos ayudan a personalizar el contenido, analizar el tráfico y ofrecerle funciones adaptadas.",
+    "learnMore": "Más información",
+    "necessary": "Cookies Necesarias",
+    "required": "Obligatorio",
+    "necessaryDesc": "Estas cookies son esenciales para el funcionamiento del sitio. Permiten la autenticación, la seguridad y las funciones básicas como el carrito de compras.",
+    "analytics": "Cookies Analíticas",
+    "analyticsDesc": "Estas cookies nos ayudan a comprender cómo los visitantes usan nuestro sitio al recopilar información de forma anónima. Utilizamos estos datos para mejorar la experiencia del usuario.",
+    "marketing": "Cookies de Marketing",
+    "marketingDesc": "Estas cookies se utilizan para mostrarle anuncios relevantes en otros sitios. También ayudan a medir la efectividad de nuestras campañas publicitarias.",
+    "preferences": "Cookies de Preferencias",
+    "preferencesDesc": "Estas cookies permiten al sitio recordar sus elecciones (idioma, moneda, región) para ofrecerle una experiencia personalizada en futuras visitas.",
+    "acceptAll": "Aceptar Todo",
+    "acceptNecessary": "Solo Necesarias",
+    "customize": "Personalizar",
+    "savePreferences": "Guardar mis Opciones",
+    "back": "Volver",
+    "footerText": "Puede cambiar sus preferencias en cualquier momento en",
+    "privacyPolicy": "nuestra política de privacidad"
+  },
+  "cookiePreferences": {
+    "title": "Gestionar mis Preferencias de Cookies",
+    "subtitle": "Controle las cookies utilizadas en Nature Pharmacy",
+    "lastUpdated": "Última actualización",
+    "saved": "Sus preferencias se han guardado correctamente",
+    "necessary": "Cookies Necesarias",
+    "alwaysActive": "Siempre activo",
+    "necessaryDesc": "Estas cookies son esenciales para el correcto funcionamiento del sitio web. Sin ellas, no podría navegar correctamente ni utilizar las funciones esenciales.",
+    "examples": "Ejemplos",
+    "necessaryExample1": "Autenticación y sesiones de usuario",
+    "necessaryExample2": "Carrito de compras y proceso de pago",
+    "necessaryExample3": "Seguridad y protección CSRF",
+    "analytics": "Cookies Analíticas",
+    "analyticsDesc": "Estas cookies nos ayudan a comprender mejor cómo los visitantes interactúan con nuestro sitio. Los datos recopilados son anónimos y nos ayudan a mejorar la experiencia del usuario.",
+    "analyticsExample1": "Google Analytics (tráfico y comportamiento)",
+    "analyticsExample2": "Tiempo pasado en las páginas",
+    "analyticsExample3": "Páginas más visitadas",
+    "marketing": "Cookies de Marketing",
+    "marketingDesc": "Estas cookies nos permiten mostrarle anuncios relevantes adaptados a sus intereses, en nuestro sitio y en otros sitios web.",
+    "marketingExample1": "Anuncios dirigidos en redes sociales",
+    "marketingExample2": "Retargeting publicitario",
+    "marketingExample3": "Medición del rendimiento de campañas",
+    "preferences": "Cookies de Preferencias",
+    "preferencesDesc": "Estas cookies recuerdan sus elecciones personales para brindarle una experiencia personalizada en sus próximas visitas.",
+    "preferencesExample1": "Idioma seleccionado",
+    "preferencesExample2": "Moneda preferida",
+    "preferencesExample3": "Configuración de visualización",
+    "save": "Guardar mis Preferencias",
+    "reset": "Restablecer Todo",
+    "infoTitle": "¿Necesita saber más?",
+    "infoText": "Para obtener más información sobre nuestro uso de cookies y la protección de datos, consulte nuestras políticas completas.",
+    "cookiePolicy": "Política de Cookies",
+    "privacyPolicy": "Política de Privacidad"
+  },
+  "seller": {
+    "payout": {
+      "title": "Gestión de Pagos",
+      "description": "Configure su cuenta Stripe Connect para recibir pagos",
+      "errors": {
+        "title": "Error",
+        "notSeller": "Acceso Solo para Vendedores",
+        "notSellerDescription": "Solo las cuentas de vendedor pueden acceder a esta página."
+      },
+      "status": {
+        "paid": "Pagado",
+        "pending": "Pendiente",
+        "inTransit": "En Tránsito",
+        "failed": "Fallido",
+        "canceled": "Cancelado"
+      },
+      "noAccount": {
+        "title": "Configure sus Pagos",
+        "description": "Conecte su cuenta Stripe para comenzar a recibir pagos. El proceso toma aproximadamente 5 minutos.",
+        "button": "Conectar Stripe",
+        "connecting": "Conectando..."
+      },
+      "incomplete": {
+        "title": "Configuración Incompleta",
+        "description": "Su cuenta Stripe no está completamente configurada. Complete la configuración para comenzar a recibir pagos.",
+        "button": "Completar Configuración"
+      },
+      "balance": {
+        "available": "Saldo Disponible",
+        "pending": "Saldo Pendiente"
+      },
+      "account": {
+        "status": "Estado de la Cuenta",
+        "active": "Activo"
+      },
+      "actions": {
+        "title": "Acciones Rápidas",
+        "openDashboard": "Abrir Panel de Stripe",
+        "refresh": "Actualizar Datos"
+      },
+      "payouts": {
+        "title": "Transferencias Recientes",
+        "date": "Fecha",
+        "amount": "Monto",
+        "status": "Estado",
+        "arrival": "Llegada Esperada"
+      },
+      "info": {
+        "commission": {
+          "title": "💰 Comisión de la Plataforma",
+          "description": "Se aplica una comisión del 10% en cada venta. Usted recibe el 90% del monto de venta de sus productos."
+        },
+        "schedule": {
+          "title": "📅 Calendario de Pagos",
+          "description": "Los fondos se transfieren automáticamente a su cuenta bancaria una vez que se entrega un pedido. Las transferencias llegan en 2-3 días hábiles."
+        }
+      }
+    }
   }
 }

@@ -38,6 +38,11 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link href={`/${locale}/blog`} className="text-gray-600 hover:text-green-600 transition-colors">
+                    {t('blog')}
+                  </Link>
+                </li>
+                <li>
                   <Link href={`/${locale}/contact`} className="text-gray-600 hover:text-green-600 transition-colors">
                     {t('contactUs')}
                   </Link>
@@ -99,13 +104,23 @@ export default function Footer() {
               <h3 className="text-gray-900 font-bold text-sm mb-4">{t('help')}</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href={`/${locale}/terms`} className="text-gray-600 hover:text-green-600 transition-colors">
-                    {t('termsOfService')}
+                  <Link href={`/${locale}/legal`} className="text-gray-600 hover:text-green-600 transition-colors">
+                    {t('legalNotice')}
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/${locale}/terms-of-sale`} className="text-gray-600 hover:text-green-600 transition-colors">
+                    {t('termsOfSale')}
                   </Link>
                 </li>
                 <li>
                   <Link href={`/${locale}/privacy`} className="text-gray-600 hover:text-green-600 transition-colors">
                     {t('privacyPolicy')}
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/${locale}/terms-of-use`} className="text-gray-600 hover:text-green-600 transition-colors">
+                    {t('termsOfUse')}
                   </Link>
                 </li>
                 <li>

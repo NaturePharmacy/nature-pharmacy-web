@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import { sendWelcomeEmail } from '@/lib/email';
 
 // GET /api/auth/verify-email?token=xxx - Verify email with token
 export async function GET(request: NextRequest) {
@@ -40,6 +41,10 @@ export async function GET(request: NextRequest) {
     user.emailVerificationToken = undefined;
     user.emailVerificationExpires = undefined;
     await user.save();
+
+    // Send welcome email
+    const locale = request.nextUrl.searchParams.get('locale') || 'fr';
+    await sendWelcomeEmail(user.email, user.name, locale as 'fr' | 'en' | 'es');
 
     return NextResponse.json({
       message: 'Email verified successfully',

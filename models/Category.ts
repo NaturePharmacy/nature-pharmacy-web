@@ -16,6 +16,7 @@ export interface ICategory extends Document {
   image?: string;
   icon?: string;
   parent?: mongoose.Types.ObjectId | null;
+  displayOrder: number;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -62,6 +63,10 @@ const CategorySchema = new Schema<ICategory>(
       type: Schema.Types.ObjectId,
       ref: 'Category',
       default: null,
+    },
+    displayOrder: {
+      type: Number,
+      default: 0,
     },
     isActive: {
       type: Boolean,

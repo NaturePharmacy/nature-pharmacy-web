@@ -6,6 +6,7 @@ import SessionProvider from '@/components/providers/SessionProvider';
 import { CartProvider } from '@/contexts/CartContext';
 import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import FloatingCart from '@/components/cart/FloatingCart';
+import CookieConsent from '@/components/CookieConsent';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import "../globals.css";
@@ -28,10 +29,48 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
   return {
-    title: t('title'),
+    title: {
+      default: t('title'),
+      template: `%s | ${t('title')}`,
+    },
     description: t('description'),
+    metadataBase: new URL(baseUrl),
+    keywords: locale === 'fr'
+      ? 'plantes médicinales, phytothérapie, huiles essentielles, cosmétiques naturels, bio, herboristerie, remèdes naturels'
+      : locale === 'es'
+      ? 'plantas medicinales, fitoterapia, aceites esenciales, cosméticos naturales, orgánico, herbolaria, remedios naturales'
+      : 'medicinal plants, phytotherapy, essential oils, natural cosmetics, organic, herbalism, natural remedies',
+    authors: [{ name: 'Nature Pharmacy' }],
+    openGraph: {
+      type: 'website',
+      locale: locale,
+      url: baseUrl,
+      siteName: 'Nature Pharmacy',
+      title: t('title'),
+      description: t('description'),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('title'),
+      description: t('description'),
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    verification: {
+      google: process.env.GOOGLE_SITE_VERIFICATION || '',
+    },
   };
 }
 
@@ -60,6 +99,7 @@ export default async function RootLayout({
                 </main>
                 <Footer />
                 <FloatingCart />
+                <CookieConsent />
               </CartProvider>
             </CurrencyProvider>
           </NextIntlClientProvider>

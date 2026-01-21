@@ -10,7 +10,8 @@
     "seed:shipping": "npx tsx scripts/seedShippingZones.ts",
     "seed:products": "npx tsx scripts/seedProducts.ts",
     "seed:users": "npx tsx scripts/createTestUsers.ts",
-    "seed:all": "npm run seed:products && npm run seed:users && npm run seed:shipping"
+    "seed:all": "npm run seed:products && npm run seed:users && npm run seed:shipping",
+    "create-admin": "npx tsx scripts/create-admin.ts"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.11.1",

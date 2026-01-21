@@ -11,6 +11,12 @@ export interface IReview extends Document {
   images?: string[];
   isVerifiedPurchase: boolean;
   helpfulCount: number;
+  status: 'pending' | 'approved' | 'rejected';
+  moderatedBy?: mongoose.Types.ObjectId;
+  moderatedAt?: Date;
+  moderationNote?: string;
+  isFlagged: boolean;
+  flagReason?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -62,6 +68,30 @@ const ReviewSchema = new Schema<IReview>(
       type: Number,
       default: 0,
       min: [0, 'Helpful count cannot be negative'],
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+    },
+    moderatedBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    moderatedAt: {
+      type: Date,
+    },
+    moderationNote: {
+      type: String,
+      maxlength: [500, 'Moderation note cannot exceed 500 characters'],
+    },
+    isFlagged: {
+      type: Boolean,
+      default: false,
+    },
+    flagReason: {
+      type: String,
+      maxlength: [200, 'Flag reason cannot exceed 200 characters'],
     },
   },
   {

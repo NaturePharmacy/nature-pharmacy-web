@@ -4,6 +4,7 @@ import Order from '@/models/Order';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { createNotification, NotificationTemplates } from '@/lib/notifications';
+import { sendOrderShippedEmail, sendOrderDeliveredEmail, sendOrderCancelledEmail } from '@/lib/email';
 
 // GET /api/orders/[id] - Get a single order
 export async function GET(
@@ -118,13 +119,37 @@ export async function PUT(
 
       // Send notification to buyer on status change
       if (oldStatus !== status) {
+        // Get buyer info for email
+        const User = (await import('@/models/User')).default;
+        const buyer = await User.findById(order.buyer);
+        const locale = (buyer?.preferredLanguage || 'fr') as 'fr' | 'en' | 'es';
+
         let notification;
         if (status === 'processing') {
           notification = NotificationTemplates.orderProcessing(order._id.toString());
         } else if (status === 'shipped') {
           notification = NotificationTemplates.orderShipped(order._id.toString());
+          // Send shipped email
+          if (buyer) {
+            await sendOrderShippedEmail(
+              buyer.email,
+              buyer.name,
+              order._id.toString(),
+              order.trackingNumber,
+              locale
+            );
+          }
         } else if (status === 'delivered') {
           notification = NotificationTemplates.orderDelivered(order._id.toString());
+          // Send delivered email
+          if (buyer) {
+            await sendOrderDeliveredEmail(
+              buyer.email,
+              buyer.name,
+              order._id.toString(),
+              locale
+            );
+          }
         }
 
         if (notification) {
@@ -219,6 +244,20 @@ export async function DELETE(
       await Product.findByIdAndUpdate(item.product, {
         $inc: { stock: item.quantity },
       });
+    }
+
+    // Send cancellation email
+    const User = (await import('@/models/User')).default;
+    const buyer = await User.findById(order.buyer);
+    if (buyer) {
+      const locale = (buyer.preferredLanguage || 'fr') as 'fr' | 'en' | 'es';
+      await sendOrderCancelledEmail(
+        buyer.email,
+        buyer.name,
+        order._id.toString(),
+        'Cancelled by customer',
+        locale
+      );
     }
 
     return NextResponse.json({

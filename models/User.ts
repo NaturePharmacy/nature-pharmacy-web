@@ -29,6 +29,12 @@ export interface IUser extends Document {
     verified: boolean;
     rating: number;
     totalSales: number;
+    stripeAccountId?: string;
+    stripeOnboardingComplete: boolean;
+    stripeChargesEnabled: boolean;
+    stripePayoutsEnabled: boolean;
+    stripeDetailsSubmitted: boolean;
+    stripeBankAccountAdded: boolean;
   };
   createdAt: Date;
   updatedAt: Date;
@@ -119,6 +125,27 @@ const UserSchema = new Schema<IUser>(
       totalSales: {
         type: Number,
         default: 0,
+      },
+      stripeAccountId: String,
+      stripeOnboardingComplete: {
+        type: Boolean,
+        default: false,
+      },
+      stripeChargesEnabled: {
+        type: Boolean,
+        default: false,
+      },
+      stripePayoutsEnabled: {
+        type: Boolean,
+        default: false,
+      },
+      stripeDetailsSubmitted: {
+        type: Boolean,
+        default: false,
+      },
+      stripeBankAccountAdded: {
+        type: Boolean,
+        default: false,
       },
     },
   },
