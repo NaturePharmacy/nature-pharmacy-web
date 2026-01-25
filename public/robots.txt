@@ -1,0 +1,25 @@
+# Nature Pharmacy - robots.txt
+# https://www.naturepharmacy.com
+
+User-agent: *
+Allow: /
+
+# Disallow admin and private pages
+Disallow: /admin/
+Disallow: /api/
+Disallow: /account/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /seller/
+Disallow: /messages/
+Disallow: /support/
+
+# Allow search engines to crawl public pages
+Allow: /products/
+Allow: /blog/
+Allow: /about/
+Allow: /contact/
+Allow: /sellers/
+
+# Sitemap location
+Sitemap: https://www.naturepharmacy.com/sitemap.xml
