@@ -20,7 +20,7 @@ export default function BecomeSellerPage() {
       street: '',
       city: '',
       state: '',
-      country: 'SN',
+      country: '',
       postalCode: '',
     },
   });

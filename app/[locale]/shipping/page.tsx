@@ -191,7 +191,7 @@ export default function ShippingPage() {
           },
           {
             q: 'Do you deliver internationally?',
-            a: 'Yes, we deliver to several West African countries. Delivery times and rates vary by destination.',
+            a: 'Yes, our sellers ship worldwide. Delivery times and rates vary by destination and seller location.',
           },
         ],
       },
@@ -286,7 +286,7 @@ export default function ShippingPage() {
           },
           {
             q: '¿Entregan internacionalmente?',
-            a: 'Sí, entregamos en varios países de África Occidental. Los plazos y tarifas varían según el destino.',
+            a: 'Sí, nuestros vendedores envían a todo el mundo. Los plazos y tarifas varían según el destino y la ubicación del vendedor.',
           },
         ],
       },

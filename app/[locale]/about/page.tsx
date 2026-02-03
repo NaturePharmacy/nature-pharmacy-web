@@ -8,77 +8,77 @@ export default function AboutPage() {
   const content = {
     fr: {
       title: 'À propos de Nature Pharmacy',
-      subtitle: 'Votre partenaire de confiance pour les produits naturels au Sénégal',
+      subtitle: 'Votre marketplace internationale de produits naturels',
       mission: {
         title: 'Notre Mission',
-        text: 'Nature Pharmacy s\'engage à rendre les produits naturels et biologiques accessibles à tous au Sénégal. Nous croyons au pouvoir de la nature pour améliorer la santé et le bien-être de nos clients.',
+        text: 'Nature Pharmacy est une marketplace qui connecte vendeurs et acheteurs de produits naturels partout dans le monde. Nous facilitons l\'accès aux remèdes traditionnels et aux produits biologiques, permettant aux vendeurs indépendants de proposer leurs produits à une clientèle internationale.',
       },
       vision: {
         title: 'Notre Vision',
-        text: 'Devenir la marketplace leader en Afrique de l\'Ouest pour les produits naturels, biologiques et durables, tout en soutenant les producteurs locaux et en promouvant un mode de vie sain.',
+        text: 'Devenir la marketplace de référence mondiale pour les produits naturels, biologiques et durables, en connectant des vendeurs et acheteurs du monde entier tout en promouvant un mode de vie sain.',
       },
       values: {
         title: 'Nos Valeurs',
         items: [
-          { title: 'Authenticité', desc: 'Nous garantissons l\'authenticité de tous nos produits naturels et biologiques.' },
-          { title: 'Qualité', desc: 'Chaque produit est soigneusement sélectionné pour sa qualité exceptionnelle.' },
-          { title: 'Transparence', desc: 'Nous croyons en une communication honnête avec nos clients et nos vendeurs.' },
-          { title: 'Durabilité', desc: 'Nous soutenons les pratiques durables et responsables.' },
+          { title: 'Connexion', desc: 'Nous connectons vendeurs et acheteurs du monde entier autour des produits naturels.' },
+          { title: 'Transparence', desc: 'Nous croyons en une communication honnête entre notre plateforme, les vendeurs et les acheteurs.' },
+          { title: 'Diversité', desc: 'Nous valorisons la richesse des traditions et remèdes naturels de toutes les cultures.' },
+          { title: 'Accessibilité', desc: 'Nous rendons les produits naturels accessibles partout dans le monde.' },
         ],
       },
       story: {
         title: 'Notre Histoire',
-        text: 'Fondée au Sénégal, Nature Pharmacy est née de la passion pour les remèdes naturels et la médecine traditionnelle africaine. Notre plateforme connecte les producteurs locaux avec les consommateurs qui recherchent des alternatives naturelles pour leur santé et leur bien-être.',
+        text: 'Nature Pharmacy est née de la volonté de créer un pont entre les producteurs de produits naturels et les consommateurs du monde entier. Notre plateforme permet à chaque vendeur de proposer ses produits à une clientèle internationale, et à chaque acheteur de découvrir des remèdes traditionnels de toutes les cultures.',
       },
     },
     en: {
       title: 'About Nature Pharmacy',
-      subtitle: 'Your trusted partner for natural products in Senegal',
+      subtitle: 'Your international marketplace for natural products',
       mission: {
         title: 'Our Mission',
-        text: 'Nature Pharmacy is committed to making natural and organic products accessible to everyone in Senegal. We believe in the power of nature to improve the health and well-being of our customers.',
+        text: 'Nature Pharmacy is a marketplace that connects sellers and buyers of natural products worldwide. We facilitate access to traditional remedies and organic products, allowing independent sellers to offer their products to an international clientele.',
       },
       vision: {
         title: 'Our Vision',
-        text: 'To become the leading marketplace in West Africa for natural, organic, and sustainable products, while supporting local producers and promoting a healthy lifestyle.',
+        text: 'To become the world\'s leading marketplace for natural, organic, and sustainable products, connecting sellers and buyers worldwide while promoting a healthy lifestyle.',
       },
       values: {
         title: 'Our Values',
         items: [
-          { title: 'Authenticity', desc: 'We guarantee the authenticity of all our natural and organic products.' },
-          { title: 'Quality', desc: 'Each product is carefully selected for its exceptional quality.' },
-          { title: 'Transparency', desc: 'We believe in honest communication with our customers and sellers.' },
-          { title: 'Sustainability', desc: 'We support sustainable and responsible practices.' },
+          { title: 'Connection', desc: 'We connect sellers and buyers worldwide around natural products.' },
+          { title: 'Transparency', desc: 'We believe in honest communication between our platform, sellers and buyers.' },
+          { title: 'Diversity', desc: 'We value the richness of natural traditions and remedies from all cultures.' },
+          { title: 'Accessibility', desc: 'We make natural products accessible everywhere in the world.' },
         ],
       },
       story: {
         title: 'Our Story',
-        text: 'Founded in Senegal, Nature Pharmacy was born from a passion for natural remedies and traditional African medicine. Our platform connects local producers with consumers seeking natural alternatives for their health and wellness.',
+        text: 'Nature Pharmacy was born from the desire to create a bridge between natural product producers and consumers worldwide. Our platform allows every seller to offer their products to an international clientele, and every buyer to discover traditional remedies from all cultures.',
       },
     },
     es: {
       title: 'Acerca de Nature Pharmacy',
-      subtitle: 'Su socio de confianza para productos naturales en Senegal',
+      subtitle: 'Tu marketplace internacional de productos naturales',
       mission: {
         title: 'Nuestra Misión',
-        text: 'Nature Pharmacy se compromete a hacer que los productos naturales y orgánicos sean accesibles para todos en Senegal. Creemos en el poder de la naturaleza para mejorar la salud y el bienestar de nuestros clientes.',
+        text: 'Nature Pharmacy es un marketplace que conecta vendedores y compradores de productos naturales en todo el mundo. Facilitamos el acceso a remedios tradicionales y productos orgánicos, permitiendo a vendedores independientes ofrecer sus productos a una clientela internacional.',
       },
       vision: {
         title: 'Nuestra Visión',
-        text: 'Convertirse en el mercado líder en África Occidental para productos naturales, orgánicos y sostenibles, mientras apoyamos a los productores locales y promovemos un estilo de vida saludable.',
+        text: 'Convertirnos en el marketplace líder mundial para productos naturales, orgánicos y sostenibles, conectando vendedores y compradores de todo el mundo mientras promovemos un estilo de vida saludable.',
       },
       values: {
         title: 'Nuestros Valores',
         items: [
-          { title: 'Autenticidad', desc: 'Garantizamos la autenticidad de todos nuestros productos naturales y orgánicos.' },
-          { title: 'Calidad', desc: 'Cada producto es cuidadosamente seleccionado por su calidad excepcional.' },
-          { title: 'Transparencia', desc: 'Creemos en la comunicación honesta con nuestros clientes y vendedores.' },
-          { title: 'Sostenibilidad', desc: 'Apoyamos prácticas sostenibles y responsables.' },
+          { title: 'Conexión', desc: 'Conectamos vendedores y compradores de todo el mundo en torno a productos naturales.' },
+          { title: 'Transparencia', desc: 'Creemos en la comunicación honesta entre nuestra plataforma, vendedores y compradores.' },
+          { title: 'Diversidad', desc: 'Valoramos la riqueza de las tradiciones y remedios naturales de todas las culturas.' },
+          { title: 'Accesibilidad', desc: 'Hacemos que los productos naturales sean accesibles en todo el mundo.' },
         ],
       },
       story: {
         title: 'Nuestra Historia',
-        text: 'Fundada en Senegal, Nature Pharmacy nació de la pasión por los remedios naturales y la medicina tradicional africana. Nuestra plataforma conecta a los productores locales con los consumidores que buscan alternativas naturales para su salud y bienestar.',
+        text: 'Nature Pharmacy nació del deseo de crear un puente entre los productores de productos naturales y los consumidores de todo el mundo. Nuestra plataforma permite a cada vendedor ofrecer sus productos a una clientela internacional, y a cada comprador descubrir remedios tradicionales de todas las culturas.',
       },
     },
   };
@@ -87,7 +87,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      
+
       <main className="flex-1 py-12">
         <div className="max-w-5xl mx-auto px-4">
           {/* Hero Section */}

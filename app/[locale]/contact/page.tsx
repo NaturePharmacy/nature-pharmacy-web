@@ -28,10 +28,9 @@ export default function ContactPage() {
       },
       info: {
         title: 'Informations de contact',
-        address: 'Dakar, Sénégal',
-        phone: '+221 XX XXX XX XX',
-        email: 'contact@naturepharmacy.sn',
-        hours: 'Lun - Sam: 8h00 - 18h00',
+        email: 'contact@nature-pharmacy.com',
+        hours: '24/7 - Support en ligne',
+        response: 'Réponse sous 24-48h',
       },
       success: 'Message envoyé avec succès! Nous vous répondrons bientôt.',
       error: 'Une erreur s\'est produite. Veuillez réessayer.',
@@ -49,10 +48,9 @@ export default function ContactPage() {
       },
       info: {
         title: 'Contact Information',
-        address: 'Dakar, Senegal',
-        phone: '+221 XX XXX XX XX',
-        email: 'contact@naturepharmacy.sn',
-        hours: 'Mon - Sat: 8:00 AM - 6:00 PM',
+        email: 'contact@nature-pharmacy.com',
+        hours: '24/7 - Online Support',
+        response: 'Response within 24-48h',
       },
       success: 'Message sent successfully! We\'ll get back to you soon.',
       error: 'An error occurred. Please try again.',
@@ -70,10 +68,9 @@ export default function ContactPage() {
       },
       info: {
         title: 'Información de contacto',
-        address: 'Dakar, Senegal',
-        phone: '+221 XX XXX XX XX',
-        email: 'contact@naturepharmacy.sn',
-        hours: 'Lun - Sáb: 8:00 - 18:00',
+        email: 'contact@nature-pharmacy.com',
+        hours: '24/7 - Soporte en línea',
+        response: 'Respuesta en 24-48h',
       },
       success: '¡Mensaje enviado con éxito! Le responderemos pronto.',
       error: 'Ocurrió un error. Por favor, inténtelo de nuevo.',
@@ -97,7 +94,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      
+
       <main className="flex-1 py-12">
         <div className="max-w-6xl mx-auto px-4">
           {/* Header */}
@@ -187,31 +184,6 @@ export default function ContactPage() {
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                       <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">Adresse</h3>
-                      <p className="text-gray-600">{t.info.address}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">Téléphone</h3>
-                      <p className="text-gray-600">{t.info.phone}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                     </div>
@@ -228,8 +200,20 @@ export default function ContactPage() {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Horaires</h3>
+                      <h3 className="font-semibold text-gray-900">{locale === 'fr' ? 'Disponibilité' : locale === 'es' ? 'Disponibilidad' : 'Availability'}</h3>
                       <p className="text-gray-600">{t.info.hours}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">{locale === 'fr' ? 'Délai de réponse' : locale === 'es' ? 'Tiempo de respuesta' : 'Response time'}</h3>
+                      <p className="text-gray-600">{t.info.response}</p>
                     </div>
                   </div>
                 </div>
@@ -237,16 +221,16 @@ export default function ContactPage() {
 
               {/* Quick Links */}
               <div className="bg-green-50 rounded-lg p-6 border border-green-200">
-                <h3 className="font-semibold text-gray-900 mb-4">Support rapide</h3>
+                <h3 className="font-semibold text-gray-900 mb-4">{locale === 'fr' ? 'Support rapide' : locale === 'es' ? 'Soporte rápido' : 'Quick support'}</h3>
                 <div className="space-y-2">
                   <a href={`/${locale}/support`} className="block text-green-600 hover:text-green-700">
-                    → Centre d'aide
+                    → {locale === 'fr' ? 'Centre d\'aide' : locale === 'es' ? 'Centro de ayuda' : 'Help center'}
                   </a>
                   <a href={`/${locale}/orders`} className="block text-green-600 hover:text-green-700">
-                    → Suivre ma commande
+                    → {locale === 'fr' ? 'Suivre ma commande' : locale === 'es' ? 'Seguir mi pedido' : 'Track my order'}
                   </a>
                   <a href={`/${locale}/returns`} className="block text-green-600 hover:text-green-700">
-                    → Retours et remboursements
+                    → {locale === 'fr' ? 'Retours et remboursements' : locale === 'es' ? 'Devoluciones y reembolsos' : 'Returns and refunds'}
                   </a>
                 </div>
               </div>

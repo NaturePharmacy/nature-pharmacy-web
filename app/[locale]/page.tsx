@@ -206,8 +206,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900">{locale === 'fr' ? 'Livraison gratuite' : locale === 'es' ? 'Envío gratis' : 'Free shipping'}</p>
-                      <p className="text-sm text-gray-500">{locale === 'fr' ? 'À partir de 50€' : locale === 'es' ? 'Desde 50€' : 'Orders over $50'}</p>
+                      <p className="font-semibold text-gray-900">{locale === 'fr' ? 'Livraison mondiale' : locale === 'es' ? 'Envío mundial' : 'Worldwide shipping'}</p>
+                      <p className="text-sm text-gray-500">{locale === 'fr' ? 'Partout dans le monde' : locale === 'es' ? 'A todo el mundo' : 'Everywhere in the world'}</p>
                     </div>
                   </div>
                 </div>
