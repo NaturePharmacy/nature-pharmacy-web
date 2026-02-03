@@ -16,7 +16,9 @@ export function middleware(request: NextRequest) {
     pathname === '/favicon.ico' ||
     pathname.startsWith('/images/') ||
     pathname === '/robots.txt' ||
-    pathname === '/sitemap.xml'
+    pathname === '/sitemap.xml' ||
+    // Skip static image files in public folder
+    /\.(jpeg|jpg|png|gif|svg|ico|webp|avif)$/i.test(pathname)
   ) {
     return NextResponse.next();
   }
@@ -59,7 +61,7 @@ export function middleware(request: NextRequest) {
 // Configure which routes the middleware should run on
 export const config = {
   matcher: [
-    // Match all paths except static files
-    '/((?!_next/static|_next/image|favicon.ico|images/).*)',
+    // Match all paths except static files and images
+    '/((?!_next/static|_next/image|favicon.ico|images/|.*\\.(?:jpeg|jpg|png|gif|svg|ico|webp|avif)$).*)',
   ],
 };
