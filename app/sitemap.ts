@@ -32,6 +32,13 @@ const staticPages = [
 // Supported locales
 const locales = ['fr', 'en', 'es'];
 
+// Helper function to safely create a date
+function safeDate(dateValue: string | Date | undefined | null): Date {
+  if (!dateValue) return new Date();
+  const date = new Date(dateValue);
+  return isNaN(date.getTime()) ? new Date() : date;
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
@@ -61,7 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         for (const locale of locales) {
           sitemapEntries.push({
             url: `${BASE_URL}/${locale}/products/${product.slug}`,
-            lastModified: new Date(product.updatedAt || product.createdAt),
+            lastModified: safeDate(product.updatedAt || product.createdAt),
             changeFrequency: 'weekly',
             priority: 0.7,
           });
@@ -86,7 +93,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         for (const locale of locales) {
           sitemapEntries.push({
             url: `${BASE_URL}/${locale}/blog/${post.slug}`,
-            lastModified: new Date(post.updatedAt || post.createdAt),
+            lastModified: safeDate(post.updatedAt || post.createdAt),
             changeFrequency: 'monthly',
             priority: 0.6,
           });
