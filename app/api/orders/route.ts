@@ -191,7 +191,7 @@ export async function POST(request: NextRequest) {
     // Send order confirmation email
     const buyer = await User.findById(session.user.id);
     if (buyer) {
-      const locale = (buyer.preferredLanguage || 'fr') as 'fr' | 'en' | 'es';
+      const locale = 'fr' as 'fr' | 'en' | 'es';
       await sendOrderConfirmationEmail(
         buyer.email,
         buyer.name,
@@ -215,7 +215,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle referral rewards if this is user's first purchase
-    const buyer = await User.findById(session.user.id);
     if (buyer?.referredBy) {
       // Check if this is the first completed order
       const previousOrders = await Order.countDocuments({
@@ -230,22 +229,32 @@ export async function POST(request: NextRequest) {
           // Calculate reward (5% of order total as an example)
           const rewardAmount = totalPrice * 0.05;
 
-          await referral.addReward(
-            buyer._id,
-            order._id,
-            rewardAmount
-          );
+          referral.rewards.push({
+            referredUser: buyer._id as any,
+            order: order._id as any,
+            amount: rewardAmount,
+            status: 'pending',
+            createdAt: new Date(),
+          });
+          referral.stats.totalEarned += rewardAmount;
+          referral.stats.conversions += 1;
+          await referral.save();
 
           // Notify the referrer
-          const referrerNotification = {
-            type: 'referral_reward' as const,
-            title: 'Referral Reward Earned!',
-            message: `You earned ${rewardAmount.toFixed(2)} FCFA from your referral's first purchase!`,
-            link: '/referral',
-          };
           await createNotification({
             userId: buyer.referredBy.toString(),
-            ...referrerNotification,
+            type: 'system',
+            title: {
+              fr: 'Récompense de parrainage!',
+              en: 'Referral Reward Earned!',
+              es: '¡Recompensa de referido!'
+            },
+            message: {
+              fr: `Vous avez gagné ${rewardAmount.toFixed(2)} FCFA grâce au premier achat de votre filleul!`,
+              en: `You earned ${rewardAmount.toFixed(2)} FCFA from your referral's first purchase!`,
+              es: `¡Ganaste ${rewardAmount.toFixed(2)} FCFA de la primera compra de tu referido!`
+            },
+            link: '/referral',
           });
         }
       }
