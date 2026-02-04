@@ -1,24 +1,20 @@
 'use client';
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
+import { CURRENCY_CONFIG } from '@/lib/currency';
 
-// Currency rates (base: USD)
-const CURRENCY_RATES: Record<string, number> = {
-  USD: 1,
-  EUR: 0.92,
-  GBP: 0.79,
-  XOF: 605.5, // West African CFA franc
-  MAD: 10.12, // Moroccan Dirham
-};
+// Extraire les taux et symboles depuis la config centralisée
+const CURRENCY_RATES: Record<string, number> = Object.fromEntries(
+  Object.entries(CURRENCY_CONFIG).map(([key, config]) => [key, config.rate])
+);
 
-// Currency symbols
-const CURRENCY_SYMBOLS: Record<string, string> = {
-  USD: '$',
-  EUR: '€',
-  GBP: '£',
-  XOF: 'CFA',
-  MAD: 'DH',
-};
+const CURRENCY_SYMBOLS: Record<string, string> = Object.fromEntries(
+  Object.entries(CURRENCY_CONFIG).map(([key, config]) => [key, config.symbol])
+);
+
+const CURRENCY_POSITIONS: Record<string, string> = Object.fromEntries(
+  Object.entries(CURRENCY_CONFIG).map(([key, config]) => [key, config.position])
+);
 
 type Currency = keyof typeof CURRENCY_RATES;
 
@@ -55,15 +51,17 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
     (price: number): string => {
       const convertedPrice = convertPrice(price);
       const symbol = CURRENCY_SYMBOLS[currency];
+      const position = CURRENCY_POSITIONS[currency];
+      const decimals = CURRENCY_CONFIG[currency as keyof typeof CURRENCY_CONFIG]?.decimals ?? 2;
 
       // Format with proper decimal places
-      const formatted = new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+      const formatted = new Intl.NumberFormat('fr-FR', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
       }).format(convertedPrice);
 
-      // Return formatted price with symbol
-      if (currency === 'XOF' || currency === 'MAD') {
+      // Return formatted price with symbol based on position
+      if (position === 'after') {
         return `${formatted} ${symbol}`;
       }
       return `${symbol}${formatted}`;

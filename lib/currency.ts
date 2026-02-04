@@ -5,7 +5,7 @@ export const CURRENCY_CONFIG = {
     code: 'USD',
     symbol: '$',
     name: 'US Dollar',
-    position: 'before',
+    position: 'before' as const,
     rate: 1, // Devise de base
     decimals: 2,
   },
@@ -13,40 +13,70 @@ export const CURRENCY_CONFIG = {
     code: 'XOF',
     symbol: 'FCFA',
     name: 'Franc CFA',
-    position: 'after',
-    rate: 625, // 1 USD = 625 FCFA (environ)
+    position: 'after' as const,
+    rate: 615, // 1 USD = 615 FCFA (taux moyen 2024-2025)
     decimals: 0,
   },
   EUR: {
     code: 'EUR',
     symbol: '€',
     name: 'Euro',
-    position: 'after',
-    rate: 0.92, // 1 USD = 0.92 EUR (environ)
+    position: 'after' as const,
+    rate: 0.92, // 1 USD = 0.92 EUR
+    decimals: 2,
+  },
+  GBP: {
+    code: 'GBP',
+    symbol: '£',
+    name: 'British Pound',
+    position: 'before' as const,
+    rate: 0.79, // 1 USD = 0.79 GBP
+    decimals: 2,
+  },
+  MAD: {
+    code: 'MAD',
+    symbol: 'DH',
+    name: 'Moroccan Dirham',
+    position: 'after' as const,
+    rate: 10.0, // 1 USD = 10 MAD
+    decimals: 2,
+  },
+  CAD: {
+    code: 'CAD',
+    symbol: 'CA$',
+    name: 'Canadian Dollar',
+    position: 'before' as const,
+    rate: 1.36, // 1 USD = 1.36 CAD
     decimals: 2,
   },
 } as const;
 
-// Mapping pays → devise (utilise ALL_COUNTRIES de countries.ts comme source de vérité)
-// Cette constante est générée automatiquement à partir de ALL_COUNTRIES
+// Mapping pays → devise
 export const COUNTRY_TO_CURRENCY = {
-  // Zone CFA - Afrique de l'Ouest
+  // Zone CFA - Afrique de l'Ouest (UEMOA)
   SN: 'XOF', CI: 'XOF', ML: 'XOF', BF: 'XOF', BJ: 'XOF', TG: 'XOF', NE: 'XOF', GW: 'XOF',
-  // Zone CFA - Afrique Centrale
+  // Zone CFA - Afrique Centrale (CEMAC)
   CM: 'XOF', GA: 'XOF', CG: 'XOF', TD: 'XOF', CF: 'XOF', GQ: 'XOF',
+  // Maroc (MAD)
+  MA: 'MAD',
   // Autres pays d'Afrique (USD)
-  MA: 'USD', DZ: 'USD', TN: 'USD', EG: 'USD', GH: 'USD', NG: 'USD', KE: 'USD', ZA: 'USD', ET: 'USD',
-  // Europe (EUR)
+  DZ: 'USD', TN: 'USD', EG: 'USD', GH: 'USD', NG: 'USD', KE: 'USD', ZA: 'USD', ET: 'USD',
+  // Zone Euro
   FR: 'EUR', BE: 'EUR', DE: 'EUR', ES: 'EUR', IT: 'EUR', PT: 'EUR', NL: 'EUR', LU: 'EUR',
-  CH: 'EUR', AT: 'EUR', GR: 'EUR', IE: 'EUR', GB: 'EUR', SE: 'EUR', DK: 'EUR', NO: 'EUR',
-  FI: 'EUR', PL: 'EUR', CZ: 'EUR', RO: 'EUR',
-  // Amérique du Nord (USD)
-  US: 'USD', CA: 'USD', MX: 'USD',
+  AT: 'EUR', GR: 'EUR', IE: 'EUR', FI: 'EUR', SK: 'EUR', SI: 'EUR', EE: 'EUR', LV: 'EUR',
+  LT: 'EUR', CY: 'EUR', MT: 'EUR', MC: 'EUR', AD: 'EUR', SM: 'EUR', VA: 'EUR',
+  // Europe hors zone Euro
+  GB: 'GBP', // Royaume-Uni
+  CH: 'EUR', SE: 'EUR', DK: 'EUR', NO: 'EUR', PL: 'EUR', CZ: 'EUR', RO: 'EUR', HU: 'EUR',
+  // Amérique du Nord
+  US: 'USD',
+  CA: 'CAD', // Canada
+  MX: 'USD',
   // Amérique du Sud (USD)
-  BR: 'USD', AR: 'USD', CL: 'USD', CO: 'USD', PE: 'USD', VE: 'USD',
+  BR: 'USD', AR: 'USD', CL: 'USD', CO: 'USD', PE: 'USD', VE: 'USD', EC: 'USD', UY: 'USD',
   // Asie (USD)
   CN: 'USD', JP: 'USD', IN: 'USD', KR: 'USD', TH: 'USD', VN: 'USD', SG: 'USD',
-  MY: 'USD', PH: 'USD', ID: 'USD', AE: 'USD', SA: 'USD',
+  MY: 'USD', PH: 'USD', ID: 'USD', AE: 'USD', SA: 'USD', QA: 'USD', KW: 'USD',
   // Océanie (USD)
   AU: 'USD', NZ: 'USD',
 } as const;

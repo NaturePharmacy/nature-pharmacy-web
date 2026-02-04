@@ -1,16 +1,29 @@
 import nodemailer from 'nodemailer';
+import type { Transporter } from 'nodemailer';
 import Settings from '@/models/Settings';
 
-const smtpPort = parseInt(process.env.SMTP_PORT || '587');
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: smtpPort,
-  secure: smtpPort === 465, // true for 465 (SSL), false for 587 (TLS)
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+// Transporter créé de manière lazy (à la demande)
+let transporter: Transporter | null = null;
+
+function getTransporter(): Transporter {
+  if (!transporter) {
+    const smtpPort = parseInt(process.env.SMTP_PORT || '587');
+    transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: smtpPort,
+      secure: smtpPort === 465, // true for 465 (SSL), false for 587 (TLS)
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+      // Timeout settings pour éviter les blocages
+      connectionTimeout: 10000, // 10 seconds
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
+    });
+  }
+  return transporter;
+}
 
 interface EmailOptions {
   to: string;
@@ -18,17 +31,33 @@ interface EmailOptions {
   html: string;
 }
 
-export async function sendEmail({ to, subject, html }: EmailOptions) {
+export async function sendEmail({ to, subject, html }: EmailOptions): Promise<{ success: boolean; error?: unknown }> {
+  // Vérifier que les credentials SMTP sont configurés
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    console.error('SMTP credentials not configured');
+    return { success: false, error: 'SMTP not configured' };
+  }
+
+  if (!process.env.SMTP_HOST) {
+    console.error('SMTP_HOST not configured');
+    return { success: false, error: 'SMTP host not configured' };
+  }
+
   try {
-    await transporter.sendMail({
-      from: `"Nature Pharmacy" <${process.env.SMTP_USER || 'noreply@naturepharmacy.com'}>`,
+    const emailTransporter = getTransporter();
+
+    await emailTransporter.sendMail({
+      from: `"Nature Pharmacy" <${process.env.SMTP_USER}>`,
       to,
       subject,
       html,
     });
+
     return { success: true };
   } catch (error) {
     console.error('Error sending email:', error);
+    // Reset transporter en cas d'erreur de connexion
+    transporter = null;
     return { success: false, error };
   }
 }
