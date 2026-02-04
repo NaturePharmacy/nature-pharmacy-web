@@ -84,12 +84,26 @@ export default function ContactPage() {
     setLoading(true);
     setMessage('');
 
-    // Simulate sending (in production, call an API)
-    setTimeout(() => {
-      setMessage(t.success);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessage(t.success);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setMessage(data.error || t.error);
+      }
+    } catch {
+      setMessage(t.error);
+    } finally {
       setLoading(false);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 1500);
+    }
   };
 
   return (

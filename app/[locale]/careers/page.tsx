@@ -1,7 +1,6 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import Link from 'next/link';
 
 export default function CareersPage() {
   const locale = useLocale() as 'fr' | 'en' | 'es';
@@ -15,7 +14,7 @@ export default function CareersPage() {
         items: [
           {
             title: 'Mission Inspirante',
-            description: 'Contribuez à améliorer la santé et le bien-être de milliers de personnes à travers l\'Afrique',
+            description: 'Contribuez à améliorer la santé et le bien-être de milliers de personnes à travers le monde',
           },
           {
             title: 'Innovation',
@@ -39,7 +38,7 @@ export default function CareersPage() {
       spontaneous: {
         title: 'Candidature spontanée',
         description: 'Vous ne trouvez pas le poste qui vous correspond ? Envoyez-nous votre CV et lettre de motivation.',
-        email: 'carrieres@naturepharmacy.sn',
+        email: 'contact@naturepharmacy.com',
         cta: 'Envoyer votre candidature',
       },
       benefits: {
@@ -62,7 +61,7 @@ export default function CareersPage() {
         items: [
           {
             title: 'Inspiring Mission',
-            description: 'Help improve the health and well-being of thousands of people across Africa',
+            description: 'Help improve the health and well-being of thousands of people around the world',
           },
           {
             title: 'Innovation',
@@ -86,7 +85,7 @@ export default function CareersPage() {
       spontaneous: {
         title: 'Spontaneous application',
         description: 'Can\'t find the right position? Send us your resume and cover letter.',
-        email: 'careers@naturepharmacy.sn',
+        email: 'contact@naturepharmacy.com',
         cta: 'Send your application',
       },
       benefits: {
@@ -109,7 +108,7 @@ export default function CareersPage() {
         items: [
           {
             title: 'Misión Inspiradora',
-            description: 'Ayuda a mejorar la salud y el bienestar de miles de personas en África',
+            description: 'Ayuda a mejorar la salud y el bienestar de miles de personas en todo el mundo',
           },
           {
             title: 'Innovación',
@@ -133,7 +132,7 @@ export default function CareersPage() {
       spontaneous: {
         title: 'Candidatura espontánea',
         description: '¿No encuentras el puesto adecuado? Envíanos tu currículum y carta de presentación.',
-        email: 'carreras@naturepharmacy.sn',
+        email: 'contact@naturepharmacy.com',
         cta: 'Enviar tu candidatura',
       },
       benefits: {
@@ -154,7 +153,7 @@ export default function CareersPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      
+
       <main className="flex-1 py-12">
         <div className="max-w-6xl mx-auto px-4">
           {/* Header */}

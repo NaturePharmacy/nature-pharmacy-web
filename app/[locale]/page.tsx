@@ -3,7 +3,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
-import ProductPrice from '@/components/ProductPrice';
+import FeaturedProductsGrid from '@/components/FeaturedProductsGrid';
+import NewProductsSlider from '@/components/NewProductsSlider';
 import { Metadata } from 'next';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -368,57 +369,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 {t('seeAll')} →
               </Link>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {featuredProducts.slice(0, 4).map((product: any) => (
-                <Link
-                  key={product._id}
-                  href={`/${locale}/products/${product.slug}`}
-                  className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-all group"
-                >
-                  <div className="relative aspect-square bg-gray-50">
-                    {product.images?.[0] ? (
-                      <Image
-                        src={product.images[0]}
-                        alt={product.name[locale]}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-gray-300 text-5xl">🌿</div>
-                    )}
-                    {product.isOrganic && (
-                      <span className="absolute top-2 left-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">
-                        Bio
-                      </span>
-                    )}
-                    {product.compareAtPrice && (
-                      <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                        -{Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)}%
-                      </span>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-medium text-gray-900 text-sm line-clamp-2 group-hover:text-green-600 transition-colors mb-2">
-                      {product.name[locale]}
-                    </h3>
-                    <div className="flex items-center gap-1 mb-2">
-                      <div className="flex text-amber-400">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <svg key={star} className={`w-3 h-3 ${star <= Math.round(product.rating || 0) ? 'fill-current' : 'fill-gray-200'}`} viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                        ))}
-                      </div>
-                      <span className="text-xs text-gray-500">({product.reviewCount || 0})</span>
-                    </div>
-                    <ProductPrice
-                      price={product.price || 0}
-                      compareAtPrice={product.compareAtPrice}
-                    />
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <FeaturedProductsGrid products={featuredProducts} locale={locale} />
           </div>
         </div>
 
@@ -477,36 +428,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 {t('seeAll')} →
               </Link>
             </div>
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-              {newProducts.map((product: any) => (
-                <Link
-                  key={product._id}
-                  href={`/${locale}/products/${product.slug}`}
-                  className="flex-shrink-0 w-48 bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-all group"
-                >
-                  <div className="relative aspect-square bg-gray-50">
-                    {product.images?.[0] ? (
-                      <Image
-                        src={product.images[0]}
-                        alt={product.name[locale]}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-gray-300 text-4xl">🌿</div>
-                    )}
-                  </div>
-                  <div className="p-3">
-                    <h3 className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-green-600 transition-colors">
-                      {product.name[locale]}
-                    </h3>
-                    <div className="mt-2">
-                      <ProductPrice price={product.price || 0} />
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <NewProductsSlider products={newProducts} locale={locale} />
           </div>
         </div>
 
