@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
       submit: 'Envoyer le lien',
       sending: 'Envoi en cours...',
       success: 'Email envoyé !',
-      successMessage: 'Si un compte existe avec cette adresse, vous recevrez un email avec les instructions.',
+      successMessage: 'Un email avec les instructions de réinitialisation a été envoyé à votre adresse.',
       backToLogin: 'Retour à la connexion',
       error: 'Une erreur est survenue. Veuillez réessayer.',
     },
@@ -30,7 +30,7 @@ export default function ForgotPasswordPage() {
       submit: 'Send reset link',
       sending: 'Sending...',
       success: 'Email sent!',
-      successMessage: 'If an account exists with this email, you will receive instructions to reset your password.',
+      successMessage: 'An email with reset instructions has been sent to your address.',
       backToLogin: 'Back to login',
       error: 'An error occurred. Please try again.',
     },
@@ -49,12 +49,14 @@ export default function ForgotPasswordPage() {
         body: JSON.stringify({ email, locale }),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
         setStatus('success');
         setMessage(t.successMessage);
       } else {
         setStatus('error');
-        setMessage(t.error);
+        setMessage(data.error || t.error);
       }
     } catch {
       setStatus('error');

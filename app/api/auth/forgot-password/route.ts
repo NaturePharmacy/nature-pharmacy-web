@@ -20,11 +20,17 @@ export async function POST(request: NextRequest) {
 
     const user = await User.findOne({ email: email.toLowerCase() });
 
-    // Always return success to prevent email enumeration
+    // Return error if user doesn't exist
     if (!user) {
-      return NextResponse.json({
-        message: 'If an account with this email exists, a password reset link has been sent',
-      });
+      const errorMessages = {
+        fr: 'Aucun compte n\'existe avec cette adresse email',
+        en: 'No account exists with this email address',
+        es: 'No existe ninguna cuenta con este correo electrónico',
+      };
+      return NextResponse.json(
+        { error: errorMessages[locale as keyof typeof errorMessages] || errorMessages.fr },
+        { status: 404 }
+      );
     }
 
     // Generate reset token
@@ -42,11 +48,19 @@ export async function POST(request: NextRequest) {
     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
     const resetUrl = `${baseUrl}/${locale}/reset-password?token=${resetToken}`;
 
-    await sendEmail({
+    const emailResult = await sendEmail({
       to: user.email,
       subject: locale === 'fr' ? 'Réinitialisation de mot de passe - Nature Pharmacy' : 'Password Reset - Nature Pharmacy',
       html: generatePasswordResetEmail(user.name, resetUrl, locale),
     });
+
+    if (!emailResult.success) {
+      console.error('Failed to send password reset email:', emailResult.error);
+      return NextResponse.json(
+        { error: locale === 'fr' ? 'Échec de l\'envoi de l\'email. Veuillez réessayer.' : 'Failed to send email. Please try again.' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       message: 'Password reset email sent successfully',
