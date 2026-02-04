@@ -27,9 +27,10 @@ export default function NewProductPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Formulaire simplifié - une seule langue (celle du vendeur)
   const [formData, setFormData] = useState({
-    name: { fr: '', en: '', es: '' },
-    description: { fr: '', en: '', es: '' },
+    name: '',
+    description: '',
     price: '',
     compareAtPrice: '',
     stock: '',
@@ -38,9 +39,104 @@ export default function NewProductPage() {
     isOrganic: false,
     isFeatured: false,
     weight: '',
-    ingredients: { fr: '', en: '', es: '' },
-    usage: { fr: '', en: '', es: '' },
+    ingredients: '',
+    usage: '',
   });
+
+  const labels = {
+    fr: {
+      pageTitle: 'Ajouter un produit',
+      basicInfo: 'Informations de base',
+      name: 'Nom du produit',
+      namePlaceholder: 'Ex: Huile de baobab bio',
+      category: 'Catégorie',
+      selectCategory: 'Sélectionner une catégorie',
+      description: 'Description',
+      descriptionPlaceholder: 'Décrivez votre produit en détail...',
+      pricingStock: 'Prix et stock',
+      price: 'Prix de vente',
+      compareAtPrice: 'Prix barré (optionnel)',
+      stock: 'Quantité en stock',
+      weight: 'Poids / Contenance',
+      weightPlaceholder: 'Ex: 100g, 250ml',
+      isOrganic: 'Produit biologique',
+      isFeatured: 'Mettre en avant',
+      images: 'Images du produit',
+      imagesHelp: 'Ajoutez jusqu\'à 5 images de votre produit. La première image sera l\'image principale.',
+      additionalInfo: 'Informations complémentaires',
+      ingredients: 'Ingrédients / Composition',
+      ingredientsPlaceholder: 'Listez les ingrédients du produit...',
+      usage: 'Mode d\'emploi / Conseils d\'utilisation',
+      usagePlaceholder: 'Comment utiliser ce produit...',
+      creating: 'Création en cours...',
+      createProduct: 'Créer le produit',
+      cancel: 'Annuler',
+      backToProducts: 'Retour aux produits',
+      translationNote: 'Les traductions seront générées automatiquement pour les autres langues.',
+    },
+    en: {
+      pageTitle: 'Add a product',
+      basicInfo: 'Basic information',
+      name: 'Product name',
+      namePlaceholder: 'Ex: Organic baobab oil',
+      category: 'Category',
+      selectCategory: 'Select a category',
+      description: 'Description',
+      descriptionPlaceholder: 'Describe your product in detail...',
+      pricingStock: 'Pricing and stock',
+      price: 'Selling price',
+      compareAtPrice: 'Compare at price (optional)',
+      stock: 'Stock quantity',
+      weight: 'Weight / Volume',
+      weightPlaceholder: 'Ex: 100g, 250ml',
+      isOrganic: 'Organic product',
+      isFeatured: 'Featured',
+      images: 'Product images',
+      imagesHelp: 'Add up to 5 images of your product. The first image will be the main image.',
+      additionalInfo: 'Additional information',
+      ingredients: 'Ingredients / Composition',
+      ingredientsPlaceholder: 'List the product ingredients...',
+      usage: 'How to use / Usage instructions',
+      usagePlaceholder: 'How to use this product...',
+      creating: 'Creating...',
+      createProduct: 'Create product',
+      cancel: 'Cancel',
+      backToProducts: 'Back to products',
+      translationNote: 'Translations will be automatically generated for other languages.',
+    },
+    es: {
+      pageTitle: 'Agregar un producto',
+      basicInfo: 'Información básica',
+      name: 'Nombre del producto',
+      namePlaceholder: 'Ej: Aceite de baobab orgánico',
+      category: 'Categoría',
+      selectCategory: 'Seleccionar una categoría',
+      description: 'Descripción',
+      descriptionPlaceholder: 'Describe tu producto en detalle...',
+      pricingStock: 'Precio y stock',
+      price: 'Precio de venta',
+      compareAtPrice: 'Precio tachado (opcional)',
+      stock: 'Cantidad en stock',
+      weight: 'Peso / Contenido',
+      weightPlaceholder: 'Ej: 100g, 250ml',
+      isOrganic: 'Producto orgánico',
+      isFeatured: 'Destacado',
+      images: 'Imágenes del producto',
+      imagesHelp: 'Agrega hasta 5 imágenes de tu producto. La primera imagen será la imagen principal.',
+      additionalInfo: 'Información adicional',
+      ingredients: 'Ingredientes / Composición',
+      ingredientsPlaceholder: 'Lista los ingredientes del producto...',
+      usage: 'Modo de uso / Instrucciones',
+      usagePlaceholder: 'Cómo usar este producto...',
+      creating: 'Creando...',
+      createProduct: 'Crear producto',
+      cancel: 'Cancelar',
+      backToProducts: 'Volver a productos',
+      translationNote: 'Las traducciones se generarán automáticamente para otros idiomas.',
+    },
+  };
+
+  const l = labels[locale as keyof typeof labels] || labels.fr;
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -72,39 +168,41 @@ export default function NewProductPage() {
     setError('');
 
     try {
-      // Use French as fallback for empty translations
+      // Le vendeur entre dans sa langue, on copie dans toutes les langues
+      // Les traductions externes seront implémentées plus tard
       const name = {
-        fr: formData.name.fr,
-        en: formData.name.en || formData.name.fr,
-        es: formData.name.es || formData.name.fr,
+        fr: formData.name,
+        en: formData.name,
+        es: formData.name,
       };
 
       const description = {
-        fr: formData.description.fr,
-        en: formData.description.en || formData.description.fr,
-        es: formData.description.es || formData.description.fr,
+        fr: formData.description,
+        en: formData.description,
+        es: formData.description,
       };
 
       const ingredients = {
-        fr: formData.ingredients.fr,
-        en: formData.ingredients.en || formData.ingredients.fr,
-        es: formData.ingredients.es || formData.ingredients.fr,
+        fr: formData.ingredients,
+        en: formData.ingredients,
+        es: formData.ingredients,
       };
 
       const usage = {
-        fr: formData.usage.fr,
-        en: formData.usage.en || formData.usage.fr,
-        es: formData.usage.es || formData.usage.fr,
+        fr: formData.usage,
+        en: formData.usage,
+        es: formData.usage,
       };
 
-      // Générer le slug à partir du nom (use EN if available, otherwise FR)
-      const slug = (name.en)
+      // Générer le slug à partir du nom
+      const slug = formData.name
         .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove accents
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
 
       const productData = {
-        ...formData,
         name,
         description,
         ingredients,
@@ -113,7 +211,13 @@ export default function NewProductPage() {
         price: parseFloat(formData.price),
         compareAtPrice: formData.compareAtPrice ? parseFloat(formData.compareAtPrice) : undefined,
         stock: parseInt(formData.stock),
+        category: formData.category,
         images: formData.images.filter(img => img.trim() !== ''),
+        isOrganic: formData.isOrganic,
+        isFeatured: formData.isFeatured,
+        weight: formData.weight,
+        // Marquer la langue originale pour la traduction future
+        originalLocale: locale,
       };
 
       const res = await fetch('/api/products', {
@@ -135,34 +239,6 @@ export default function NewProductPage() {
     }
   };
 
-  const handleNameChange = (lang: 'fr' | 'en' | 'es', value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      name: { ...prev.name, [lang]: value }
-    }));
-  };
-
-  const handleDescriptionChange = (lang: 'fr' | 'en' | 'es', value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      description: { ...prev.description, [lang]: value }
-    }));
-  };
-
-  const handleIngredientsChange = (lang: 'fr' | 'en' | 'es', value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      ingredients: { ...prev.ingredients, [lang]: value }
-    }));
-  };
-
-  const handleUsageChange = (lang: 'fr' | 'en' | 'es', value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      usage: { ...prev.usage, [lang]: value }
-    }));
-  };
-
   const handleImagesChange = (urls: string[]) => {
     setFormData(prev => ({ ...prev, images: urls }));
   };
@@ -177,7 +253,7 @@ export default function NewProductPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <Link
@@ -187,9 +263,10 @@ export default function NewProductPage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            {t('backToProducts')}
+            {l.backToProducts}
           </Link>
-          <h1 className="text-2xl font-bold text-gray-800">{t('productForm.createTitle')}</h1>
+          <h1 className="text-2xl font-bold text-gray-800">{l.pageTitle}</h1>
+          <p className="text-sm text-gray-500 mt-1">{l.translationNote}</p>
         </div>
 
         {error && (
@@ -198,144 +275,69 @@ export default function NewProductPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Info */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('productForm.basicInfo')}</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">{l.basicInfo}</h2>
 
-            {/* Product Names */}
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('productForm.nameFr')} *
+                  {l.name} *
                 </label>
                 <input
                   type="text"
-                  value={formData.name.fr}
-                  onChange={(e) => handleNameChange('fr', e.target.value)}
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder={l.namePlaceholder}
                   required
                 />
-                <p className="text-xs text-gray-500 mt-1">Requis - Ce nom sera utilisé si les traductions ne sont pas fournies</p>
               </div>
 
-              {/* Optional translations */}
-              <div className="border-t pt-4">
-                <p className="text-sm font-medium text-gray-700 mb-3">
-                  Traductions (optionnel)
-                </p>
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-1">
-                      {t('productForm.nameEn')} (optionnel)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.name.en}
-                      onChange={(e) => handleNameChange('en', e.target.value)}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="Laissez vide pour utiliser le nom français"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-1">
-                      {t('productForm.nameEs')} (optionnel)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.name.es}
-                      onChange={(e) => handleNameChange('es', e.target.value)}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="Laissez vide pour utiliser le nom français"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Category */}
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {t('productForm.category')} *
-              </label>
-              <select
-                value={formData.category}
-                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                required
-              >
-                <option value="">{t('productForm.selectCategory')}</option>
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.name[locale as keyof typeof cat.name]}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Descriptions */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('productForm.descriptions')}</h2>
-
-            <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('productForm.descriptionFr')} *
+                  {l.category} *
                 </label>
-                <textarea
-                  value={formData.description.fr}
-                  onChange={(e) => handleDescriptionChange('fr', e.target.value)}
-                  rows={3}
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   required
-                />
-                <p className="text-xs text-gray-500 mt-1">Requis - Cette description sera utilisée si les traductions ne sont pas fournies</p>
+                >
+                  <option value="">{l.selectCategory}</option>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.name[locale as keyof typeof cat.name] || cat.name.fr}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              {/* Optional translations */}
-              <div className="border-t pt-4">
-                <p className="text-sm font-medium text-gray-700 mb-3">
-                  Traductions (optionnel)
-                </p>
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-1">
-                      {t('productForm.descriptionEn')} (optionnel)
-                    </label>
-                    <textarea
-                      value={formData.description.en}
-                      onChange={(e) => handleDescriptionChange('en', e.target.value)}
-                      rows={3}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="Laissez vide pour utiliser la description française"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-1">
-                      {t('productForm.descriptionEs')} (optionnel)
-                    </label>
-                    <textarea
-                      value={formData.description.es}
-                      onChange={(e) => handleDescriptionChange('es', e.target.value)}
-                      rows={3}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="Laissez vide pour utiliser la description française"
-                    />
-                  </div>
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {l.description} *
+                </label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  rows={4}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder={l.descriptionPlaceholder}
+                  required
+                />
               </div>
             </div>
           </div>
 
           {/* Pricing & Stock */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('productForm.pricingStock')}</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">{l.pricingStock}</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('productForm.price')} ({currencySymbol}) *
+                  {l.price} ({currencySymbol}) *
                 </label>
                 <input
                   type="number"
@@ -350,7 +352,7 @@ export default function NewProductPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('productForm.compareAtPrice')} ({currencySymbol})
+                  {l.compareAtPrice}
                 </label>
                 <input
                   type="number"
@@ -364,7 +366,7 @@ export default function NewProductPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('productForm.stock')} *
+                  {l.stock} *
                 </label>
                 <input
                   type="number"
@@ -379,13 +381,13 @@ export default function NewProductPage() {
 
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                {t('productForm.weight')}
+                {l.weight}
               </label>
               <input
                 type="text"
                 value={formData.weight}
                 onChange={(e) => setFormData(prev => ({ ...prev, weight: e.target.value }))}
-                placeholder="e.g., 100g, 250ml"
+                placeholder={l.weightPlaceholder}
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
@@ -398,7 +400,7 @@ export default function NewProductPage() {
                   onChange={(e) => setFormData(prev => ({ ...prev, isOrganic: e.target.checked }))}
                   className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                 />
-                <span className="text-sm text-gray-700">{t('productForm.isOrganic')}</span>
+                <span className="text-sm text-gray-700">{l.isOrganic}</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -407,21 +409,15 @@ export default function NewProductPage() {
                   onChange={(e) => setFormData(prev => ({ ...prev, isFeatured: e.target.checked }))}
                   className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                 />
-                <span className="text-sm text-gray-700">{t('productForm.isFeatured')}</span>
+                <span className="text-sm text-gray-700">{l.isFeatured}</span>
               </label>
             </div>
           </div>
 
           {/* Images */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('productForm.images')}</h2>
-            <p className="text-sm text-gray-500 mb-4">
-              {locale === 'fr'
-                ? 'Téléchargez les images de votre produit (max 5 images)'
-                : locale === 'es'
-                ? 'Sube las imágenes de tu producto (máx. 5 imágenes)'
-                : 'Upload your product images (max 5 images)'}
-            </p>
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">{l.images}</h2>
+            <p className="text-sm text-gray-500 mb-4">{l.imagesHelp}</p>
 
             <ImageUpload
               value={formData.images}
@@ -434,87 +430,33 @@ export default function NewProductPage() {
 
           {/* Additional Info */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('productForm.additionalInfo')}</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">{l.additionalInfo}</h2>
 
-            {/* Ingredients */}
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('productForm.ingredientsFr')} *
-                </label>
-                <input
-                  type="text"
-                  value={formData.ingredients.fr}
-                  onChange={(e) => handleIngredientsChange('fr', e.target.value)}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  required
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Requis - Ces ingrédients seront utilisés si les traductions ne sont pas fournies
-                </p>
-              </div>
-
-              <div className="border-t pt-4">
-                <p className="text-sm font-medium text-gray-700 mb-3">
-                  Traductions (optionnel)
-                </p>
-                <div className="space-y-3">
-                  <input
-                    type="text"
-                    value={formData.ingredients.en}
-                    onChange={(e) => handleIngredientsChange('en', e.target.value)}
-                    placeholder="Laissez vide pour utiliser les ingrédients français"
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                  <input
-                    type="text"
-                    value={formData.ingredients.es}
-                    onChange={(e) => handleIngredientsChange('es', e.target.value)}
-                    placeholder="Laissez vide pour utiliser les ingrédients français"
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Usage */}
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('productForm.usageFr')} *
+                  {l.ingredients}
                 </label>
-                <input
-                  type="text"
-                  value={formData.usage.fr}
-                  onChange={(e) => handleUsageChange('fr', e.target.value)}
+                <textarea
+                  value={formData.ingredients}
+                  onChange={(e) => setFormData(prev => ({ ...prev, ingredients: e.target.value }))}
+                  rows={3}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  required
+                  placeholder={l.ingredientsPlaceholder}
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  Requis - Ces instructions seront utilisées si les traductions ne sont pas fournies
-                </p>
               </div>
 
-              <div className="border-t pt-4">
-                <p className="text-sm font-medium text-gray-700 mb-3">
-                  Traductions (optionnel)
-                </p>
-                <div className="space-y-3">
-                  <input
-                    type="text"
-                    value={formData.usage.en}
-                    onChange={(e) => handleUsageChange('en', e.target.value)}
-                    placeholder="Laissez vide pour utiliser les instructions françaises"
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                  <input
-                    type="text"
-                    value={formData.usage.es}
-                    onChange={(e) => handleUsageChange('es', e.target.value)}
-                    placeholder="Laissez vide pour utiliser les instructions françaises"
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {l.usage}
+                </label>
+                <textarea
+                  value={formData.usage}
+                  onChange={(e) => setFormData(prev => ({ ...prev, usage: e.target.value }))}
+                  rows={3}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder={l.usagePlaceholder}
+                />
               </div>
             </div>
           </div>
@@ -526,13 +468,13 @@ export default function NewProductPage() {
               disabled={loading}
               className="flex-1 bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? t('productForm.creating') : t('productForm.createProduct')}
+              {loading ? l.creating : l.createProduct}
             </button>
             <Link
               href={`/${locale}/seller/products`}
-              className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-center"
             >
-              {t('productForm.cancel')}
+              {l.cancel}
             </Link>
           </div>
         </form>
