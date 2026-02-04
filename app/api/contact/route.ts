@@ -22,21 +22,22 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create transporter
+    // Create transporter (supports both SMTP_* and EMAIL_* variable names)
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.EMAIL_PORT || '587'),
-      secure: process.env.EMAIL_SECURE === 'true',
+      host: process.env.SMTP_HOST || process.env.EMAIL_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.SMTP_PORT || process.env.EMAIL_PORT || '587'),
+      secure: (process.env.SMTP_PORT || process.env.EMAIL_PORT) === '465',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.SMTP_USER || process.env.EMAIL_USER,
+        pass: process.env.SMTP_PASS || process.env.EMAIL_PASS,
       },
     });
 
     // Email to admin/support
+    const smtpUser = process.env.SMTP_USER || process.env.EMAIL_USER;
     const adminMailOptions = {
-      from: `"Nature Pharmacy Contact" <${process.env.EMAIL_USER}>`,
-      to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER || 'contact@naturepharmacy.com',
+      from: `"Nature Pharmacy Contact" <${smtpUser}>`,
+      to: process.env.CONTACT_EMAIL || smtpUser || 'contact@naturepharmacy.com',
       replyTo: email,
       subject: `[Contact Form] ${subject}`,
       html: `
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
 
     // Confirmation email to user
     const userMailOptions = {
-      from: `"Nature Pharmacy" <${process.env.EMAIL_USER}>`,
+      from: `"Nature Pharmacy" <${smtpUser}>`,
       to: email,
       subject: 'We received your message - Nature Pharmacy',
       html: `
@@ -86,7 +87,7 @@ export async function POST(request: Request) {
     };
 
     // Check if email is configured
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    if (!smtpUser || (!process.env.SMTP_PASS && !process.env.EMAIL_PASS)) {
       console.log('Email not configured. Contact form submission:', { name, email, subject, message });
       // Return success anyway to not block users, but log the submission
       return NextResponse.json({
