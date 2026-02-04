@@ -8,18 +8,25 @@ let transporter: Transporter | null = null;
 function getTransporter(): Transporter {
   if (!transporter) {
     const smtpPort = parseInt(process.env.SMTP_PORT || '587');
+    const isSecure = smtpPort === 465;
+
     transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: smtpPort,
-      secure: smtpPort === 465, // true for 465 (SSL), false for 587 (TLS)
+      secure: isSecure, // true for 465 (SSL), false for 587 (TLS)
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
+      // TLS options for better compatibility
+      tls: {
+        rejectUnauthorized: false, // Accept self-signed certificates
+        minVersion: 'TLSv1.2',
+      },
       // Timeout settings pour éviter les blocages
-      connectionTimeout: 10000, // 10 seconds
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
+      connectionTimeout: 15000, // 15 seconds
+      greetingTimeout: 15000,
+      socketTimeout: 30000,
     });
   }
   return transporter;
