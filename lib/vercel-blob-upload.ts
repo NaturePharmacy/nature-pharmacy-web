@@ -29,6 +29,7 @@ export async function uploadToVercelBlob(
     const blob = await put(uniqueFilename, buffer, {
       access: 'public',
       addRandomSuffix: false,
+      token: process.env.BLOB_READ_WRITE_TOKEN,
     });
 
     return {
@@ -49,7 +50,7 @@ export async function uploadToVercelBlob(
  */
 export async function deleteFromVercelBlob(imageUrl: string): Promise<boolean> {
   try {
-    await del(imageUrl);
+    await del(imageUrl, { token: process.env.BLOB_READ_WRITE_TOKEN });
     return true;
   } catch (error: any) {
     console.error('Vercel Blob delete error:', error);

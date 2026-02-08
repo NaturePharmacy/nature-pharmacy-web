@@ -6,6 +6,7 @@ import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface Product {
   _id: string;
@@ -30,6 +31,7 @@ export default function SellerProductsPage() {
   const searchParams = useSearchParams();
   const locale = params.locale as string;
   const t = useTranslations('sellerDashboard');
+  const { formatPrice } = useCurrency();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -248,7 +250,7 @@ export default function SellerProductsPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-sm font-medium text-gray-900">
-                          ${product.price.toFixed(2)}
+                          {formatPrice(product.price)}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">

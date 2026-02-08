@@ -293,7 +293,7 @@ export default function SellerOrdersPage() {
                     <div className="text-right">
                       <p className="text-sm text-gray-500">{t('orders.yourEarnings')}</p>
                       <p className="text-2xl font-bold text-green-600">
-                        ${order.sellerTotal?.toFixed(2) || '0.00'}
+                        {formatPrice(order.sellerTotal || 0)}
                       </p>
                     </div>
                   </div>

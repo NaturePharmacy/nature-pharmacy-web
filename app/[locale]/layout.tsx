@@ -37,6 +37,10 @@ export async function generateMetadata({
       template: `%s | ${t('title')}`,
     },
     description: t('description'),
+    icons: {
+      icon: '/logo-fr.jpg',
+      apple: '/logo-fr.jpg',
+    },
     metadataBase: new URL(baseUrl),
     keywords: locale === 'fr'
       ? 'plantes médicinales, phytothérapie, huiles essentielles, cosmétiques naturels, bio, herboristerie, remèdes naturels'

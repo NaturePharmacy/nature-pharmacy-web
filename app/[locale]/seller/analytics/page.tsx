@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface AnalyticsData {
   overview: {
@@ -48,6 +49,7 @@ export default function SellerAnalyticsPage() {
   const router = useRouter();
   const locale = useLocale() as 'fr' | 'en' | 'es';
 
+  const { formatPrice } = useCurrency();
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState('30');
@@ -78,7 +80,7 @@ export default function SellerAnalyticsPage() {
   };
 
   const formatCurrency = (amount: number) => {
-    return `${amount.toLocaleString()} CFA`;
+    return formatPrice(amount);
   };
 
   const getStatusColor = (status: string) => {
