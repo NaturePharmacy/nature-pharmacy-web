@@ -47,19 +47,17 @@
 Le PC utilise un autre compte GitHub globalement (`Magnetiksn2025` / `jokergamersn@outlook.com`).
 Pour Nature Pharmacy, le repo a sa propre config locale.
 
-**Pour reconnecter rapidement ce workspace** :
+**Config actuelle** : Le remote utilise un PAT (Personal Access Token) dans l'URL.
+Le git local est configure avec `user.name=NaturePharmacy` et `user.email=contact@naturepharmacy.com`.
+Aucun conflit avec le compte global (`Magnetiksn2025`).
+
+**Si le token expire ou est revoque** :
+1. Aller sur https://github.com/settings/tokens (compte NaturePharmacy)
+2. Generer un nouveau token (classic) avec scope `repo`
+3. Mettre a jour le remote :
 ```bash
-# 1. Configurer le compte git local pour ce repo
 cd "c:\Users\pc\Nature Pharmacy\nature-pharmacy"
-git config --local user.name "NaturePharmacy"
-git config --local user.email "contact@naturepharmacy.com"
-
-# 2. Si erreur d'auth au push, reset les credentials pour ce repo
-git config --local credential.helper manager
-# Puis au prochain push, entrer les identifiants du compte NaturePharmacy
-
-# 3. Alternative : utiliser un token personnel (PAT) dans l'URL
-# git remote set-url origin https://<TOKEN>@github.com/NaturePharmacy/nature-pharmacy-web.git
+git remote set-url origin https://<NOUVEAU_TOKEN>@github.com/NaturePharmacy/nature-pharmacy-web.git
 ```
 
 ---
