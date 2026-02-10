@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface Order {
   _id: string;
@@ -21,6 +22,7 @@ export default function AdminOrdersPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const locale = useLocale();
+  const { formatPrice } = useCurrency();
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -226,7 +228,7 @@ export default function AdminOrdersPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <p className="font-semibold text-green-600">${order.totalPrice.toFixed(2)}</p>
+                          <p className="font-semibold text-green-600">{formatPrice(order.totalPrice)}</p>
                         </td>
                         <td className="px-6 py-4">
                           <select

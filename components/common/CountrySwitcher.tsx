@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { useUserCountry } from '@/hooks/useUserCountry';
 import { ALL_COUNTRIES, POPULAR_COUNTRIES, REGION_NAMES, getCountriesByRegion } from '@/lib/countries';
+import { useCurrency } from '@/contexts/CurrencyContext';
+import { getCurrencyForCountry } from '@/lib/currency';
 
 const CURRENCY_NAMES = {
   XOF: { fr: 'Franc CFA (FCFA)', en: 'CFA Franc (FCFA)', es: 'Franco CFA (FCFA)' },
@@ -14,6 +16,7 @@ const CURRENCY_NAMES = {
 export default function CountrySwitcher() {
   const locale = useLocale() as 'fr' | 'en' | 'es';
   const { country, countryName, setUserCountry } = useUserCountry(locale);
+  const { setCurrency } = useCurrency();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -35,6 +38,9 @@ export default function CountrySwitcher() {
 
   const handleCountryChange = (countryCode: string) => {
     setUserCountry(countryCode);
+    // Also update the currency context based on the new country
+    const newCurrency = getCurrencyForCountry(countryCode);
+    setCurrency(newCurrency);
     setIsOpen(false);
     setSearchQuery('');
   };

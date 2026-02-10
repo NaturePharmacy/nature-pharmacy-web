@@ -59,6 +59,15 @@ export async function POST(request: NextRequest) {
     const originalName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
     const optimizedFilename = `${originalName}.webp`;
 
+    // Verify blob token is configured
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      console.error('BLOB_READ_WRITE_TOKEN is not set in environment variables');
+      return NextResponse.json(
+        { error: 'Image storage is not configured. BLOB_READ_WRITE_TOKEN missing from environment.' },
+        { status: 503 }
+      );
+    }
+
     // Upload to Vercel Blob Storage
     const result = await uploadToVercelBlob(optimizedBuffer, optimizedFilename, folder);
 

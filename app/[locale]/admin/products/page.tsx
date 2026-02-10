@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface Product {
   _id: string;
@@ -26,6 +27,7 @@ export default function AdminProductsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const locale = useLocale() as 'fr' | 'en' | 'es';
+  const { formatPrice } = useCurrency();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -243,7 +245,7 @@ export default function AdminProductsPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <p className="font-semibold text-gray-900">${product.price.toFixed(2)}</p>
+                          <p className="font-semibold text-gray-900">{formatPrice(product.price)}</p>
                         </td>
                         <td className="px-6 py-4">
                           <span className={`px-2 py-1 rounded text-xs font-medium ${

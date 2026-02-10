@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface OrderItem {
   productName: string;
@@ -28,6 +29,7 @@ export default function OrdersPage() {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('orders');
+  const { formatPrice } = useCurrency();
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -236,7 +238,7 @@ export default function OrdersPage() {
                       <div>
                         <p className="text-sm text-gray-600">{t('total')}</p>
                         <p className="text-2xl font-bold text-green-600">
-                          ${order.totalPrice.toFixed(2)}
+                          {formatPrice(order.totalPrice)}
                         </p>
                       </div>
                       <div className="flex gap-2">

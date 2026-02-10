@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface Stats {
   totalUsers: number;
@@ -36,6 +37,7 @@ export default function AdminDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const locale = useLocale();
+  const { formatPrice } = useCurrency();
 
   const [stats, setStats] = useState<Stats | null>(null);
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
@@ -243,7 +245,7 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-500">{tr.stats.revenue}</p>
-                  <p className="text-3xl font-bold text-gray-900">${(stats?.totalRevenue || 0).toFixed(0)}</p>
+                  <p className="text-3xl font-bold text-gray-900">{formatPrice(stats?.totalRevenue || 0)}</p>
                 </div>
                 <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
                   <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -390,7 +392,7 @@ export default function AdminDashboard() {
                         <p className="text-sm text-gray-500">{order.buyer?.name || 'Unknown'}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium text-gray-900">${order.totalPrice.toFixed(2)}</p>
+                        <p className="font-medium text-gray-900">{formatPrice(order.totalPrice)}</p>
                         <span className={`text-xs px-2 py-1 rounded-full ${statusColors[order.status] || 'bg-gray-100'}`}>
                           {order.status}
                         </span>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { CURRENCY_CONFIG } from '@/lib/currency';
+import { CURRENCY_CONFIG, getCurrencyForCountry } from '@/lib/currency';
 
 // Extraire les taux et symboles depuis la config centralisée
 const CURRENCY_RATES: Record<string, number> = Object.fromEntries(
@@ -69,12 +69,33 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
     [currency, convertPrice]
   );
 
-  // Load currency from localStorage on mount
+  // Load currency from localStorage on mount, or auto-detect from country
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('preferred-currency');
       if (saved && saved in CURRENCY_RATES) {
         setCurrencyState(saved as Currency);
+        return;
+      }
+
+      // Auto-detect currency from user's detected country
+      const detectFromCountry = () => {
+        const userCountry = localStorage.getItem('userCountry');
+        if (userCountry) {
+          const mapped = getCurrencyForCountry(userCountry);
+          if (mapped in CURRENCY_RATES) {
+            setCurrencyState(mapped as Currency);
+            localStorage.setItem('preferred-currency', mapped);
+          }
+          return true;
+        }
+        return false;
+      };
+
+      // Try immediately (returning visitors), then retry for first-time visitors
+      if (!detectFromCountry()) {
+        const timer = setTimeout(detectFromCountry, 2000);
+        return () => clearTimeout(timer);
       }
     }
   }, []);
