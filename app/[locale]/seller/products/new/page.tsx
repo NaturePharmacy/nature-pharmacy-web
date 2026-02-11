@@ -6,7 +6,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import ImageUpload from '@/components/upload/ImageUpload';
-import { useCurrency, CURRENCY_SYMBOLS } from '@/contexts/CurrencyContext';
+import { useCurrency, CURRENCY_SYMBOLS, CURRENCY_RATES } from '@/contexts/CurrencyContext';
 
 interface Category {
   _id: string;
@@ -202,20 +202,25 @@ export default function NewProductPage() {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
 
+      // Convertir le prix de la devise du vendeur en USD (devise de stockage)
+      const rate = CURRENCY_RATES[currency] || 1;
+      const priceInUSD = parseFloat(formData.price) / rate;
+      const compareAtPriceInUSD = formData.compareAtPrice ? parseFloat(formData.compareAtPrice) / rate : undefined;
+
       const productData = {
         name,
         description,
         ingredients,
         usage,
         slug,
-        price: parseFloat(formData.price),
-        compareAtPrice: formData.compareAtPrice ? parseFloat(formData.compareAtPrice) : undefined,
+        price: Math.round(priceInUSD * 100) / 100, // Arrondir a 2 decimales
+        compareAtPrice: compareAtPriceInUSD ? Math.round(compareAtPriceInUSD * 100) / 100 : undefined,
         stock: parseInt(formData.stock),
         category: formData.category,
         images: formData.images.filter(img => img.trim() !== ''),
         isOrganic: formData.isOrganic,
         isFeatured: formData.isFeatured,
-        weight: formData.weight,
+        weight: formData.weight || undefined,
         // Marquer la langue originale pour la traduction future
         originalLocale: locale,
       };
@@ -230,10 +235,23 @@ export default function NewProductPage() {
         router.push(`/${locale}/seller/products`);
       } else {
         const data = await res.json();
-        setError(data.error || 'Error creating product');
+        // Simplifier les messages d'erreur techniques
+        const rawError = data.error || '';
+        if (rawError.includes('validation failed')) {
+          const fieldErrors = rawError.split(': ').slice(1).join(': ');
+          setError(locale === 'fr' ? `Veuillez verifier les champs du formulaire: ${fieldErrors}` :
+                   locale === 'es' ? `Por favor verifique los campos: ${fieldErrors}` :
+                   `Please check the form fields: ${fieldErrors}`);
+        } else {
+          setError(data.error || (locale === 'fr' ? 'Erreur lors de la creation du produit' :
+                                  locale === 'es' ? 'Error al crear el producto' :
+                                  'Error creating product'));
+        }
       }
     } catch (error) {
-      setError('Error creating product');
+      setError(locale === 'fr' ? 'Erreur lors de la creation du produit' :
+               locale === 'es' ? 'Error al crear el producto' :
+               'Error creating product');
     } finally {
       setLoading(false);
     }
