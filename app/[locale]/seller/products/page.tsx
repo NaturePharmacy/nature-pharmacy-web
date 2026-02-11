@@ -34,7 +34,8 @@ export default function SellerProductsPage() {
   const { formatPrice } = useCurrency();
 
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
   const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
   const [filterStatus, setFilterStatus] = useState(searchParams.get('status') || '');
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,7 +43,7 @@ export default function SellerProductsPage() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push(`/${locale}/login`);
-    } else if (session?.user?.role !== 'seller' && session?.user?.role !== 'admin') {
+    } else if (status === 'authenticated' && session?.user?.role !== 'seller' && session?.user?.role !== 'admin') {
       router.push(`/${locale}`);
     }
   }, [session, status, router, locale]);
@@ -66,6 +67,7 @@ export default function SellerProductsPage() {
         console.error('Error fetching products:', error);
       } finally {
         setLoading(false);
+        setHasFetched(true);
       }
     };
 
@@ -108,7 +110,7 @@ export default function SellerProductsPage() {
     }
   };
 
-  if (status === 'loading' || loading) {
+  if (status === 'loading' || (loading && !hasFetched)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>

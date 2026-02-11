@@ -55,7 +55,7 @@ export default function SellerOrdersPage() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push(`/${locale}/login`);
-    } else if (session?.user?.role !== 'seller' && session?.user?.role !== 'admin') {
+    } else if (status === 'authenticated' && session?.user?.role !== 'seller' && session?.user?.role !== 'admin') {
       router.push(`/${locale}`);
     }
   }, [session, status, router, locale]);

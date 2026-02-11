@@ -57,7 +57,7 @@ export default function SellerAnalyticsPage() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push(`/${locale}/login`);
-    } else if (session?.user?.role !== 'seller') {
+    } else if (status === 'authenticated' && session?.user?.role !== 'seller') {
       router.push(`/${locale}`);
     } else {
       fetchAnalytics();

@@ -86,7 +86,7 @@ export default function AdminProductsPage() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push(`/${locale}/login`);
-    } else if (session?.user?.role !== 'admin') {
+    } else if (status === 'authenticated' && session?.user?.role !== 'admin') {
       router.push(`/${locale}`);
     }
   }, [status, session, router, locale]);
