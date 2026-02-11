@@ -257,4 +257,4 @@ Ce fichier (`CLAUDE.md`) doit etre mis a jour :
 - Quand de nouvelles variables d'environnement sont ajoutees
 - Quand un pattern de code important est etabli
 
-**Derniere mise a jour** : 2026-02-10
+**Derniere mise a jour** : 2026-02-11
