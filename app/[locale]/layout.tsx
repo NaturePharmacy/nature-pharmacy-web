@@ -7,6 +7,7 @@ import { CartProvider } from '@/contexts/CartContext';
 import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import FloatingCart from '@/components/cart/FloatingCart';
 import CookieConsent from '@/components/CookieConsent';
+import PWARegister from '@/components/PWARegister';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import "../globals.css";
@@ -37,9 +38,16 @@ export async function generateMetadata({
       template: `%s | ${t('title')}`,
     },
     description: t('description'),
+    manifest: '/manifest.json',
+    themeColor: '#16a34a',
     icons: {
-      icon: '/logo-fr.jpg',
-      apple: '/logo-fr.jpg',
+      icon: '/icons/icon-192x192.png',
+      apple: '/icons/apple-touch-icon.png',
+    },
+    appleWebApp: {
+      capable: true,
+      title: 'Nature Pharmacy',
+      statusBarStyle: 'default',
     },
     metadataBase: new URL(baseUrl),
     keywords: locale === 'fr'
@@ -104,6 +112,7 @@ export default async function RootLayout({
                 <Footer />
                 <FloatingCart />
                 <CookieConsent />
+                <PWARegister />
               </CartProvider>
             </CurrencyProvider>
           </NextIntlClientProvider>
