@@ -66,13 +66,8 @@ async function createTestUsers() {
     console.log('👥 Création des utilisateurs de test...');
 
     for (const userData of testUsers) {
-      // Hash du mot de passe
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
-
-      const user = await User.create({
-        ...userData,
-        password: hashedPassword,
-      });
+      // Pass plain password - the User model's pre('save') hook handles hashing
+      const user = await User.create(userData);
 
       console.log(
         `✅ Utilisateur créé: ${user.name} (${user.email}) - Rôle: ${user.role}`

@@ -11,13 +11,20 @@
     "seed:products": "npx tsx scripts/seedProducts.ts",
     "seed:users": "npx tsx scripts/createTestUsers.ts",
     "seed:all": "npm run seed:products && npm run seed:users && npm run seed:shipping",
-    "create-admin": "npx tsx scripts/create-admin.ts"
+    "create-admin": "npx tsx scripts/create-admin.ts",
+    "test:e2e": "npx playwright test --config=e2e/playwright.config.ts",
+    "test:e2e:smoke": "npx playwright test --config=e2e/playwright.config.ts --project=smoke",
+    "test:e2e:api": "npx playwright test --config=e2e/playwright.config.ts --project=api",
+    "test:e2e:chrome": "npx playwright test --config=e2e/playwright.config.ts --project=chrome",
+    "test:e2e:firefox": "npx playwright test --config=e2e/playwright.config.ts --project=firefox",
+    "test:e2e:mobile": "npx playwright test --config=e2e/playwright.config.ts --project=mobile-chrome --project=mobile-safari",
+    "test:e2e:ui": "npx playwright test --config=e2e/playwright.config.ts --ui",
+    "test:e2e:report": "npx playwright show-report e2e/playwright-report"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.11.1",
     "@vercel/blob": "^2.0.0",
     "bcryptjs": "^3.0.3",
-    "dotenv": "^17.2.3",
     "mongoose": "^8.20.1",
     "next": "^15.1.6",
     "next-auth": "^4.24.13",
@@ -30,12 +37,14 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.2.4",
     "eslint": "^9",
     "eslint-config-next": "^15.1.6",
     "tailwindcss": "^4",
