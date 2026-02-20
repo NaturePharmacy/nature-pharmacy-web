@@ -213,7 +213,7 @@ export function generateOrganizationJsonLd(): object {
     ],
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+221-XX-XXX-XX-XX',
+      telephone: '',
       contactType: 'customer service',
       availableLanguage: ['French', 'English', 'Spanish'],
     },

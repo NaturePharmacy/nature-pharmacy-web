@@ -185,7 +185,7 @@ const SettingsSchema = new Schema<ISettings>(
     },
     contactPhone: {
       type: String,
-      default: '+221 00 000 00 00',
+      default: '',
     },
     supportEmail: {
       type: String,

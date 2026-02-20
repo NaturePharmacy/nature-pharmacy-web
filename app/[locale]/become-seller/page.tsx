@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { getCountriesByRegion, REGION_NAMES } from '@/lib/countries';
 
 export default function BecomeSellerPage() {
   const { data: session, status, update } = useSession();
@@ -184,7 +185,7 @@ export default function BecomeSellerPage() {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900"
-                  placeholder="Ex: Herbes Bio du Sénégal"
+                  placeholder="Ex: Green Nature Store"
                 />
               </div>
 
@@ -218,7 +219,7 @@ export default function BecomeSellerPage() {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900"
-                  placeholder="+221 XX XXX XX XX"
+                  placeholder="+X XXX XXX XXXX"
                 />
               </div>
 
@@ -286,11 +287,20 @@ export default function BecomeSellerPage() {
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900"
                   >
-                    <option value="SN">Sénégal</option>
-                    <option value="FR">France</option>
-                    <option value="CI">Côte d'Ivoire</option>
-                    <option value="ML">Mali</option>
-                    <option value="BF">Burkina Faso</option>
+                    <option value="">-- Sélectionnez un pays --</option>
+                    {Object.entries(getCountriesByRegion()).map(([region, countries]) => {
+                      const entries = Object.entries(countries).sort(([, a], [, b]) =>
+                        a.fr.localeCompare(b.fr)
+                      );
+                      if (entries.length === 0) return null;
+                      return (
+                        <optgroup key={region} label={REGION_NAMES[region as keyof typeof REGION_NAMES].fr}>
+                          {entries.map(([code, country]) => (
+                            <option key={code} value={code}>{country.flag} {country.fr}</option>
+                          ))}
+                        </optgroup>
+                      );
+                    })}
                   </select>
                 </div>
 

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/hooks/useCurrency';
 import { useState, useEffect } from 'react';
+import { getCountriesByRegion, REGION_NAMES } from '@/lib/countries';
 
 export default function CartPage() {
   const t = useTranslations('cart');
@@ -16,7 +17,7 @@ export default function CartPage() {
   const [shippingCost, setShippingCost] = useState<number>(0);
   const [shippingZone, setShippingZone] = useState<any>(null);
   const [loadingShipping, setLoadingShipping] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState('SN');
+  const [selectedCountry, setSelectedCountry] = useState('');
 
   // Coupon state
   const [couponCode, setCouponCode] = useState('');
@@ -236,12 +237,20 @@ export default function CartPage() {
                       onChange={(e) => setSelectedCountry(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 font-medium"
                     >
-                      <option value="SN">Sénégal</option>
-                      <option value="FR">France</option>
-                      <option value="US">United States</option>
-                      <option value="GB">United Kingdom</option>
-                      <option value="DE">Germany</option>
-                      <option value="ES">Spain</option>
+                      <option value="">-- Select a country --</option>
+                      {Object.entries(getCountriesByRegion()).map(([region, countries]) => {
+                        const entries = Object.entries(countries).sort(([, a], [, b]) =>
+                          a.en.localeCompare(b.en)
+                        );
+                        if (entries.length === 0) return null;
+                        return (
+                          <optgroup key={region} label={REGION_NAMES[region as keyof typeof REGION_NAMES].en}>
+                            {entries.map(([code, country]) => (
+                              <option key={code} value={code}>{country.flag} {country.en}</option>
+                            ))}
+                          </optgroup>
+                        );
+                      })}
                     </select>
                   </div>
 

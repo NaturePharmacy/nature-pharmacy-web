@@ -336,7 +336,7 @@ export default function MedicalFieldsForm({ formData, setFormData }: MedicalFiel
           </label>
           <input
             type="text"
-            placeholder="ex: Casamance, Sénégal"
+            placeholder="ex: Provence, France"
             value={formData.origin || ''}
             onChange={(e) => handleChange('origin', e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900"

@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/hooks/useCurrency';
+import { getCountriesByRegion, REGION_NAMES } from '@/lib/countries';
 
 export default function CheckoutPage() {
   const { data: session, status } = useSession();
@@ -28,7 +29,7 @@ export default function CheckoutPage() {
     street: '',
     city: '',
     state: '',
-    country: 'SN',
+    country: '',
     postalCode: '',
     paymentMethod: 'stripe',
     notes: '',
@@ -264,12 +265,20 @@ export default function CheckoutPage() {
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       >
-                        <option value="SN">Sénégal</option>
-                        <option value="FR">France</option>
-                        <option value="US">United States</option>
-                        <option value="GB">United Kingdom</option>
-                        <option value="DE">Germany</option>
-                        <option value="ES">Spain</option>
+                        <option value="">-- Select a country --</option>
+                        {Object.entries(getCountriesByRegion()).map(([region, countries]) => {
+                          const entries = Object.entries(countries).sort(([, a], [, b]) =>
+                            a.en.localeCompare(b.en)
+                          );
+                          if (entries.length === 0) return null;
+                          return (
+                            <optgroup key={region} label={REGION_NAMES[region as keyof typeof REGION_NAMES].en}>
+                              {entries.map(([code, country]) => (
+                                <option key={code} value={code}>{country.flag} {country.en}</option>
+                              ))}
+                            </optgroup>
+                          );
+                        })}
                       </select>
                     </div>
 

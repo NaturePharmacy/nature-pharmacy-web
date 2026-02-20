@@ -273,7 +273,7 @@ export default function AdminShippingPage() {
                     value={regionInput}
                     onChange={(e) => setRegionInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addRegion())}
-                    placeholder="Add region (e.g., Dakar)"
+                    placeholder="Add region (e.g., Paris)"
                     className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
                   />
                   <button
