@@ -83,7 +83,7 @@ export async function PUT(
     // If base price changed, recalculate commission and final price
     if (data.basePrice && data.basePrice !== product.basePrice) {
       const settings = await Settings.findOne();
-      const commissionRate = settings?.commissionRate || 10;
+      const commissionRate = settings?.commissionRate || 30;
       data.commission = (data.basePrice * commissionRate) / 100;
       data.price = data.basePrice + data.commission;
     }

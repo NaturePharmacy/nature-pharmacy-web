@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
 
     // Calculate commission and final price
     const settings = await Settings.findOne();
-    const commissionRate = settings?.commissionRate || 10;
+    const commissionRate = settings?.commissionRate || 30;
     const commission = (data.basePrice * commissionRate) / 100;
     const finalPrice = data.basePrice + commission;
 

@@ -64,6 +64,7 @@ export default function EditProductPage() {
     isFeatured: false,
     isActive: true,
     weight: '',
+    weightUnit: 'g',
     ingredients: '',
     usage: '',
   });
@@ -243,7 +244,8 @@ export default function EditProductPage() {
           isOrganic: product.isOrganic || false,
           isFeatured: product.isFeatured || false,
           isActive: product.isActive !== false,
-          weight: product.weight || '',
+          weight: product.weight ? product.weight.replace(/[a-zA-Z]+$/, '') : '',
+          weightUnit: product.weight ? (product.weight.match(/[a-zA-Z]+$/)?.[0] || 'g') : 'g',
           ingredients: product.ingredients?.[locale as keyof typeof product.ingredients] || product.ingredients?.fr || '',
           usage: product.usage?.[locale as keyof typeof product.usage] || product.usage?.fr || '',
         });
@@ -310,7 +312,7 @@ export default function EditProductPage() {
         isOrganic: formData.isOrganic,
         isFeatured: formData.isFeatured,
         isActive: formData.isActive,
-        weight: formData.weight || undefined,
+        weight: formData.weight ? `${formData.weight}${formData.weightUnit}` : undefined,
       };
 
       const res = await fetch(`/api/products/${productId}`, {
@@ -516,13 +518,31 @@ export default function EditProductPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {l.weight}
               </label>
-              <input
-                type="text"
-                value={formData.weight}
-                onChange={(e) => setFormData(prev => ({ ...prev, weight: e.target.value }))}
-                placeholder={l.weightPlaceholder}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={formData.weight}
+                  onChange={(e) => setFormData(prev => ({ ...prev, weight: e.target.value }))}
+                  placeholder="250"
+                  className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+                <select
+                  value={formData.weightUnit}
+                  onChange={(e) => setFormData(prev => ({ ...prev, weightUnit: e.target.value }))}
+                  className="w-24 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+                >
+                  <option value="mg">mg</option>
+                  <option value="g">g</option>
+                  <option value="kg">kg</option>
+                  <option value="ml">ml</option>
+                  <option value="cl">cl</option>
+                  <option value="L">L</option>
+                  <option value="oz">oz</option>
+                  <option value="lb">lb</option>
+                </select>
+              </div>
             </div>
 
             <div className="mt-4 flex gap-6">

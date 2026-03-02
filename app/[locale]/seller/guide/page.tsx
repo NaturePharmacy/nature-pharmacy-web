@@ -71,7 +71,7 @@ export default function SellerGuidePage() {
       fees: {
         title: 'Tarifs et commissions',
         description: 'Nous prélevons une commission sur chaque vente réalisée :',
-        commission: '10% de commission sur chaque vente',
+        commission: '30% de commission sur chaque vente',
         details: [
           'Pas de frais d\'inscription',
           'Pas de frais mensuels',
@@ -208,7 +208,7 @@ export default function SellerGuidePage() {
       fees: {
         title: 'Fees and commissions',
         description: 'We charge a commission on each sale made:',
-        commission: '10% commission on each sale',
+        commission: '30% commission on each sale',
         details: [
           'No registration fees',
           'No monthly fees',
@@ -345,7 +345,7 @@ export default function SellerGuidePage() {
       fees: {
         title: 'Tarifas y comisiones',
         description: 'Cobramos una comisión en cada venta realizada:',
-        commission: '10% de comisión en cada venta',
+        commission: '30% de comisión en cada venta',
         details: [
           'Sin tasas de registro',
           'Sin tarifas mensuales',

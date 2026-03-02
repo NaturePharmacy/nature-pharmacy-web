@@ -39,6 +39,7 @@ export default function NewProductPage() {
     isOrganic: false,
     isFeatured: false,
     weight: '',
+    weightUnit: 'g',
     ingredients: '',
     usage: '',
   });
@@ -220,7 +221,7 @@ export default function NewProductPage() {
         images: formData.images.filter(img => img.trim() !== ''),
         isOrganic: formData.isOrganic,
         isFeatured: formData.isFeatured,
-        weight: formData.weight || undefined,
+        weight: formData.weight ? `${formData.weight}${formData.weightUnit}` : undefined,
         // Marquer la langue originale pour la traduction future
         originalLocale: locale,
       };
@@ -401,13 +402,31 @@ export default function NewProductPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {l.weight}
               </label>
-              <input
-                type="text"
-                value={formData.weight}
-                onChange={(e) => setFormData(prev => ({ ...prev, weight: e.target.value }))}
-                placeholder={l.weightPlaceholder}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={formData.weight}
+                  onChange={(e) => setFormData(prev => ({ ...prev, weight: e.target.value }))}
+                  placeholder="250"
+                  className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+                <select
+                  value={formData.weightUnit}
+                  onChange={(e) => setFormData(prev => ({ ...prev, weightUnit: e.target.value }))}
+                  className="w-24 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+                >
+                  <option value="mg">mg</option>
+                  <option value="g">g</option>
+                  <option value="kg">kg</option>
+                  <option value="ml">ml</option>
+                  <option value="cl">cl</option>
+                  <option value="L">L</option>
+                  <option value="oz">oz</option>
+                  <option value="lb">lb</option>
+                </select>
+              </div>
             </div>
 
             <div className="mt-4 flex gap-6">

@@ -32,7 +32,7 @@ export default function BecomeSellerPage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push(`/${locale}/login?callbackUrl=/${locale}/become-seller`);
+      router.push(`/${locale}/register?callbackUrl=/${locale}/become-seller`);
     }
 
     if (session?.user?.role === 'seller') {

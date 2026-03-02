@@ -4,7 +4,7 @@ export interface ISettings extends Document {
   _id: string;
 
   // Commission Settings
-  commissionRate: number; // Pourcentage de commission (ex: 10 pour 10%)
+  commissionRate: number; // Pourcentage de commission (ex: 30 pour 30%)
 
   // General Store Settings
   storeName: {
@@ -162,7 +162,7 @@ const SettingsSchema = new Schema<ISettings>(
     commissionRate: {
       type: Number,
       required: true,
-      default: 10,
+      default: 30,
       min: [0, 'Commission rate cannot be negative'],
       max: [100, 'Commission rate cannot exceed 100%'],
     },

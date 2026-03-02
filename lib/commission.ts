@@ -2,12 +2,12 @@
  * Utilitaires pour gérer les commissions
  */
 
-const DEFAULT_COMMISSION_RATE = 10; // 10% par défaut
+const DEFAULT_COMMISSION_RATE = 30; // 30% par défaut
 
 /**
  * Calcule le prix final avec commission
  * @param basePrice Prix de base du vendeur
- * @param commissionRate Taux de commission en pourcentage (défaut: 10)
+ * @param commissionRate Taux de commission en pourcentage (défaut: 30)
  * @returns Object contenant le prix final et le montant de la commission
  */
 export function calculatePriceWithCommission(
@@ -23,7 +23,7 @@ export function calculatePriceWithCommission(
 /**
  * Calcule le prix de base à partir du prix final
  * @param finalPrice Prix final (avec commission)
- * @param commissionRate Taux de commission en pourcentage (défaut: 10)
+ * @param commissionRate Taux de commission en pourcentage (défaut: 30)
  * @returns Prix de base
  */
 export function calculateBasePriceFromFinal(

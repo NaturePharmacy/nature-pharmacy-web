@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     let settings = await Settings.findOne();
     if (!settings) {
       settings = await Settings.create({
-        commissionRate: 10,
+        commissionRate: 30,
         storeName: {
           fr: 'Nature Pharmacy',
           en: 'Nature Pharmacy',
