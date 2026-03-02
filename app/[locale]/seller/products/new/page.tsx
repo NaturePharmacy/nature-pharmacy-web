@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import ImageUpload from '@/components/upload/ImageUpload';
 import { useCurrency, CURRENCY_SYMBOLS, CURRENCY_RATES } from '@/contexts/CurrencyContext';
+import MedicalFieldsForm from '@/components/seller/MedicalFieldsForm';
 
 interface Category {
   _id: string;
@@ -26,9 +27,10 @@ export default function NewProductPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState<'general' | 'medical'>('general');
 
-  // Formulaire simplifié - une seule langue (celle du vendeur)
   const [formData, setFormData] = useState({
+    // Informations générales
     name: '',
     description: '',
     price: '',
@@ -42,10 +44,31 @@ export default function NewProductPage() {
     weightUnit: 'g',
     ingredients: '',
     usage: '',
+    // Informations médicales / thérapeutiques
+    therapeuticCategory: '',
+    form: '',
+    indications: { fr: [] as string[], en: [] as string[], es: [] as string[] },
+    contraindications: { fr: [] as string[], en: [] as string[], es: [] as string[] },
+    activeIngredients: { fr: [] as string[], en: [] as string[], es: [] as string[] },
+    traditionalUses: { fr: '', en: '', es: '' },
+    dosage: { fr: '', en: '', es: '' },
+    preparationMethod: { fr: '', en: '', es: '' },
+    origin: '',
+    harvestMethod: '',
+    certifications: [] as string[],
+    warnings: {
+      pregnancy: false,
+      breastfeeding: false,
+      children: false,
+      minAge: undefined as number | undefined,
+      prescriptionRequired: false,
+    },
   });
 
   const labels = {
     fr: {
+      tabGeneral: 'Informations générales',
+      tabMedical: 'Informations médicales',
       pageTitle: 'Ajouter un produit',
       basicInfo: 'Informations de base',
       name: 'Nom du produit',
@@ -59,7 +82,6 @@ export default function NewProductPage() {
       compareAtPrice: 'Prix barré (optionnel)',
       stock: 'Quantité en stock',
       weight: 'Poids / Contenance',
-      weightPlaceholder: 'Ex: 100g, 250ml',
       isOrganic: 'Produit biologique',
       isFeatured: 'Mettre en avant',
       images: 'Images du produit',
@@ -76,6 +98,8 @@ export default function NewProductPage() {
       translationNote: 'Les traductions seront générées automatiquement pour les autres langues.',
     },
     en: {
+      tabGeneral: 'General information',
+      tabMedical: 'Medical information',
       pageTitle: 'Add a product',
       basicInfo: 'Basic information',
       name: 'Product name',
@@ -89,7 +113,6 @@ export default function NewProductPage() {
       compareAtPrice: 'Compare at price (optional)',
       stock: 'Stock quantity',
       weight: 'Weight / Volume',
-      weightPlaceholder: 'Ex: 100g, 250ml',
       isOrganic: 'Organic product',
       isFeatured: 'Featured',
       images: 'Product images',
@@ -106,6 +129,8 @@ export default function NewProductPage() {
       translationNote: 'Translations will be automatically generated for other languages.',
     },
     es: {
+      tabGeneral: 'Información general',
+      tabMedical: 'Información médica',
       pageTitle: 'Agregar un producto',
       basicInfo: 'Información básica',
       name: 'Nombre del producto',
@@ -119,7 +144,6 @@ export default function NewProductPage() {
       compareAtPrice: 'Precio tachado (opcional)',
       stock: 'Cantidad en stock',
       weight: 'Peso / Contenido',
-      weightPlaceholder: 'Ej: 100g, 250ml',
       isOrganic: 'Producto orgánico',
       isFeatured: 'Destacado',
       images: 'Imágenes del producto',
@@ -159,7 +183,6 @@ export default function NewProductPage() {
         console.error('Error fetching categories:', error);
       }
     };
-
     fetchCategories();
   }, []);
 
@@ -169,52 +192,29 @@ export default function NewProductPage() {
     setError('');
 
     try {
-      // Le vendeur entre dans sa langue, on copie dans toutes les langues
-      // Les traductions externes seront implémentées plus tard
-      const name = {
-        fr: formData.name,
-        en: formData.name,
-        es: formData.name,
-      };
+      const name = { fr: formData.name, en: formData.name, es: formData.name };
+      const description = { fr: formData.description, en: formData.description, es: formData.description };
+      const ingredients = { fr: formData.ingredients, en: formData.ingredients, es: formData.ingredients };
+      const usage = { fr: formData.usage, en: formData.usage, es: formData.usage };
 
-      const description = {
-        fr: formData.description,
-        en: formData.description,
-        es: formData.description,
-      };
-
-      const ingredients = {
-        fr: formData.ingredients,
-        en: formData.ingredients,
-        es: formData.ingredients,
-      };
-
-      const usage = {
-        fr: formData.usage,
-        en: formData.usage,
-        es: formData.usage,
-      };
-
-      // Générer le slug à partir du nom
       const slug = formData.name
         .toLowerCase()
         .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '') // Remove accents
+        .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
 
-      // Convertir le prix de la devise du vendeur en USD (devise de stockage)
       const rate = CURRENCY_RATES[currency] || 1;
       const priceInUSD = parseFloat(formData.price) / rate;
       const compareAtPriceInUSD = formData.compareAtPrice ? parseFloat(formData.compareAtPrice) / rate : undefined;
 
-      const productData = {
+      const productData: any = {
         name,
         description,
         ingredients,
         usage,
         slug,
-        price: Math.round(priceInUSD * 100) / 100, // Arrondir a 2 decimales
+        price: Math.round(priceInUSD * 100) / 100,
         compareAtPrice: compareAtPriceInUSD ? Math.round(compareAtPriceInUSD * 100) / 100 : undefined,
         stock: parseInt(formData.stock),
         category: formData.category,
@@ -222,8 +222,20 @@ export default function NewProductPage() {
         isOrganic: formData.isOrganic,
         isFeatured: formData.isFeatured,
         weight: formData.weight ? `${formData.weight}${formData.weightUnit}` : undefined,
-        // Marquer la langue originale pour la traduction future
         originalLocale: locale,
+        // Champs médicaux / thérapeutiques
+        therapeuticCategory: formData.therapeuticCategory || undefined,
+        form: formData.form || undefined,
+        indications: formData.indications.fr.length ? formData.indications : undefined,
+        contraindications: formData.contraindications.fr.length ? formData.contraindications : undefined,
+        activeIngredients: formData.activeIngredients.fr.length ? formData.activeIngredients : undefined,
+        traditionalUses: formData.traditionalUses.fr ? formData.traditionalUses : undefined,
+        dosage: formData.dosage.fr ? formData.dosage : undefined,
+        preparationMethod: formData.preparationMethod.fr ? formData.preparationMethod : undefined,
+        origin: formData.origin || undefined,
+        harvestMethod: formData.harvestMethod || undefined,
+        certifications: formData.certifications.length ? formData.certifications : undefined,
+        warnings: formData.warnings,
       };
 
       const res = await fetch('/api/products', {
@@ -236,7 +248,6 @@ export default function NewProductPage() {
         router.push(`/${locale}/seller/products`);
       } else {
         const data = await res.json();
-        // Simplifier les messages d'erreur techniques
         const rawError = data.error || '';
         if (rawError.includes('validation failed')) {
           const fieldErrors = rawError.split(': ').slice(1).join(': ');
@@ -274,7 +285,7 @@ export default function NewProductPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <Link
             href={`/${locale}/seller/products`}
             className="text-green-600 hover:text-green-700 inline-flex items-center gap-2 mb-4"
@@ -294,212 +305,239 @@ export default function NewProductPage() {
           </div>
         )}
 
+        {/* Tabs */}
+        <div className="flex border-b border-gray-200 mb-6">
+          <button
+            type="button"
+            onClick={() => setActiveTab('general')}
+            className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'general'
+                ? 'border-green-600 text-green-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <span className="flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              {l.tabGeneral}
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('medical')}
+            className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'medical'
+                ? 'border-green-600 text-green-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <span className="flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              {l.tabMedical}
+              {formData.therapeuticCategory && (
+                <span className="ml-1 w-2 h-2 bg-green-500 rounded-full inline-block" />
+              )}
+            </span>
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Basic Info */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">{l.basicInfo}</h2>
+          {/* ── ONGLET 1 : Informations générales ── */}
+          <div className={activeTab === 'general' ? 'block' : 'hidden'}>
+            {/* Basic Info */}
+            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">{l.basicInfo}</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{l.name} *</label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    placeholder={l.namePlaceholder}
+                    required
+                  />
+                </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {l.name} *
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder={l.namePlaceholder}
-                  required
-                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{l.category} *</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    required
+                  >
+                    <option value="">{l.selectCategory}</option>
+                    {categories.map((cat) => (
+                      <option key={cat._id} value={cat._id}>
+                        {cat.name[locale as keyof typeof cat.name] || cat.name.fr}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{l.description} *</label>
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                    rows={4}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    placeholder={l.descriptionPlaceholder}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Pricing & Stock */}
+            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">{l.pricingStock}</h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {l.price} ({currencySymbol}) *
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={formData.price}
+                    onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    required
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{l.compareAtPrice}</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={formData.compareAtPrice}
+                    onChange={(e) => setFormData(prev => ({ ...prev, compareAtPrice: e.target.value }))}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{l.stock} *</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.stock}
+                    onChange={(e) => setFormData(prev => ({ ...prev, stock: e.target.value }))}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    required
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {l.category} *
-                </label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  required
-                >
-                  <option value="">{l.selectCategory}</option>
-                  {categories.map((cat) => (
-                    <option key={cat._id} value={cat._id}>
-                      {cat.name[locale as keyof typeof cat.name] || cat.name.fr}
-                    </option>
-                  ))}
-                </select>
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">{l.weight}</label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    value={formData.weight}
+                    onChange={(e) => setFormData(prev => ({ ...prev, weight: e.target.value }))}
+                    placeholder="250"
+                    className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                  <select
+                    value={formData.weightUnit}
+                    onChange={(e) => setFormData(prev => ({ ...prev, weightUnit: e.target.value }))}
+                    className="w-24 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+                  >
+                    <option value="mg">mg</option>
+                    <option value="g">g</option>
+                    <option value="kg">kg</option>
+                    <option value="ml">ml</option>
+                    <option value="cl">cl</option>
+                    <option value="L">L</option>
+                    <option value="oz">oz</option>
+                    <option value="lb">lb</option>
+                  </select>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {l.description} *
+              <div className="mt-4 flex gap-6">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.isOrganic}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isOrganic: e.target.checked }))}
+                    className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                  />
+                  <span className="text-sm text-gray-700">{l.isOrganic}</span>
                 </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  rows={4}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder={l.descriptionPlaceholder}
-                  required
-                />
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.isFeatured}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isFeatured: e.target.checked }))}
+                    className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                  />
+                  <span className="text-sm text-gray-700">{l.isFeatured}</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Images */}
+            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">{l.images}</h2>
+              <p className="text-sm text-gray-500 mb-4">{l.imagesHelp}</p>
+              <ImageUpload
+                value={formData.images}
+                onChange={handleImagesChange}
+                maxImages={5}
+                folder="nature-pharmacy/products"
+                disabled={loading}
+              />
+            </div>
+
+            {/* Additional Info */}
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">{l.additionalInfo}</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{l.ingredients}</label>
+                  <textarea
+                    value={formData.ingredients}
+                    onChange={(e) => setFormData(prev => ({ ...prev, ingredients: e.target.value }))}
+                    rows={3}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    placeholder={l.ingredientsPlaceholder}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{l.usage}</label>
+                  <textarea
+                    value={formData.usage}
+                    onChange={(e) => setFormData(prev => ({ ...prev, usage: e.target.value }))}
+                    rows={3}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    placeholder={l.usagePlaceholder}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Pricing & Stock */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">{l.pricingStock}</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {l.price} ({currencySymbol}) *
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={formData.price}
-                  onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  required
-                  placeholder="0.00"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {l.compareAtPrice}
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={formData.compareAtPrice}
-                  onChange={(e) => setFormData(prev => ({ ...prev, compareAtPrice: e.target.value }))}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="0.00"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {l.stock} *
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  value={formData.stock}
-                  onChange={(e) => setFormData(prev => ({ ...prev, stock: e.target.value }))}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {l.weight}
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  value={formData.weight}
-                  onChange={(e) => setFormData(prev => ({ ...prev, weight: e.target.value }))}
-                  placeholder="250"
-                  className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
-                <select
-                  value={formData.weightUnit}
-                  onChange={(e) => setFormData(prev => ({ ...prev, weightUnit: e.target.value }))}
-                  className="w-24 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
-                >
-                  <option value="mg">mg</option>
-                  <option value="g">g</option>
-                  <option value="kg">kg</option>
-                  <option value="ml">ml</option>
-                  <option value="cl">cl</option>
-                  <option value="L">L</option>
-                  <option value="oz">oz</option>
-                  <option value="lb">lb</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="mt-4 flex gap-6">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.isOrganic}
-                  onChange={(e) => setFormData(prev => ({ ...prev, isOrganic: e.target.checked }))}
-                  className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                />
-                <span className="text-sm text-gray-700">{l.isOrganic}</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.isFeatured}
-                  onChange={(e) => setFormData(prev => ({ ...prev, isFeatured: e.target.checked }))}
-                  className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                />
-                <span className="text-sm text-gray-700">{l.isFeatured}</span>
-              </label>
-            </div>
+          {/* ── ONGLET 2 : Informations médicales ── */}
+          <div className={activeTab === 'medical' ? 'block' : 'hidden'}>
+            <MedicalFieldsForm formData={formData} setFormData={setFormData} />
           </div>
 
-          {/* Images */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">{l.images}</h2>
-            <p className="text-sm text-gray-500 mb-4">{l.imagesHelp}</p>
-
-            <ImageUpload
-              value={formData.images}
-              onChange={handleImagesChange}
-              maxImages={5}
-              folder="nature-pharmacy/products"
-              disabled={loading}
-            />
-          </div>
-
-          {/* Additional Info */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">{l.additionalInfo}</h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {l.ingredients}
-                </label>
-                <textarea
-                  value={formData.ingredients}
-                  onChange={(e) => setFormData(prev => ({ ...prev, ingredients: e.target.value }))}
-                  rows={3}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder={l.ingredientsPlaceholder}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {l.usage}
-                </label>
-                <textarea
-                  value={formData.usage}
-                  onChange={(e) => setFormData(prev => ({ ...prev, usage: e.target.value }))}
-                  rows={3}
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder={l.usagePlaceholder}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Submit */}
-          <div className="flex gap-4">
+          {/* Submit — toujours visible */}
+          <div className="flex gap-4 pt-2">
             <button
               type="submit"
               disabled={loading}
