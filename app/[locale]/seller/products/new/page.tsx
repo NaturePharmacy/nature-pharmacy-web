@@ -245,7 +245,13 @@ export default function NewProductPage() {
       });
 
       if (res.ok) {
-        router.push(`/${locale}/seller/products`);
+        const data = await res.json();
+        const newId = data.product?._id;
+        if (newId) {
+          router.push(`/${locale}/seller/products/${newId}?tab=medical`);
+        } else {
+          router.push(`/${locale}/seller/products`);
+        }
       } else {
         const data = await res.json();
         const rawError = data.error || '';

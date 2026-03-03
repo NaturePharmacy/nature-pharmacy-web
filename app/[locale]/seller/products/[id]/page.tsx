@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import ImageUpload from '@/components/upload/ImageUpload';
@@ -58,6 +58,7 @@ export default function EditProductPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const locale = params.locale as string;
   const productId = params.id as string;
   const t = useTranslations('sellerDashboard');
@@ -69,7 +70,9 @@ export default function EditProductPage() {
   const [loadingProduct, setLoadingProduct] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [activeTab, setActiveTab] = useState<'general' | 'medical'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'medical'>(
+    searchParams.get('tab') === 'medical' ? 'medical' : 'general'
+  );
 
   const [formData, setFormData] = useState({
     // Informations générales

@@ -203,7 +203,9 @@ export default function ProductReviews({ productId, locale }: ProductReviewsProp
               const count = stats?.[`rating${rating}` as keyof ReviewStats] as number || 0;
               return (
                 <div key={rating} className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600 w-8">{rating} {t('star')}</span>
+                  <span className="text-sm text-yellow-400 w-12 flex gap-0.5">
+                    {'★'.repeat(rating)}{'☆'.repeat(5 - rating)}
+                  </span>
                   <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-yellow-400 rounded-full transition-all"
