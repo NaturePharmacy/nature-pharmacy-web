@@ -8,7 +8,7 @@ const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 const TEST_USERS = {
   buyer: { email: 'buyer@test.com', password: 'password123' },
   seller: { email: 'seller@test.com', password: 'password123' },
-  admin: { email: 'admin@test.com', password: 'password123' },
+  admin: { email: 'admin@test.com', password: 'TestAdmin@E2E' },
 };
 
 async function waitForServer(url: string, maxRetries = 10): Promise<void> {
