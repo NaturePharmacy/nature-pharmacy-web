@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { useCart } from '@/contexts/CartContext';
 import { useCurrency } from '@/hooks/useCurrency';
 import { getCountriesByRegion, REGION_NAMES } from '@/lib/countries';
@@ -20,6 +21,8 @@ export default function CheckoutPage() {
   const { formatPrice } = useCurrency();
 
   const [loading, setLoading] = useState(false);
+  const [paypalError, setPaypalError] = useState('');
+  const createdOrderIdRef = useRef<string>('');
   const [shippingCost, setShippingCost] = useState<number>(0);
   const [shippingZone, setShippingZone] = useState<any>(null);
   const [loadingShipping, setLoadingShipping] = useState(false);
@@ -164,6 +167,13 @@ export default function CheckoutPage() {
   }
 
   return (
+    <PayPalScriptProvider
+      options={{
+        clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
+        currency: 'USD',
+        intent: 'capture',
+      }}
+    >
     <div className="min-h-screen flex flex-col">
       
       <main className="flex-1 bg-gray-50 py-8">
@@ -422,13 +432,74 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
-                  >
-                    {loading ? t('processing') : t('placeOrder')}
-                  </button>
+                  {formData.paymentMethod === 'paypal' ? (
+                    <div className="mt-6">
+                      {paypalError && (
+                        <p className="text-red-600 text-sm mb-3 text-center">{paypalError}</p>
+                      )}
+                      <PayPalButtons
+                        style={{ layout: 'vertical', color: 'blue', shape: 'rect', label: 'pay' }}
+                        createOrder={async () => {
+                          setPaypalError('');
+                          const orderData = {
+                            items: items.map((item) => ({
+                              productId: item.productId,
+                              quantity: item.quantity,
+                            })),
+                            shippingAddress: {
+                              name: formData.name,
+                              phone: formData.phone,
+                              street: formData.street,
+                              city: formData.city,
+                              state: formData.state,
+                              country: formData.country,
+                              postalCode: formData.postalCode,
+                            },
+                            shippingCost,
+                            shippingZone: shippingZone?._id,
+                            notes: formData.notes,
+                          };
+                          const res = await fetch('/api/payments/paypal/create-order', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ orderData }),
+                          });
+                          const data = await res.json();
+                          if (!res.ok) throw new Error(data.error || 'Failed to create order');
+                          createdOrderIdRef.current = data.orderId;
+                          return data.paypalOrderId;
+                        }}
+                        onApprove={async (data) => {
+                          const res = await fetch('/api/payments/paypal/capture', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              paypalOrderId: data.orderID,
+                              orderId: createdOrderIdRef.current,
+                            }),
+                          });
+                          const result = await res.json();
+                          if (!res.ok) {
+                            setPaypalError(result.error || 'Payment failed');
+                            return;
+                          }
+                          clearCart();
+                          router.push(`/${locale}/orders/${result.orderId}?success=true`);
+                        }}
+                        onError={() => {
+                          setPaypalError('Une erreur PayPal est survenue. Veuillez réessayer.');
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+                    >
+                      {loading ? t('processing') : t('placeOrder')}
+                    </button>
+                  )}
 
                   <Link
                     href={`/${locale}/cart`}
@@ -443,6 +514,7 @@ export default function CheckoutPage() {
         </div>
       </main>
 
-          </div>
+    </div>
+    </PayPalScriptProvider>
   );
 }
