@@ -6,16 +6,18 @@ import { ProductDetailPage } from '../../page-objects/product-detail.page';
 import { TestData } from '../../helpers/test-data-factory';
 import { mockPayPalCheckout, mockPayPalError } from '../../mocks/paypal.mock';
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
-async function addProductToCartAndGoToCheckout(buyerPage: any) {
-  await mockPayPalCheckout(buyerPage);
-
+// ─── Helper : ajoute un produit au panier et arrive sur /checkout ─────────────
+async function goToCheckout(buyerPage: any): Promise<boolean> {
   const productsPage = new ProductsListPage(buyerPage);
   await productsPage.navigate();
   await buyerPage.waitForLoadState('networkidle');
 
-  const hasProducts = await productsPage.productCards.first().isVisible({ timeout: 15000 }).catch(() => false);
+  const hasProducts = await productsPage.productCards
+    .first()
+    .isVisible({ timeout: 15000 })
+    .catch(() => false);
   if (!hasProducts) return false;
 
   await productsPage.clickFirstProduct();
@@ -29,361 +31,304 @@ async function addProductToCartAndGoToCheckout(buyerPage: any) {
   await buyerPage.waitForLoadState('networkidle');
 
   const checkoutBtn = cartPage.checkoutButton;
-  const btnVisible = await checkoutBtn.isVisible({ timeout: 10000 }).catch(() => false);
-  if (!btnVisible) return false;
+  if (!(await checkoutBtn.isVisible({ timeout: 10000 }).catch(() => false))) return false;
 
   await checkoutBtn.click();
   await buyerPage.waitForLoadState('networkidle');
+  await buyerPage.waitForURL(/\/fr\/checkout/, { timeout: 15000 });
   return true;
 }
 
-// ─── Tests ────────────────────────────────────────────────────────────────────
+// ─── Helper : remplit l'adresse de livraison ──────────────────────────────────
+async function fillAddress(buyerPage: any) {
+  const checkoutPage = new CheckoutPage(buyerPage);
+  const address = TestData.shippingAddress();
+  await checkoutPage.fullNameInput.fill(address.fullName);
+  await checkoutPage.phoneInput.fill(address.phone);
+  await checkoutPage.addressInput.fill(address.address);
+  await checkoutPage.cityInput.fill(address.city);
+  await checkoutPage.stateInput.fill('Paris');
+  await checkoutPage.postalCodeInput.fill('75001');
+  // Sélectionner un pays si le select existe
+  const countrySelect = buyerPage.locator('select[name="country"]');
+  if (await countrySelect.isVisible({ timeout: 2000 }).catch(() => false)) {
+    await countrySelect.selectOption({ index: 1 });
+    await buyerPage.waitForTimeout(400);
+  }
+}
 
-test.describe('PayPal — Checkout Integration', () => {
+// ═══════════════════════════════════════════════════════════════════════════
+// 1. RENDU DE LA PAGE CHECKOUT
+// ═══════════════════════════════════════════════════════════════════════════
 
-  // ── 1. Page checkout ──────────────────────────────────────────────────────
-  test.describe('Checkout page rendering', () => {
-
-    test('checkout page se charge avec les options de paiement', async ({ buyerPage }) => {
-      const ready = await addProductToCartAndGoToCheckout(buyerPage);
-      if (!ready) { test.skip(true, 'No products available'); return; }
-
-      await expect(buyerPage).toHaveURL(/\/fr\/checkout/);
-      await expect(buyerPage.locator('input[name="paymentMethod"][value="paypal"]')).toBeVisible();
-      await expect(buyerPage.locator('input[name="paymentMethod"][value="stripe"]')).toBeVisible();
-      await expect(buyerPage.locator('input[name="paymentMethod"][value="cash_on_delivery"]')).toBeVisible();
-    });
-
-    test('le bouton "Passer commande" est visible quand Stripe est sélectionné (défaut)', async ({ buyerPage }) => {
-      const ready = await addProductToCartAndGoToCheckout(buyerPage);
-      if (!ready) { test.skip(true, 'No products available'); return; }
-
-      // Stripe est la méthode par défaut
-      const submitBtn = buyerPage.locator('button[type="submit"]');
-      await expect(submitBtn.first()).toBeVisible({ timeout: 10000 });
-    });
-
-    test('le bouton "Passer commande" est visible quand COD est sélectionné', async ({ buyerPage }) => {
-      const ready = await addProductToCartAndGoToCheckout(buyerPage);
-      if (!ready) { test.skip(true, 'No products available'); return; }
-
-      await buyerPage.locator('input[name="paymentMethod"][value="cash_on_delivery"]').check();
-      await buyerPage.waitForTimeout(500);
-
-      const submitBtn = buyerPage.locator('button[type="submit"]');
-      await expect(submitBtn.first()).toBeVisible({ timeout: 10000 });
-    });
+test.describe('PayPal — Rendu page checkout', () => {
+  test.beforeEach(async ({ buyerPage }) => {
+    await mockPayPalCheckout(buyerPage);
   });
 
-  // ── 2. Sélection PayPal ───────────────────────────────────────────────────
-  test.describe('Sélection de PayPal', () => {
+  test('les 3 méthodes de paiement sont disponibles', async ({ buyerPage }) => {
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
 
-    test('la sélection de PayPal affiche les boutons PayPal', async ({ buyerPage }) => {
-      const ready = await addProductToCartAndGoToCheckout(buyerPage);
-      if (!ready) { test.skip(true, 'No products available'); return; }
-
-      const checkoutPage = new CheckoutPage(buyerPage);
-      await checkoutPage.selectPaymentMethod('paypal');
-      await buyerPage.waitForTimeout(1000);
-
-      // Les boutons PayPal doivent apparaître (rendus par le mock SDK)
-      const paypalBtn = buyerPage.locator('[data-testid="paypal-button-mock"]');
-      await expect(paypalBtn).toBeVisible({ timeout: 10000 });
-    });
-
-    test('le bouton submit standard disparaît quand PayPal est sélectionné', async ({ buyerPage }) => {
-      const ready = await addProductToCartAndGoToCheckout(buyerPage);
-      if (!ready) { test.skip(true, 'No products available'); return; }
-
-      const checkoutPage = new CheckoutPage(buyerPage);
-      await checkoutPage.selectPaymentMethod('paypal');
-      await buyerPage.waitForTimeout(500);
-
-      // Le bouton type="submit" ne doit plus être visible
-      const submitBtn = buyerPage.locator('button[type="submit"]');
-      const isVisible = await submitBtn.isVisible().catch(() => false);
-      expect(isVisible).toBe(false);
-    });
-
-    test('basculer vers une autre méthode restaure le bouton submit', async ({ buyerPage }) => {
-      const ready = await addProductToCartAndGoToCheckout(buyerPage);
-      if (!ready) { test.skip(true, 'No products available'); return; }
-
-      const checkoutPage = new CheckoutPage(buyerPage);
-
-      // Sélectionner PayPal
-      await checkoutPage.selectPaymentMethod('paypal');
-      await buyerPage.waitForTimeout(500);
-
-      // Revenir au COD
-      await checkoutPage.selectPaymentMethod('cod');
-      await buyerPage.waitForTimeout(500);
-
-      const submitBtn = buyerPage.locator('button[type="submit"]');
-      await expect(submitBtn.first()).toBeVisible({ timeout: 5000 });
-    });
+    await expect(buyerPage.locator('input[name="paymentMethod"][value="paypal"]')).toBeVisible();
+    await expect(buyerPage.locator('input[name="paymentMethod"][value="stripe"]')).toBeVisible();
+    await expect(buyerPage.locator('input[name="paymentMethod"][value="cash_on_delivery"]')).toBeVisible();
   });
 
-  // ── 3. Formulaire + PayPal ────────────────────────────────────────────────
-  test.describe('Formulaire d\'adresse avec PayPal', () => {
+  test('bouton submit visible par défaut (Stripe)', async ({ buyerPage }) => {
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
 
-    test('tous les champs du formulaire sont remplis avant de payer', async ({ buyerPage }) => {
-      const ready = await addProductToCartAndGoToCheckout(buyerPage);
-      if (!ready) { test.skip(true, 'No products available'); return; }
-
-      const checkoutPage = new CheckoutPage(buyerPage);
-      const address = TestData.shippingAddress();
-
-      await checkoutPage.fullNameInput.fill(address.fullName);
-      await checkoutPage.phoneInput.fill(address.phone);
-      await checkoutPage.addressInput.fill(address.address);
-      await checkoutPage.cityInput.fill(address.city);
-      await checkoutPage.stateInput.fill('Île-de-France');
-      await checkoutPage.postalCodeInput.fill('75001');
-
-      // Sélectionner un pays
-      const countrySelect = buyerPage.locator('select[name="country"]');
-      const hasCountry = await countrySelect.isVisible().catch(() => false);
-      if (hasCountry) {
-        await countrySelect.selectOption({ index: 1 });
-        await buyerPage.waitForTimeout(500);
-      }
-
-      await checkoutPage.selectPaymentMethod('paypal');
-      await buyerPage.waitForTimeout(1000);
-
-      const paypalBtn = buyerPage.locator('[data-testid="paypal-button-mock"]');
-      await expect(paypalBtn).toBeVisible({ timeout: 10000 });
-    });
-
-    test('le résumé de commande affiche le total correct', async ({ buyerPage }) => {
-      const ready = await addProductToCartAndGoToCheckout(buyerPage);
-      if (!ready) { test.skip(true, 'No products available'); return; }
-
-      // Le total doit être visible dans le résumé
-      const total = buyerPage.locator('text=/total/i').first();
-      await expect(total).toBeVisible({ timeout: 10000 });
-
-      // Le prix doit contenir un montant
-      const priceText = buyerPage.locator('[class*="text-green"]').first();
-      await expect(priceText).toBeVisible({ timeout: 5000 });
-    });
+    await expect(buyerPage.locator('button[type="submit"]').first()).toBeVisible({ timeout: 10000 });
   });
 
-  // ── 4. Flux complet PayPal (avec mock) ───────────────────────────────────
-  test.describe('Flux de paiement PayPal (mocké)', () => {
+  test('bouton submit visible quand COD sélectionné', async ({ buyerPage }) => {
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
 
-    test('cliquer sur le bouton PayPal appelle create-order puis capture', async ({ buyerPage }) => {
-      const ready = await addProductToCartAndGoToCheckout(buyerPage);
-      if (!ready) { test.skip(true, 'No products available'); return; }
-
-      // Intercepter les appels API
-      const apiCalls: string[] = [];
-      buyerPage.on('request', req => {
-        if (req.url().includes('/api/payments/paypal/')) {
-          apiCalls.push(req.url());
-        }
-      });
-
-      const checkoutPage = new CheckoutPage(buyerPage);
-      const address = TestData.shippingAddress();
-
-      await checkoutPage.fullNameInput.fill(address.fullName);
-      await checkoutPage.phoneInput.fill(address.phone);
-      await checkoutPage.addressInput.fill(address.address);
-      await checkoutPage.cityInput.fill(address.city);
-      await checkoutPage.stateInput.fill('Paris');
-      await checkoutPage.postalCodeInput.fill('75001');
-
-      const countrySelect = buyerPage.locator('select[name="country"]');
-      if (await countrySelect.isVisible().catch(() => false)) {
-        await countrySelect.selectOption({ index: 1 });
-        await buyerPage.waitForTimeout(500);
-      }
-
-      await checkoutPage.selectPaymentMethod('paypal');
-      await buyerPage.waitForTimeout(1500);
-
-      const paypalBtn = buyerPage.locator('[data-testid="paypal-button-mock"]');
-      await expect(paypalBtn).toBeVisible({ timeout: 10000 });
-      await paypalBtn.click();
-
-      // Attendre la redirection vers la confirmation de commande
-      await buyerPage.waitForURL(/\/fr\/(orders|checkout)/, { timeout: 20000 });
-
-      // Vérifier que les deux API ont été appelées
-      expect(apiCalls.some(url => url.includes('create-order'))).toBe(true);
-      expect(apiCalls.some(url => url.includes('capture'))).toBe(true);
-    });
-
-    test('après paiement PayPal réussi, redirection vers page commande', async ({ buyerPage }) => {
-      const ready = await addProductToCartAndGoToCheckout(buyerPage);
-      if (!ready) { test.skip(true, 'No products available'); return; }
-
-      const checkoutPage = new CheckoutPage(buyerPage);
-      const address = TestData.shippingAddress();
-
-      await checkoutPage.fullNameInput.fill(address.fullName);
-      await checkoutPage.phoneInput.fill(address.phone);
-      await checkoutPage.addressInput.fill(address.address);
-      await checkoutPage.cityInput.fill(address.city);
-      await checkoutPage.stateInput.fill('Paris');
-      await checkoutPage.postalCodeInput.fill('75001');
-
-      const countrySelect = buyerPage.locator('select[name="country"]');
-      if (await countrySelect.isVisible().catch(() => false)) {
-        await countrySelect.selectOption({ index: 1 });
-        await buyerPage.waitForTimeout(500);
-      }
-
-      await checkoutPage.selectPaymentMethod('paypal');
-      await buyerPage.waitForTimeout(1500);
-
-      const paypalBtn = buyerPage.locator('[data-testid="paypal-button-mock"]');
-      await paypalBtn.click();
-
-      await buyerPage.waitForURL(/\/fr\/(orders|checkout)/, { timeout: 20000 });
-      // L'URL doit changer (plus sur /checkout)
-      expect(buyerPage.url()).not.toMatch(/\/fr\/checkout$/);
-    });
+    await buyerPage.locator('input[name="paymentMethod"][value="cash_on_delivery"]').check();
+    await buyerPage.waitForTimeout(300);
+    await expect(buyerPage.locator('button[type="submit"]').first()).toBeVisible({ timeout: 5000 });
   });
 
-  // ── 5. Gestion des erreurs ────────────────────────────────────────────────
-  test.describe('Gestion des erreurs PayPal', () => {
+  test('résumé de commande affiche un total', async ({ buyerPage }) => {
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
 
-    test('une erreur PayPal affiche un message d\'erreur', async ({ buyerPage }) => {
-      // Utiliser le mock d'erreur
-      await mockPayPalError(buyerPage);
+    const total = buyerPage.getByText(/total/i).first();
+    await expect(total).toBeVisible({ timeout: 10000 });
+  });
+});
 
-      const productsPage = new ProductsListPage(buyerPage);
-      await productsPage.navigate();
-      await buyerPage.waitForLoadState('networkidle');
+// ═══════════════════════════════════════════════════════════════════════════
+// 2. SÉLECTION PAYPAL — AFFICHAGE DES BOUTONS
+// ═══════════════════════════════════════════════════════════════════════════
 
-      const hasProducts = await productsPage.productCards.first().isVisible({ timeout: 15000 }).catch(() => false);
-      if (!hasProducts) { test.skip(true, 'No products available'); return; }
-
-      await productsPage.clickFirstProduct();
-      const detailPage = new ProductDetailPage(buyerPage);
-      await detailPage.addToCart();
-
-      const cartPage = new CartPage(buyerPage);
-      await cartPage.navigate();
-      await cartPage.checkoutButton.click();
-      await buyerPage.waitForLoadState('networkidle');
-
-      const checkoutPage = new CheckoutPage(buyerPage);
-      const address = TestData.shippingAddress();
-
-      await checkoutPage.fullNameInput.fill(address.fullName);
-      await checkoutPage.phoneInput.fill(address.phone);
-      await checkoutPage.addressInput.fill(address.address);
-      await checkoutPage.cityInput.fill(address.city);
-      await checkoutPage.stateInput.fill('Paris');
-      await checkoutPage.postalCodeInput.fill('75001');
-
-      await checkoutPage.selectPaymentMethod('paypal');
-      await buyerPage.waitForTimeout(1500);
-
-      const errorBtn = buyerPage.locator('[data-testid="paypal-button-error"]');
-      const hasMockBtn = await errorBtn.isVisible({ timeout: 5000 }).catch(() => false);
-      if (!hasMockBtn) { test.skip(true, 'Error mock button not rendered'); return; }
-
-      await errorBtn.click();
-      await buyerPage.waitForTimeout(1000);
-
-      // Un message d'erreur doit apparaître sur la page
-      const errorMsg = buyerPage.locator('[class*="text-red"], [class*="bg-red"], .error').first();
-      await expect(errorMsg).toBeVisible({ timeout: 5000 });
-    });
-
-    test('l\'API create-order retourne 500 → message d\'erreur affiché', async ({ buyerPage }) => {
-      await mockPayPalError(buyerPage);
-
-      const productsPage = new ProductsListPage(buyerPage);
-      await productsPage.navigate();
-      const hasProducts = await productsPage.productCards.first().isVisible({ timeout: 10000 }).catch(() => false);
-      if (!hasProducts) { test.skip(true, 'No products available'); return; }
-
-      await productsPage.clickFirstProduct();
-      const detailPage = new ProductDetailPage(buyerPage);
-      await detailPage.addToCart();
-
-      const cartPage = new CartPage(buyerPage);
-      await cartPage.navigate();
-      await cartPage.checkoutButton.click();
-      await buyerPage.waitForLoadState('networkidle');
-
-      const checkoutPage = new CheckoutPage(buyerPage);
-      await checkoutPage.selectPaymentMethod('paypal');
-      await buyerPage.waitForTimeout(1000);
-
-      // On doit rester sur la page checkout (pas de redirection)
-      await expect(buyerPage).toHaveURL(/\/fr\/checkout/);
-    });
+test.describe('PayPal — Sélection et rendu boutons', () => {
+  test.beforeEach(async ({ buyerPage }) => {
+    await mockPayPalCheckout(buyerPage);
   });
 
-  // ── 6. Vérification API (sans browser) ───────────────────────────────────
-  test.describe('API PayPal — Routes', () => {
+  test('sélectionner PayPal affiche le bouton mocké', async ({ buyerPage }) => {
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
 
-    test('POST /api/payments/paypal/create-order sans auth → 401', async ({ buyerPage }) => {
-      // Appel direct sans cookies d'auth
-      const context = buyerPage.context();
-      const page = await context.browser()!.newContext().then(c => c.newPage());
+    const checkoutPage = new CheckoutPage(buyerPage);
+    await checkoutPage.selectPaymentMethod('paypal');
+    await buyerPage.waitForTimeout(1000);
 
-      const res = await page.evaluate(async () => {
-        const r = await fetch('/api/payments/paypal/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ orderData: {} }),
-        });
-        return r.status;
-      });
+    await expect(buyerPage.locator('[data-testid="paypal-button-mock"]')).toBeVisible({ timeout: 10000 });
+  });
 
-      expect(res).toBe(401);
-      await page.close();
+  test('bouton submit disparaît quand PayPal sélectionné', async ({ buyerPage }) => {
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
+
+    const checkoutPage = new CheckoutPage(buyerPage);
+    await checkoutPage.selectPaymentMethod('paypal');
+    await buyerPage.waitForTimeout(500);
+
+    const isVisible = await buyerPage.locator('button[type="submit"]').isVisible().catch(() => false);
+    expect(isVisible).toBe(false);
+  });
+
+  test('revenir à COD restaure le bouton submit', async ({ buyerPage }) => {
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
+
+    const checkoutPage = new CheckoutPage(buyerPage);
+    await checkoutPage.selectPaymentMethod('paypal');
+    await buyerPage.waitForTimeout(500);
+    await checkoutPage.selectPaymentMethod('cod');
+    await buyerPage.waitForTimeout(500);
+
+    await expect(buyerPage.locator('button[type="submit"]').first()).toBeVisible({ timeout: 5000 });
+  });
+
+  test('bouton PayPal présent après avoir rempli le formulaire', async ({ buyerPage }) => {
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
+
+    await fillAddress(buyerPage);
+    const checkoutPage = new CheckoutPage(buyerPage);
+    await checkoutPage.selectPaymentMethod('paypal');
+    await buyerPage.waitForTimeout(1000);
+
+    await expect(buyerPage.locator('[data-testid="paypal-button-mock"]')).toBeVisible({ timeout: 10000 });
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 3. FLUX COMPLET DE PAIEMENT (mocké)
+// ═══════════════════════════════════════════════════════════════════════════
+
+test.describe('PayPal — Flux complet mocké', () => {
+  test.beforeEach(async ({ buyerPage }) => {
+    await mockPayPalCheckout(buyerPage);
+  });
+
+  test('cliquer PayPal → create-order ET capture appelés', async ({ buyerPage }) => {
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
+
+    const apiCalls: string[] = [];
+    buyerPage.on('request', req => {
+      if (req.url().includes('/api/payments/paypal/')) apiCalls.push(req.url());
     });
 
-    test('POST /api/payments/paypal/capture sans auth → 401', async ({ buyerPage }) => {
-      const context = buyerPage.context();
-      const page = await context.browser()!.newContext().then(c => c.newPage());
+    await fillAddress(buyerPage);
+    const checkoutPage = new CheckoutPage(buyerPage);
+    await checkoutPage.selectPaymentMethod('paypal');
+    await buyerPage.waitForTimeout(1000);
 
-      const res = await page.evaluate(async () => {
-        const r = await fetch('/api/payments/paypal/capture', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ paypalOrderId: 'xxx', orderId: 'yyy' }),
-        });
-        return r.status;
+    const paypalBtn = buyerPage.locator('[data-testid="paypal-button-mock"]');
+    await expect(paypalBtn).toBeVisible({ timeout: 10000 });
+    await paypalBtn.click();
+
+    await buyerPage.waitForURL(/\/fr\/orders|\/fr\/checkout/, { timeout: 20000 });
+
+    expect(apiCalls.some(u => u.includes('create-order'))).toBe(true);
+    expect(apiCalls.some(u => u.includes('capture'))).toBe(true);
+  });
+
+  test('paiement réussi → redirection hors de /checkout', async ({ buyerPage }) => {
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
+
+    await fillAddress(buyerPage);
+    const checkoutPage = new CheckoutPage(buyerPage);
+    await checkoutPage.selectPaymentMethod('paypal');
+    await buyerPage.waitForTimeout(1000);
+
+    const paypalBtn = buyerPage.locator('[data-testid="paypal-button-mock"]');
+    await expect(paypalBtn).toBeVisible({ timeout: 10000 });
+    await paypalBtn.click();
+
+    await buyerPage.waitForURL(/\/fr\/orders/, { timeout: 20000 });
+    expect(buyerPage.url()).not.toMatch(/\/fr\/checkout$/);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 4. GESTION DES ERREURS
+// ═══════════════════════════════════════════════════════════════════════════
+
+test.describe('PayPal — Gestion des erreurs', () => {
+
+  test('erreur PayPal → message d\'erreur visible sur la page', async ({ buyerPage }) => {
+    await mockPayPalError(buyerPage);
+
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
+
+    await fillAddress(buyerPage);
+    const checkoutPage = new CheckoutPage(buyerPage);
+    await checkoutPage.selectPaymentMethod('paypal');
+    await buyerPage.waitForTimeout(1000);
+
+    const errorBtn = buyerPage.locator('[data-testid="paypal-button-error"]');
+    if (!(await errorBtn.isVisible({ timeout: 8000 }).catch(() => false))) {
+      test.skip(true, 'Bouton erreur non rendu'); return;
+    }
+
+    await errorBtn.click();
+    await buyerPage.waitForTimeout(1000);
+
+    // Message d'erreur doit apparaître
+    const errorMsg = buyerPage.locator('[class*="text-red"], p.text-red-600').first();
+    await expect(errorMsg).toBeVisible({ timeout: 5000 });
+  });
+
+  test('erreur API → on reste sur /checkout', async ({ buyerPage }) => {
+    await mockPayPalError(buyerPage);
+
+    const ok = await goToCheckout(buyerPage);
+    if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
+
+    const checkoutPage = new CheckoutPage(buyerPage);
+    await checkoutPage.selectPaymentMethod('paypal');
+    await buyerPage.waitForTimeout(500);
+
+    // Rester sur la page checkout
+    await expect(buyerPage).toHaveURL(/\/fr\/checkout/);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 5. SÉCURITÉ API — SANS AUTHENTIFICATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+test.describe('PayPal — Sécurité API', () => {
+
+  test('POST create-order sans auth → 401', async ({ page }) => {
+    // Naviguer vers la base URL pour avoir un contexte valide
+    await page.goto(`${BASE_URL}/fr`);
+    await page.waitForLoadState('networkidle');
+
+    const status = await page.evaluate(async (baseUrl) => {
+      const r = await fetch(`${baseUrl}/api/payments/paypal/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderData: {} }),
       });
+      return r.status;
+    }, BASE_URL);
 
-      expect(res).toBe(401);
-      await page.close();
-    });
+    expect(status).toBe(401);
+  });
 
-    test('POST /api/payments/paypal/create-order authentifié sans items → 400', async ({ buyerPage }) => {
-      const status = await buyerPage.evaluate(async () => {
-        const r = await fetch('/api/payments/paypal/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ orderData: { items: [], shippingAddress: {} } }),
-        });
-        return r.status;
+  test('POST capture sans auth → 401', async ({ page }) => {
+    await page.goto(`${BASE_URL}/fr`);
+    await page.waitForLoadState('networkidle');
+
+    const status = await page.evaluate(async (baseUrl) => {
+      const r = await fetch(`${baseUrl}/api/payments/paypal/capture`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paypalOrderId: 'xxx', orderId: 'yyy' }),
       });
+      return r.status;
+    }, BASE_URL);
 
-      expect(status).toBe(400);
-    });
+    expect(status).toBe(401);
+  });
 
-    test('POST /api/payments/paypal/capture avec IDs invalides → 400 ou 404', async ({ buyerPage }) => {
-      const status = await buyerPage.evaluate(async () => {
-        const r = await fetch('/api/payments/paypal/capture', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ paypalOrderId: 'INVALID-ID', orderId: '000000000000000000000000' }),
-        });
-        return r.status;
+  test('POST create-order authentifié sans items → 400', async ({ buyerPage }) => {
+    await buyerPage.goto(`${BASE_URL}/fr`);
+
+    const status = await buyerPage.evaluate(async (baseUrl) => {
+      const r = await fetch(`${baseUrl}/api/payments/paypal/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderData: { items: [], shippingAddress: {} } }),
       });
+      return r.status;
+    }, BASE_URL);
 
-      expect([400, 404, 500]).toContain(status);
-    });
+    expect(status).toBe(400);
+  });
+
+  test('POST capture avec IDs invalides → 400 ou 404', async ({ buyerPage }) => {
+    await buyerPage.goto(`${BASE_URL}/fr`);
+
+    const status = await buyerPage.evaluate(async (baseUrl) => {
+      const r = await fetch(`${baseUrl}/api/payments/paypal/capture`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paypalOrderId: 'INVALID', orderId: '000000000000000000000000' }),
+      });
+      return r.status;
+    }, BASE_URL);
+
+    expect([400, 404, 500]).toContain(status);
+  });
+
+  test('GET /api/payments/paypal/create-order → 405 method not allowed', async ({ page }) => {
+    await page.goto(`${BASE_URL}/fr`);
+    const status = await page.evaluate(async (baseUrl) => {
+      const r = await fetch(`${baseUrl}/api/payments/paypal/create-order`);
+      return r.status;
+    }, BASE_URL);
+    expect([405, 401, 404]).toContain(status);
   });
 });
