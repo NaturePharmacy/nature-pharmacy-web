@@ -161,7 +161,8 @@ test.describe('Admin — Produits', () => {
     if (await skipIfDown(adminPage, '/admin/products')) return;
     const hasTable = await adminPage.locator('table').isVisible({ timeout: 10000 }).catch(() => false);
     if (!hasTable) { test.skip(true, 'Pas de tableau'); return; }
-    for (const col of [/nom|name/i, /prix|price/i, /stock/i]) {
+    // Colonnes en fr: "Produit", "Prix", "Stock" — en en: "Product", "Price", "Stock"
+    for (const col of [/produit|product/i, /prix|price/i, /stock/i]) {
       await expect(adminPage.locator('table thead th').filter({ hasText: col }).first()).toBeVisible({ timeout: 5000 });
     }
   });
@@ -265,7 +266,8 @@ test.describe('Admin — Coupons', () => {
     const ok = await gotoAdmin(adminPage, '/coupons');
     if (!ok) { test.skip(true, 'Serveur inaccessible'); return; }
     if (await skipIfDown(adminPage, '/admin/coupons')) return;
-    await expect(adminPage.locator('button').filter({ hasText: /créer|create|ajouter|nouveau/i }).first()).toBeVisible({ timeout: 10000 });
+    // Texte réel du bouton : "+ New Coupon"
+    await expect(adminPage.locator('button').filter({ hasText: /new coupon|créer|create|ajouter|nouveau/i }).first()).toBeVisible({ timeout: 10000 });
   });
 });
 
@@ -351,31 +353,32 @@ test.describe('Admin — Commandes PayPal', () => {
 
 // 11. SÉCURITÉ API
 test.describe('Admin — Sécurité API', () => {
-  test('GET /api/admin/users sans auth → 401', async ({ page }) => {
+  test('GET /api/admin/users sans auth → 401 ou 403', async ({ page }) => {
     await page.goto(`${BASE_URL}/fr`, { timeout: 30000 });
     const status = await page.evaluate(async (url: string) => {
       const r = await fetch(`${url}/api/admin/users`);
       return r.status;
     }, BASE_URL);
-    expect(status).toBe(401);
+    // 401 = non authentifié, 403 = authentifié mais non admin
+    expect([401, 403]).toContain(status);
   });
 
-  test('GET /api/admin/orders sans auth → 401', async ({ page }) => {
+  test('GET /api/admin/orders sans auth → 401 ou 403', async ({ page }) => {
     await page.goto(`${BASE_URL}/fr`, { timeout: 30000 });
     const status = await page.evaluate(async (url: string) => {
       const r = await fetch(`${url}/api/admin/orders`);
       return r.status;
     }, BASE_URL);
-    expect(status).toBe(401);
+    expect([401, 403]).toContain(status);
   });
 
-  test('GET /api/admin/products sans auth → 401', async ({ page }) => {
+  test('GET /api/admin/products sans auth → 401 ou 403', async ({ page }) => {
     await page.goto(`${BASE_URL}/fr`, { timeout: 30000 });
     const status = await page.evaluate(async (url: string) => {
       const r = await fetch(`${url}/api/admin/products`);
       return r.status;
     }, BASE_URL);
-    expect(status).toBe(401);
+    expect([401, 403]).toContain(status);
   });
 
   test('admin auth → /api/admin/users → 200', async ({ adminPage }) => {

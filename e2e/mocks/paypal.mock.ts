@@ -5,12 +5,15 @@ import { Page, Route } from '@playwright/test';
  *
  * Stratégie :
  * 1. page.addInitScript() → injecte window.paypal AVANT tout JS de la page
- * 2. page.route() → bloque le vrai script SDK PayPal (évite erreurs réseau)
- * 3. Mock les API routes create-order et capture
+ * 2. Patch document.head.insertBefore → déclenche onload immédiatement
+ *    (@paypal/react-paypal-js appelle loadScript qui attend l'onload du <script>)
+ * 3. page.route() → bloque le vrai script SDK PayPal (évite erreurs réseau)
+ * 4. Mock les API routes create-order et capture
  */
 export async function mockPayPalCheckout(page: Page): Promise<void> {
-  // ① Injecter window.paypal avant tout le JS de la page
+  // ① Injecter window.paypal + patcher insertBefore avant tout le JS de la page
   await page.addInitScript(() => {
+    // Mock PayPal SDK
     (window as any).paypal = {
       Buttons: function (config: any) {
         return {
@@ -54,9 +57,23 @@ export async function mockPayPalCheckout(page: Page): Promise<void> {
         CARD: 'card',
       },
     };
+
+    // ② Patch document.head.insertBefore pour déclencher onload immédiatement
+    // quand @paypal/react-paypal-js insère son <script> SDK
+    const _origInsertBefore = Element.prototype.insertBefore;
+    (document.head as any).insertBefore = function (newNode: Node, refNode: Node | null) {
+      const result = _origInsertBefore.call(this, newNode, refNode);
+      const el = newNode as HTMLScriptElement;
+      if (el.tagName === 'SCRIPT' && el.src && el.src.includes('paypal.com/sdk')) {
+        setTimeout(() => {
+          if (typeof el.onload === 'function') el.onload(new Event('load'));
+        }, 0);
+      }
+      return result;
+    };
   });
 
-  // ② Bloquer le vrai script SDK PayPal
+  // ③ Bloquer le vrai script SDK PayPal (prévention des requêtes réseau réelles)
   await page.route('https://www.paypal.com/sdk/js**', async (route: Route) => {
     await route.fulfill({
       status: 200,
@@ -69,7 +86,7 @@ export async function mockPayPalCheckout(page: Page): Promise<void> {
     await route.fulfill({ status: 200, contentType: 'application/javascript', body: '' });
   });
 
-  // ③ Mock API create-order
+  // ④ Mock API create-order
   await page.route('**/api/payments/paypal/create-order', async (route: Route) => {
     if (route.request().method() === 'POST') {
       await route.fulfill({
@@ -85,7 +102,7 @@ export async function mockPayPalCheckout(page: Page): Promise<void> {
     }
   });
 
-  // ④ Mock API capture
+  // ⑤ Mock API capture
   await page.route('**/api/payments/paypal/capture', async (route: Route) => {
     if (route.request().method() === 'POST') {
       await route.fulfill({
@@ -136,6 +153,19 @@ export async function mockPayPalError(page: Page): Promise<void> {
         };
       },
       FUNDING: { PAYPAL: 'paypal', CARD: 'card' },
+    };
+
+    // Patch insertBefore pour résoudre immédiatement
+    const _origInsertBefore = Element.prototype.insertBefore;
+    (document.head as any).insertBefore = function (newNode: Node, refNode: Node | null) {
+      const result = _origInsertBefore.call(this, newNode, refNode);
+      const el = newNode as HTMLScriptElement;
+      if (el.tagName === 'SCRIPT' && el.src && el.src.includes('paypal.com/sdk')) {
+        setTimeout(() => {
+          if (typeof el.onload === 'function') el.onload(new Event('load'));
+        }, 0);
+      }
+      return result;
     };
   });
 
