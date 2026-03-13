@@ -32,7 +32,9 @@ export class CheckoutPage extends BasePage {
       paypal: 'paypal',
     };
     const value = methodMap[method] || method;
-    await this.page.locator(`input[name="paymentMethod"][value="${value}"]`).check();
+    // Use click with noWaitAfter to avoid hanging on network requests triggered by PayPal SDK
+    await this.page.locator(`input[name="paymentMethod"][value="${value}"]`).click({ noWaitAfter: true, timeout: 10000 });
+    await this.page.waitForTimeout(300);
   }
 
   async fillShippingForm(address: {

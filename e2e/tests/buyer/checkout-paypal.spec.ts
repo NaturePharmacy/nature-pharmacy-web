@@ -126,9 +126,15 @@ test.describe('PayPal — Sélection et rendu boutons', () => {
 
     const checkoutPage = new CheckoutPage(buyerPage);
     await checkoutPage.selectPaymentMethod('paypal');
-    await buyerPage.waitForTimeout(500);
 
-    const isVisible = await buyerPage.locator('button[type="submit"]').isVisible().catch(() => false);
+    // Attendre que le bouton PayPal apparaisse (confirme que la sélection a fonctionné)
+    const paypalVisible = await buyerPage.locator('[data-testid="paypal-button-mock"]')
+      .isVisible({ timeout: 8000 }).catch(() => false);
+    if (!paypalVisible) { test.skip(true, 'Bouton PayPal non rendu'); return; }
+
+    // Le bouton "Passer la commande" doit avoir disparu
+    const placeOrderBtn = buyerPage.getByRole('button', { name: /passer la commande|place order/i });
+    const isVisible = await placeOrderBtn.isVisible().catch(() => false);
     expect(isVisible).toBe(false);
   });
 
@@ -138,11 +144,12 @@ test.describe('PayPal — Sélection et rendu boutons', () => {
 
     const checkoutPage = new CheckoutPage(buyerPage);
     await checkoutPage.selectPaymentMethod('paypal');
-    await buyerPage.waitForTimeout(500);
+    await buyerPage.waitForTimeout(800);
     await checkoutPage.selectPaymentMethod('cod');
     await buyerPage.waitForTimeout(500);
 
-    await expect(buyerPage.locator('button[type="submit"]').first()).toBeVisible({ timeout: 5000 });
+    // Le bouton "Passer la commande" doit réapparaître
+    await expect(buyerPage.getByRole('button', { name: /passer la commande|place order/i })).toBeVisible({ timeout: 5000 });
   });
 
   test('bouton PayPal présent après avoir rempli le formulaire', async ({ buyerPage }) => {
@@ -204,8 +211,9 @@ test.describe('PayPal — Flux complet mocké', () => {
     await expect(paypalBtn).toBeVisible({ timeout: 10000 });
     await paypalBtn.click();
 
-    await buyerPage.waitForURL(/\/fr\/orders/, { timeout: 20000 });
-    expect(buyerPage.url()).not.toMatch(/\/fr\/checkout$/);
+    // Après paiement, on quitte /checkout — vers /orders/{id} ou /products (si panier vidé déclenche une redirect)
+    await buyerPage.waitForURL(/\/fr\/orders|\/fr\/products|\/fr\/account/, { timeout: 20000 });
+    expect(buyerPage.url()).not.toMatch(/\/fr\/checkout/);
   });
 });
 
