@@ -9,7 +9,7 @@ import { createNotification, NotificationTemplates } from '@/lib/notifications';
 import { sendOrderConfirmationEmail } from '@/lib/email';
 
 const PAYPAL_API_BASE =
-  process.env.PAYPAL_MODE === 'live'
+  process.env.PAYPAL_MODE?.trim() === 'live'
     ? 'https://api-m.paypal.com'
     : 'https://api-m.sandbox.paypal.com';
 

@@ -6,7 +6,7 @@ import Order from '@/models/Order';
 import Product from '@/models/Product';
 
 const PAYPAL_API_BASE =
-  process.env.PAYPAL_MODE === 'live'
+  process.env.PAYPAL_MODE?.trim() === 'live'
     ? 'https://api-m.paypal.com'
     : 'https://api-m.sandbox.paypal.com';
 
