@@ -34,7 +34,7 @@ export default function CheckoutPage() {
     state: '',
     country: '',
     postalCode: '',
-    paymentMethod: 'stripe',
+    paymentMethod: 'paypal',
     notes: '',
   });
 
@@ -313,18 +313,6 @@ export default function CheckoutPage() {
                 <div className="bg-white rounded-lg shadow-md p-6">
                   <h2 className="text-xl font-semibold mb-4">{t('paymentMethod')}</h2>
                   <div className="space-y-3">
-                    <label className="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-green-500 transition">
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="stripe"
-                        checked={formData.paymentMethod === 'stripe'}
-                        onChange={handleChange}
-                        className="w-4 h-4 text-green-600"
-                      />
-                      <span className="ml-3 font-medium">{t('creditCard')}</span>
-                    </label>
-
                     <label className="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-green-500 transition">
                       <input
                         type="radio"

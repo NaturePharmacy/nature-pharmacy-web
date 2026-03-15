@@ -75,6 +75,8 @@ export async function POST(request: NextRequest) {
         seller: product.seller,
         quantity: item.quantity,
         price: product.price,
+        basePrice: product.price,
+        commission: 0,
       });
 
       product.stock -= item.quantity;
