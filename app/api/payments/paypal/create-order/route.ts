@@ -37,7 +37,13 @@ export async function POST(request: NextRequest) {
 
     await connectDB();
 
-    const { orderData } = await request.json();
+    const body = await request.json();
+    const orderData = body?.orderData;
+
+    if (!orderData) {
+      return NextResponse.json({ error: 'Missing orderData' }, { status: 400 });
+    }
+
     const { items, shippingAddress, shippingCost, shippingZone, notes } = orderData;
 
     if (!items || items.length === 0) {
@@ -48,21 +54,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Complete shipping address is required' }, { status: 400 });
     }
 
-    // Validate products and compute prices
+    // Validate products and compute prices (do NOT decrement stock yet — wait for capture)
     let itemsPrice = 0;
     const orderItems = [];
 
     for (const item of items) {
-      const product = await Product.findById(item.productId);
+      let product;
+      try {
+        product = await Product.findById(item.productId);
+      } catch (castErr) {
+        return NextResponse.json({ error: `Invalid product ID: ${item.productId}` }, { status: 400 });
+      }
+
       if (!product) {
-        return NextResponse.json({ error: `Product ${item.productId} not found` }, { status: 404 });
+        return NextResponse.json({ error: `Product not found: ${item.productId}` }, { status: 404 });
       }
       if (!product.isActive) {
-        return NextResponse.json({ error: `Product ${product.name.en} is unavailable` }, { status: 400 });
+        return NextResponse.json({ error: `Product unavailable: ${product.name?.en || product._id}` }, { status: 400 });
       }
       if (product.stock < item.quantity) {
         return NextResponse.json(
-          { error: `Insufficient stock for ${product.name.en}` },
+          { error: `Insufficient stock for ${product.name?.en || product._id}` },
           { status: 400 }
         );
       }
@@ -70,26 +82,24 @@ export async function POST(request: NextRequest) {
       itemsPrice += product.price * item.quantity;
       orderItems.push({
         product: product._id,
-        productName: product.name.en,
-        productImage: product.images[0] || '',
+        productName: product.name?.en || product.name?.fr || String(product._id),
+        productImage: product.images?.[0] || '',
         seller: product.seller,
         quantity: item.quantity,
         price: product.price,
-        basePrice: product.price,
-        commission: 0,
+        basePrice: product.basePrice || product.price,
+        commission: product.commission || 0,
       });
-
-      product.stock -= item.quantity;
-      await product.save();
     }
 
-    const shippingPrice = shippingCost ?? (itemsPrice > 50 ? 0 : 9.99);
-    const taxPrice = itemsPrice * 0.1;
-    const totalPrice = itemsPrice + shippingPrice + taxPrice;
+    // Commission already included in product price (basePrice + commission = price)
+    const shippingPrice = typeof shippingCost === 'number' ? shippingCost : (itemsPrice > 50 ? 0 : 9.99);
+    const taxPrice = 0;
+    const totalPrice = itemsPrice + shippingPrice;
 
-    // Create DB order (pending, will be confirmed after PayPal capture)
+    // Create DB order (pending — stock decremented only after capture)
     const order = await Order.create({
-      buyer: session.user.id,
+      buyer: (session.user as any).id,
       items: orderItems,
       shippingAddress,
       shippingZone: shippingZone || undefined,
@@ -104,6 +114,10 @@ export async function POST(request: NextRequest) {
 
     // Create PayPal order
     const accessToken = await getAccessToken();
+    if (!accessToken) {
+      await Order.findByIdAndDelete(order._id);
+      return NextResponse.json({ error: 'PayPal authentication failed' }, { status: 500 });
+    }
 
     const paypalRes = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders`, {
       method: 'POST',
@@ -129,19 +143,20 @@ export async function POST(request: NextRequest) {
     const paypalData = await paypalRes.json();
 
     if (!paypalRes.ok) {
-      // Rollback DB order
       await Order.findByIdAndDelete(order._id);
-      console.error('PayPal order creation failed:', paypalData);
-      return NextResponse.json({ error: 'Failed to create PayPal order' }, { status: 500 });
+      console.error('PayPal order creation failed:', JSON.stringify(paypalData));
+      return NextResponse.json(
+        { error: `PayPal error: ${paypalData?.message || JSON.stringify(paypalData)}` },
+        { status: 500 }
+      );
     }
 
-    // Store PayPal order ID in our order
-    order.paymentDetails = { ...(order.paymentDetails || {}), paypalOrderId: paypalData.id };
+    order.paymentDetails = { paypalOrderId: paypalData.id };
     await order.save();
 
     return NextResponse.json({ paypalOrderId: paypalData.id, orderId: order._id.toString() });
-  } catch (error) {
-    console.error('PayPal create-order error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } catch (error: any) {
+    console.error('PayPal create-order error:', error?.message, error?.stack);
+    return NextResponse.json({ error: error?.message || 'Internal server error' }, { status: 500 });
   }
 }

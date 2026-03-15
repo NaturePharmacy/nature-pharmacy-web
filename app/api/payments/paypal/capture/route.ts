@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongodb';
 import Order from '@/models/Order';
+import Product from '@/models/Product';
 import User from '@/models/User';
 import { createNotification, NotificationTemplates } from '@/lib/notifications';
 import { sendOrderConfirmationEmail } from '@/lib/email';
@@ -84,6 +85,13 @@ export async function POST(request: NextRequest) {
       currency: capture?.amount?.currency_code || 'USD',
     };
     await order.save();
+
+    // Decrement stock now that payment is confirmed
+    for (const item of order.items) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stock: -item.quantity },
+      });
+    }
 
     // Send buyer notification and confirmation email
     const buyerNotification = NotificationTemplates.orderPlaced(order._id.toString());
