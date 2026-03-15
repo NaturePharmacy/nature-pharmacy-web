@@ -34,7 +34,7 @@ interface RecentUser {
 }
 
 export default function AdminDashboard() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
   const locale = useLocale();
   const { formatPrice } = useCurrency();
@@ -109,11 +109,21 @@ export default function AdminDashboard() {
     }
   }, [status, router, locale]);
 
+  // Refresh JWT from DB in case role was recently changed
   useEffect(() => {
+    if (status === 'authenticated') {
+      update();
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (status === 'loading') return;
     if (session?.user?.role === 'admin') {
       fetchDashboardData();
+    } else if (status === 'authenticated') {
+      setLoading(false);
     }
-  }, [session]);
+  }, [status, session?.user?.role]);
 
   const fetchDashboardData = async () => {
     try {
