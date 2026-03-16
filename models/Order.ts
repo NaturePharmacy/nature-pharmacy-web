@@ -125,7 +125,7 @@ const OrderSchema = new Schema<IOrder>(
       },
       phone: {
         type: String,
-        required: true,
+        default: '',
       },
       street: {
         type: String,
@@ -250,8 +250,8 @@ const OrderSchema = new Schema<IOrder>(
   }
 );
 
-// Generate order number before saving
-OrderSchema.pre('save', async function (next) {
+// Generate order number before validation (pre validate runs before required checks)
+OrderSchema.pre('validate', function (next) {
   if (!this.orderNumber) {
     const date = new Date();
     const year = date.getFullYear().toString().slice(-2);

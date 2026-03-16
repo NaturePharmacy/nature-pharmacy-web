@@ -424,6 +424,10 @@ export default function CheckoutPage() {
                         style={{ layout: 'vertical', color: 'blue', shape: 'rect', label: 'pay' }}
                         createOrder={async () => {
                           setPaypalError('');
+                          // Validate required fields before calling API
+                          if (!formData.name || !formData.street || !formData.city || !formData.country || !formData.postalCode) {
+                            throw new Error('Veuillez remplir tous les champs obligatoires de livraison.');
+                          }
                           const orderData = {
                             items: items.map((item) => ({
                               productId: item.productId,

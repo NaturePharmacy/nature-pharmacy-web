@@ -38,7 +38,7 @@ export async function generateMetadata({
       template: `%s | ${t('title')}`,
     },
     description: t('description'),
-    manifest: '/manifest.json',
+    manifest: 'https://naturepharmacy.com/manifest.json',
     themeColor: '#16a34a',
     icons: {
       icon: [
