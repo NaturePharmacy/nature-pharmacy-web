@@ -39,8 +39,7 @@ export default function CheckoutPage() {
   });
 
   const subtotal = getCartTotal();
-  const tax = subtotal * 0.1;
-  const total = subtotal + shippingCost + tax;
+  const total = subtotal + shippingCost;
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -410,10 +409,6 @@ export default function CheckoutPage() {
                         Est. delivery: {shippingZone.estimatedDeliveryDays.min}-{shippingZone.estimatedDeliveryDays.max} days
                       </p>
                     )}
-                    <div className="flex justify-between text-gray-800">
-                      <span className="font-medium">{tCart('tax')}</span>
-                      <span className="font-semibold">{formatPrice(tax)}</span>
-                    </div>
                     <div className="border-t pt-2 flex justify-between text-lg font-bold">
                       <span className="text-gray-900">{tCart('total')}</span>
                       <span className="text-green-600">{formatPrice(total)}</span>

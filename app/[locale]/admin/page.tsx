@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
@@ -35,6 +35,7 @@ interface RecentUser {
 
 export default function AdminDashboard() {
   const { data: session, status, update } = useSession();
+  const hasRefreshed = useRef(false);
   const router = useRouter();
   const locale = useLocale();
   const { formatPrice } = useCurrency();
@@ -109,11 +110,12 @@ export default function AdminDashboard() {
     }
   }, [status, router, locale]);
 
-  // Refresh JWT from DB in case role was recently changed
   useEffect(() => {
-    if (status === 'authenticated') {
-      update();
-    }
+    if (status !== 'authenticated') return;
+    if (hasRefreshed.current) return;
+    hasRefreshed.current = true;
+    // Refresh JWT once in case role was recently promoted in DB
+    update();
   }, [status]);
 
   useEffect(() => {
@@ -123,7 +125,7 @@ export default function AdminDashboard() {
     } else if (status === 'authenticated') {
       setLoading(false);
     }
-  }, [status, session?.user?.role]);
+  }, [session?.user?.role, status]);
 
   const fetchDashboardData = async () => {
     try {

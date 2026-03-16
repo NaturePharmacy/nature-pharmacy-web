@@ -27,8 +27,7 @@ export default function CartPage() {
   const [couponError, setCouponError] = useState('');
 
   const subtotal = getCartTotal();
-  const tax = subtotal * 0.1;
-  const total = subtotal + shippingCost + tax - couponDiscount;
+  const total = subtotal + shippingCost - couponDiscount;
 
   // Calculate shipping when cart or country changes
   useEffect(() => {
@@ -326,10 +325,6 @@ export default function CartPage() {
                         Estimated delivery: {shippingZone.estimatedDeliveryDays.min}-{shippingZone.estimatedDeliveryDays.max} days
                       </p>
                     )}
-                    <div className="flex justify-between text-gray-800">
-                      <span className="font-medium">{t('tax')} (10%)</span>
-                      <span className="font-semibold">{formatPrice(tax)}</span>
-                    </div>
                     {couponDiscount > 0 && (
                       <div className="flex justify-between text-green-600 font-semibold">
                         <span>Discount</span>

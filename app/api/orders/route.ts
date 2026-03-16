@@ -157,10 +157,10 @@ export async function POST(request: NextRequest) {
       await product.save();
     }
 
-    // Calculate shipping and tax (simplified - you can customize this)
+    // Commission already included in product price (basePrice + commission = price)
     const shippingPrice = itemsPrice > 50 ? 0 : 9.99;
-    const taxPrice = itemsPrice * 0.1; // 10% tax
-    const totalPrice = itemsPrice + shippingPrice + taxPrice;
+    const taxPrice = 0;
+    const totalPrice = itemsPrice + shippingPrice;
 
     // Create order
     const order = await Order.create({
