@@ -1,15 +1,5 @@
 'use client';
-
-import { useEffect } from 'react';
-
+// Service Worker disabled — sw.js redirect causes SecurityError across domains
 export default function PWARegister() {
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .catch((err) => console.warn('SW registration failed:', err));
-    }
-  }, []);
-
   return null;
 }

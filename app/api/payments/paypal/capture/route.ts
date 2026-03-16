@@ -86,6 +86,16 @@ export async function POST(request: NextRequest) {
     };
     await order.save();
 
+    // Save shipping address to user profile for future orders
+    await User.findByIdAndUpdate((session.user as any).id, {
+      'address.street': order.shippingAddress.street,
+      'address.city': order.shippingAddress.city,
+      'address.state': order.shippingAddress.state,
+      'address.country': order.shippingAddress.country,
+      'address.postalCode': order.shippingAddress.postalCode,
+      ...(order.shippingAddress.phone ? { phone: order.shippingAddress.phone } : {}),
+    });
+
     // Decrement stock now that payment is confirmed
     for (const item of order.items) {
       await Product.findByIdAndUpdate(item.product, {

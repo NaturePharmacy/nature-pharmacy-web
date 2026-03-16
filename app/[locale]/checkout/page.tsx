@@ -26,6 +26,7 @@ export default function CheckoutPage() {
   const [shippingCost, setShippingCost] = useState<number>(0);
   const [shippingZone, setShippingZone] = useState<any>(null);
   const [loadingShipping, setLoadingShipping] = useState(false);
+  const [addressPreFilled, setAddressPreFilled] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -46,6 +47,29 @@ export default function CheckoutPage() {
       router.push(`/${locale}/login?redirect=/checkout`);
     }
   }, [status, router, locale]);
+
+  // Pre-fill form with saved address from user profile
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+    fetch('/api/user/profile')
+      .then(r => r.json())
+      .then(data => {
+        const u = data.user;
+        if (!u) return;
+        setFormData(prev => ({
+          ...prev,
+          name: u.name || prev.name,
+          phone: u.phone || prev.phone,
+          street: u.address?.street || prev.street,
+          city: u.address?.city || prev.city,
+          state: u.address?.state || prev.state,
+          country: u.address?.country || prev.country,
+          postalCode: u.address?.postalCode || prev.postalCode,
+        }));
+        if (u.address?.street) setAddressPreFilled(true);
+      })
+      .catch(() => {});
+  }, [status]);
 
   useEffect(() => {
     if (items.length === 0 && status === 'authenticated') {
@@ -186,6 +210,12 @@ export default function CheckoutPage() {
                 {/* Shipping address */}
                 <div className="bg-white rounded-lg shadow-md p-6">
                   <h2 className="text-xl font-semibold mb-4">{t('shippingAddress')}</h2>
+                {addressPreFilled && (
+                  <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-sm text-green-700">
+                    <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+                    Adresse enregistrée pré-remplie — vous pouvez la modifier si nécessaire.
+                  </div>
+                )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="md:col-span-2">
                       <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
