@@ -86,6 +86,10 @@ export interface IProduct extends Document {
     prescriptionRequired?: boolean; // Prescription requise
   };
 
+  // Validation admin
+  approvalStatus: 'pending' | 'approved' | 'rejected';
+  approvalNote?: string;
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -286,6 +290,17 @@ const ProductSchema = new Schema<IProduct>(
       trim: true,
     },
     concentration: {
+      type: String,
+      trim: true,
+    },
+
+    // Validation admin
+    approvalStatus: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'approved', // existing products stay approved; new ones from sellers set to pending
+    },
+    approvalNote: {
       type: String,
       trim: true,
     },

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import GlobalSearch from '@/components/admin/GlobalSearch';
 
 interface Stats {
   totalUsers: number;
@@ -202,9 +203,12 @@ export default function AdminDashboard() {
       <main className="flex-1 py-8">
         <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">{tr.title}</h1>
-            <p className="text-gray-600 mt-1">{tr.welcome}, {session?.user?.name}</p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">{tr.title}</h1>
+              <p className="text-gray-600 mt-1">{tr.welcome}, {session?.user?.name}</p>
+            </div>
+            <GlobalSearch />
           </div>
 
           {/* Stats Grid */}
@@ -379,6 +383,15 @@ export default function AdminDashboard() {
                   </svg>
                 </div>
                 <span className="text-sm font-medium text-gray-700">Blog / SEO</span>
+              </Link>
+
+              <Link href={`/${locale}/admin/logs`} className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-green-50 hover:border-green-200 border border-transparent transition group">
+                <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mb-3 group-hover:bg-slate-200 transition">
+                  <svg className="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium text-gray-700">Logs</span>
               </Link>
             </div>
           </div>

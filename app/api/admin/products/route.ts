@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
     const seller = searchParams.get('seller');
     const active = searchParams.get('active');
     const featured = searchParams.get('featured');
+    const approvalStatus = searchParams.get('approvalStatus');
 
     const query: any = {};
 
@@ -54,6 +55,10 @@ export async function GET(request: NextRequest) {
 
     if (featured !== null && featured !== undefined) {
       query.isFeatured = featured === 'true';
+    }
+
+    if (approvalStatus) {
+      query.approvalStatus = approvalStatus;
     }
 
     const skip = (page - 1) * limit;
