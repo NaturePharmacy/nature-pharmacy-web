@@ -124,8 +124,7 @@ const BlogSchema = new Schema<IBlog>(
   }
 );
 
-// Indexes for performance
-BlogSchema.index({ slug: 1 });
+// Indexes for performance (slug index is implicit via unique: true on schema field)
 BlogSchema.index({ isPublished: 1, publishedAt: -1 });
 BlogSchema.index({ category: 1 });
 BlogSchema.index({ tags: 1 });
