@@ -20,17 +20,28 @@ export async function GET(request: NextRequest) {
     await connectDB();
 
     const searchParams = request.nextUrl.searchParams;
-    const period = searchParams.get('period') || '30'; // days
+    const startDateParam = searchParams.get('startDate');
+    const endDateParam = searchParams.get('endDate');
+    const period = searchParams.get('period') || '30';
 
-    const daysAgo = parseInt(period);
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - daysAgo);
+    let startDate: Date;
+    let endDate: Date = new Date();
+
+    if (startDateParam && endDateParam) {
+      startDate = new Date(startDateParam);
+      endDate = new Date(endDateParam);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      const daysAgo = parseInt(period);
+      startDate = new Date();
+      startDate.setDate(startDate.getDate() - daysAgo);
+    }
 
     // Sales over time
     const salesByDay = await Order.aggregate([
       {
         $match: {
-          createdAt: { $gte: startDate },
+          createdAt: { $gte: startDate, $lte: endDate },
           status: { $nin: ['cancelled'] },
         },
       },
@@ -50,7 +61,7 @@ export async function GET(request: NextRequest) {
     const revenueByStatus = await Order.aggregate([
       {
         $match: {
-          createdAt: { $gte: startDate },
+          createdAt: { $gte: startDate, $lte: endDate },
         },
       },
       {
@@ -66,7 +77,7 @@ export async function GET(request: NextRequest) {
     const topProducts = await Order.aggregate([
       {
         $match: {
-          createdAt: { $gte: startDate },
+          createdAt: { $gte: startDate, $lte: endDate },
           status: { $nin: ['cancelled'] },
         },
       },
@@ -102,7 +113,7 @@ export async function GET(request: NextRequest) {
     const topSellers = await Order.aggregate([
       {
         $match: {
-          createdAt: { $gte: startDate },
+          createdAt: { $gte: startDate, $lte: endDate },
           status: { $nin: ['cancelled'] },
         },
       },
@@ -148,7 +159,7 @@ export async function GET(request: NextRequest) {
     const userGrowth = await User.aggregate([
       {
         $match: {
-          createdAt: { $gte: startDate },
+          createdAt: { $gte: startDate, $lte: endDate },
         },
       },
       {
@@ -167,7 +178,7 @@ export async function GET(request: NextRequest) {
     const categoryPerformance = await Order.aggregate([
       {
         $match: {
-          createdAt: { $gte: startDate },
+          createdAt: { $gte: startDate, $lte: endDate },
           status: { $nin: ['cancelled'] },
         },
       },
@@ -203,18 +214,18 @@ export async function GET(request: NextRequest) {
 
     // Summary stats
     const totalOrders = await Order.countDocuments({
-      createdAt: { $gte: startDate },
+      createdAt: { $gte: startDate, $lte: endDate },
     });
 
     const completedOrders = await Order.countDocuments({
-      createdAt: { $gte: startDate },
+      createdAt: { $gte: startDate, $lte: endDate },
       status: 'delivered',
     });
 
     const totalRevenue = await Order.aggregate([
       {
         $match: {
-          createdAt: { $gte: startDate },
+          createdAt: { $gte: startDate, $lte: endDate },
           status: { $nin: ['cancelled'] },
         },
       },
@@ -226,9 +237,34 @@ export async function GET(request: NextRequest) {
       },
     ]);
 
-    const avgOrderValue = totalRevenue.length > 0 && totalOrders > 0
-      ? totalRevenue[0].total / totalOrders
-      : 0;
+    // Commissions: sum of items.commission * items.quantity for paid orders
+    const commissionsAgg = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: endDate },
+          status: { $in: ['paid', 'processing', 'shipped', 'delivered'] },
+        },
+      },
+      { $unwind: '$items' },
+      {
+        $group: {
+          _id: null,
+          total: {
+            $sum: {
+              $multiply: [
+                { $ifNull: ['$items.commission', 0] },
+                '$items.quantity',
+              ],
+            },
+          },
+        },
+      },
+    ]);
+
+    const avgOrderValue =
+      totalRevenue.length > 0 && totalOrders > 0
+        ? totalRevenue[0].total / totalOrders
+        : 0;
 
     return NextResponse.json(
       {
@@ -238,6 +274,7 @@ export async function GET(request: NextRequest) {
             completedOrders,
             totalRevenue: totalRevenue.length > 0 ? totalRevenue[0].total : 0,
             avgOrderValue,
+            commissions: commissionsAgg.length > 0 ? commissionsAgg[0].total : 0,
           },
           salesByDay,
           revenueByStatus,

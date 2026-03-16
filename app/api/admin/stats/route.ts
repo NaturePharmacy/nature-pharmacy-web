@@ -5,6 +5,7 @@ import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import Product from '@/models/Product';
 import Order from '@/models/Order';
+import Ticket from '@/models/Ticket';
 
 export async function GET() {
   try {
@@ -30,6 +31,8 @@ export async function GET() {
       pendingOrders,
       newUsersThisMonth,
       revenueResult,
+      pendingProducts,
+      openTickets,
     ] = await Promise.all([
       User.countDocuments(),
       Product.countDocuments({ isActive: true }),
@@ -40,6 +43,8 @@ export async function GET() {
         { $match: { paymentStatus: 'paid' } },
         { $group: { _id: null, total: { $sum: '$totalPrice' } } },
       ]),
+      Product.countDocuments({ approvalStatus: 'pending' }),
+      Ticket.countDocuments({ status: 'open' }),
     ]);
 
     const totalRevenue = revenueResult[0]?.total || 0;
@@ -51,6 +56,8 @@ export async function GET() {
       totalRevenue,
       pendingOrders,
       newUsersThisMonth,
+      pendingProducts,
+      openTickets,
     });
   } catch (error: any) {
     console.error('Error fetching admin stats:', error);

@@ -39,6 +39,8 @@ export default function AdminProductsPage() {
   const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
   const [pendingCount, setPendingCount] = useState(0);
   const [toast, setToast] = useState('');
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [editingCell, setEditingCell] = useState<{ id: string; field: 'price' | 'stock'; value: string } | null>(null);
   const [approvalModal, setApprovalModal] = useState<{
     open: boolean;
     product: Product | null;
@@ -145,9 +147,51 @@ export default function AdminProductsPage() {
     URL.revokeObjectURL(url);
   };
 
+  const saveInlineEdit = async () => {
+    if (!editingCell) return;
+    const value = parseFloat(editingCell.value);
+    if (isNaN(value) || value < 0) { setEditingCell(null); return; }
+
+    await fetch(`/api/admin/products/${editingCell.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ [editingCell.field === 'price' ? 'basePrice' : 'stock']: value }),
+    });
+
+    setEditingCell(null);
+    fetchProducts();
+  };
+
   const showToast = (msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(''), 4000);
+  };
+
+  const handleBulkAction = async (action: string) => {
+    const ids = Array.from(selectedIds);
+
+    if (action === 'approve' || action === 'reject') {
+      await Promise.all(ids.map(id =>
+        fetch(`/api/admin/products/${id}/approve`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action }),
+        })
+      ));
+    } else {
+      const isActive = action === 'activate';
+      await Promise.all(ids.map(id =>
+        fetch(`/api/admin/products/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isActive }),
+        })
+      ));
+    }
+
+    setSelectedIds(new Set());
+    showToast(`Action "${action}" appliquée à ${ids.length} produit(s)`);
+    fetchProducts();
   };
 
   const approvalBadge = (s?: string) => {
@@ -244,6 +288,14 @@ export default function AdminProductsPage() {
               <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                   <tr>
+                    <th className="px-5 py-3 w-10">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.size === products.length && products.length > 0}
+                        onChange={(e) => setSelectedIds(e.target.checked ? new Set(products.map(p => p._id)) : new Set())}
+                        className="rounded"
+                      />
+                    </th>
                     <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Produit</th>
                     <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Prix</th>
                     <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Stock</th>
@@ -255,13 +307,26 @@ export default function AdminProductsPage() {
                 <tbody className="divide-y divide-gray-100">
                   {products.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-5 py-12 text-center text-gray-400">
+                      <td colSpan={7} className="px-5 py-12 text-center text-gray-400">
                         {tab === 'pending' ? 'Aucun produit en attente de validation' : 'Aucun produit trouvé'}
                       </td>
                     </tr>
                   ) : (
                     products.map((product) => (
-                      <tr key={product._id} className="hover:bg-gray-50 transition-colors">
+                      <tr key={product._id} className={`hover:bg-gray-50 transition-colors ${selectedIds.has(product._id) ? 'bg-green-50' : ''}`}>
+                        <td className="px-5 py-4">
+                          <input
+                            type="checkbox"
+                            checked={selectedIds.has(product._id)}
+                            onChange={(e) => {
+                              const next = new Set(selectedIds);
+                              if (e.target.checked) next.add(product._id);
+                              else next.delete(product._id);
+                              setSelectedIds(next);
+                            }}
+                            className="rounded"
+                          />
+                        </td>
                         <td className="px-5 py-4">
                           <div className="flex items-center gap-3">
                             <div className="relative w-10 h-10 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
@@ -281,16 +346,50 @@ export default function AdminProductsPage() {
                           </div>
                         </td>
                         <td className="px-5 py-4">
-                          <p className="font-semibold text-gray-800 text-sm">{formatPrice(product.price)}</p>
+                          {editingCell?.id === product._id && editingCell.field === 'price' ? (
+                            <input
+                              type="number"
+                              value={editingCell.value}
+                              onChange={e => setEditingCell(ec => ec ? { ...ec, value: e.target.value } : null)}
+                              onBlur={saveInlineEdit}
+                              onKeyDown={e => { if (e.key === 'Enter') saveInlineEdit(); if (e.key === 'Escape') setEditingCell(null); }}
+                              autoFocus
+                              className="w-24 px-2 py-1 border-2 border-green-500 rounded text-sm font-semibold"
+                            />
+                          ) : (
+                            <p
+                              className="font-semibold text-gray-800 text-sm cursor-pointer hover:text-green-600 hover:underline"
+                              title="Cliquer pour modifier"
+                              onClick={() => setEditingCell({ id: product._id, field: 'price', value: product.price.toFixed(2) })}
+                            >
+                              {formatPrice(product.price)}
+                            </p>
+                          )}
                         </td>
                         <td className="px-5 py-4">
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${
-                            product.stock === 0 ? 'bg-red-100 text-red-700' :
-                            product.stock < 10 ? 'bg-yellow-100 text-yellow-700' :
-                            'bg-green-100 text-green-700'
-                          }`}>
-                            {product.stock === 0 ? 'Rupture' : product.stock < 10 ? `${product.stock} (faible)` : product.stock}
-                          </span>
+                          {editingCell?.id === product._id && editingCell.field === 'stock' ? (
+                            <input
+                              type="number"
+                              value={editingCell.value}
+                              onChange={e => setEditingCell(ec => ec ? { ...ec, value: e.target.value } : null)}
+                              onBlur={saveInlineEdit}
+                              onKeyDown={e => { if (e.key === 'Enter') saveInlineEdit(); if (e.key === 'Escape') setEditingCell(null); }}
+                              autoFocus
+                              className="w-20 px-2 py-1 border-2 border-green-500 rounded text-sm"
+                            />
+                          ) : (
+                            <span
+                              className={`px-2 py-1 rounded text-xs font-medium cursor-pointer ${
+                                product.stock === 0 ? 'bg-red-100 text-red-700' :
+                                product.stock < 10 ? 'bg-yellow-100 text-yellow-700' :
+                                'bg-green-100 text-green-700'
+                              }`}
+                              title="Cliquer pour modifier"
+                              onClick={() => setEditingCell({ id: product._id, field: 'stock', value: product.stock.toString() })}
+                            >
+                              {product.stock === 0 ? 'Rupture' : product.stock < 10 ? `${product.stock} (faible)` : product.stock}
+                            </span>
+                          )}
                         </td>
                         <td className="px-5 py-4">
                           <div className="flex flex-col gap-1">
@@ -365,6 +464,20 @@ export default function AdminProductsPage() {
           </div>
         </div>
       </main>
+
+      {/* Bulk Action Bar */}
+      {selectedIds.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-gray-900 text-white rounded-2xl shadow-2xl px-6 py-4 flex items-center gap-4">
+          <span className="text-sm font-medium">{selectedIds.size} sélectionné(s)</span>
+          <div className="w-px h-5 bg-gray-600" />
+          <button onClick={() => handleBulkAction('approve')} className="text-sm text-green-400 hover:text-green-300 font-medium">Approuver</button>
+          <button onClick={() => handleBulkAction('reject')} className="text-sm text-red-400 hover:text-red-300 font-medium">Refuser</button>
+          <button onClick={() => handleBulkAction('activate')} className="text-sm text-blue-400 hover:text-blue-300 font-medium">Activer</button>
+          <button onClick={() => handleBulkAction('deactivate')} className="text-sm text-gray-400 hover:text-gray-300 font-medium">Désactiver</button>
+          <div className="w-px h-5 bg-gray-600" />
+          <button onClick={() => setSelectedIds(new Set())} className="text-sm text-gray-400 hover:text-gray-300">✕</button>
+        </div>
+      )}
 
       {/* Approval Modal */}
       {approvalModal.open && approvalModal.product && (

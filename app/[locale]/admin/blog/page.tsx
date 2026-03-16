@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import Image from 'next/image';
+import MarkdownEditor from '@/components/admin/MarkdownEditor';
 
 interface BlogArticle {
   _id: string;
@@ -558,24 +559,25 @@ export default function AdminBlog() {
               </div>
 
               {/* Content */}
-              <div className="space-y-4">
-                <label className="block text-sm font-medium text-gray-700">Contenu</label>
-                {(['fr', 'en', 'es'] as const).map(lang => (
-                  <textarea
-                    key={lang}
-                    placeholder={`Contenu (${lang.toUpperCase()})`}
-                    value={formData.content[lang]}
-                    onChange={(e) =>
-                      setFormData(prev => ({
-                        ...prev,
-                        content: { ...prev.content, [lang]: e.target.value },
-                      }))
-                    }
-                    rows={8}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                    required
-                  />
-                ))}
+              <div className="space-y-6">
+                <MarkdownEditor
+                  value={formData.content.fr}
+                  onChange={(val) => setFormData(prev => ({ ...prev, content: { ...prev.content, fr: val } }))}
+                  label="Contenu (Français)"
+                  height={400}
+                />
+                <MarkdownEditor
+                  value={formData.content.en}
+                  onChange={(val) => setFormData(prev => ({ ...prev, content: { ...prev.content, en: val } }))}
+                  label="Contenu (English)"
+                  height={400}
+                />
+                <MarkdownEditor
+                  value={formData.content.es}
+                  onChange={(val) => setFormData(prev => ({ ...prev, content: { ...prev.content, es: val } }))}
+                  label="Contenu (Español)"
+                  height={400}
+                />
               </div>
 
               {/* Featured Image */}
