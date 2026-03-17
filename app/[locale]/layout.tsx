@@ -38,8 +38,6 @@ export async function generateMetadata({
       template: `%s | ${t('title')}`,
     },
     description: t('description'),
-    manifest: 'https://naturepharmacy.com/manifest.json',
-    themeColor: '#16a34a',
     icons: {
       icon: [
         { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
