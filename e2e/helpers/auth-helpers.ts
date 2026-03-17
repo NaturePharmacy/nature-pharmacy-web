@@ -23,19 +23,23 @@ export async function loginAs(
  * Logout helper - properly fetches CSRF token before signing out
  */
 export async function logout(page: Page): Promise<void> {
-  // NextAuth signout: first get the CSRF token, then POST to signout
-  await page.evaluate(async () => {
-    // Get the CSRF token from NextAuth
-    const csrfRes = await fetch('/api/auth/csrf');
-    const csrfData = await csrfRes.json();
-    const csrfToken = csrfData.csrfToken || '';
+  // Ensure we are on a real page (not about:blank) before fetching
+  const currentUrl = page.url();
+  if (!currentUrl.startsWith('http')) {
+    await page.goto('/fr', { waitUntil: 'domcontentloaded' });
+  }
 
-    await fetch('/api/auth/signout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `csrfToken=${encodeURIComponent(csrfToken)}`,
-    });
-  });
+  // NextAuth signout: get CSRF token then POST to signout endpoint
+  const csrfRes = await page.request.get('/api/auth/csrf');
+  const csrfData = await csrfRes.json();
+  const csrfToken = csrfData.csrfToken || '';
+
+  // Use maxRedirects: 0 to avoid following the 302 redirect to NEXTAUTH_URL (port 3001)
+  await page.request.post('/api/auth/signout', {
+    form: { csrfToken },
+    maxRedirects: 0,
+  }).catch(() => {}); // 302 is expected - ignore redirect errors
+
   await page.reload();
   await page.waitForLoadState('networkidle');
 }

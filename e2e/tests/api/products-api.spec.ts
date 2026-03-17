@@ -62,7 +62,7 @@ test.describe('Products API', () => {
         price: 25.00,
         stock: 100,
         isOrganic: true,
-        weight: '250g',
+        weight: 250,
       };
 
       const response = await sellerApi.post('/api/products', { data: productData });

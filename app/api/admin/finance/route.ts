@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
           as: 'sellerInfo',
         },
       },
-      { $unwind: { path: '$sellerInfo', preserveNullAndEmpty: true } },
+      { $unwind: { path: '$sellerInfo', preserveNullAndEmptyArrays: true } },
       {
         $group: {
           _id: '$items.seller',

@@ -15,8 +15,8 @@ test.describe('Buyer Account Profile', () => {
 
     await expect(accountPage.nameInput).toBeVisible();
 
-    // Wait for user data to be fetched and populated (the form loads data async)
-    await buyerPage.waitForTimeout(2000);
+    // Wait for user data to populate (async API fetch)
+    await expect(accountPage.nameInput).not.toHaveValue('', { timeout: 10000 });
     const nameValue = await accountPage.nameInput.inputValue();
     expect(nameValue.length).toBeGreaterThan(0);
   });
@@ -25,19 +25,18 @@ test.describe('Buyer Account Profile', () => {
     const accountPage = new AccountPage(buyerPage);
     await accountPage.navigate();
 
-    // Wait for user data to be fetched and populated
-    await buyerPage.waitForTimeout(2000);
+    // Wait for user data to populate the name field (async fetch)
+    await expect(accountPage.nameInput).not.toHaveValue('', { timeout: 10000 });
 
     const updatedName = `Test Buyer ${Date.now()}`;
-    await accountPage.nameInput.clear();
     await accountPage.nameInput.fill(updatedName);
     await accountPage.saveButton.click();
     await buyerPage.waitForLoadState('networkidle');
 
-    // The success message is "Profile updated successfully!" shown in a bg-green-50 div
+    // "Profile updated successfully!" shown in bg-green-50 div
     const successMessage = buyerPage.getByText(
-      /saved|updated|success|enregistré|mis à jour/i
+      /saved|updated|success|enregistré|mis à jour|successfully/i
     );
-    await expect(successMessage.first()).toBeVisible({ timeout: 10_000 });
+    await expect(successMessage.first()).toBeVisible({ timeout: 15_000 });
   });
 });

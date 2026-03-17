@@ -25,6 +25,7 @@ export default function CheckoutPage() {
   const createdOrderIdRef = useRef<string>('');
   const [shippingCost, setShippingCost] = useState<number>(0);
   const [shippingZone, setShippingZone] = useState<any>(null);
+  const [shippingBreakdown, setShippingBreakdown] = useState<Array<{ sellerId: string; sellerName: string; shippingCost: number }>>([]);
   const [loadingShipping, setLoadingShipping] = useState(false);
   const [addressPreFilled, setAddressPreFilled] = useState(false);
   const [formData, setFormData] = useState({
@@ -93,17 +94,31 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           country: formData.country,
           region: formData.city,
-          orderTotal: subtotal,
+          items: items.map((item) => ({
+            productId: item.productId,
+            price: item.price,
+            quantity: item.quantity,
+          })),
         }),
       });
 
       if (res.ok) {
         const data = await res.json();
-        setShippingCost(data.shippingCost);
-        setShippingZone(data.zone);
+        // Multi-vendor response
+        if (typeof data.totalShipping === 'number') {
+          setShippingCost(data.totalShipping);
+          setShippingZone(null);
+          setShippingBreakdown(data.breakdown ?? []);
+        } else {
+          // Legacy single-zone response
+          setShippingCost(data.shippingCost ?? 0);
+          setShippingZone(data.zone ?? null);
+          setShippingBreakdown([]);
+        }
       } else {
         setShippingCost(0);
         setShippingZone(null);
+        setShippingBreakdown([]);
       }
     } catch (error) {
       console.error('Error calculating shipping:', error);
@@ -141,6 +156,7 @@ export default function CheckoutPage() {
         },
         shippingCost: shippingCost,
         shippingZone: shippingZone?._id,
+        shippingBreakdown: shippingBreakdown.length > 0 ? shippingBreakdown : undefined,
         paymentMethod: formData.paymentMethod,
         notes: formData.notes,
       };
@@ -429,6 +445,17 @@ export default function CheckoutPage() {
                         <span className="font-semibold">{shippingCost === 0 ? 'FREE' : formatPrice(shippingCost)}</span>
                       )}
                     </div>
+                    {/* Per-vendor shipping breakdown */}
+                    {!loadingShipping && shippingBreakdown.length > 1 && (
+                      <div className="ml-2 space-y-1">
+                        {shippingBreakdown.map((v) => (
+                          <div key={v.sellerId} className="flex justify-between text-xs text-gray-500">
+                            <span>{v.sellerName}</span>
+                            <span>{v.shippingCost === 0 ? 'Gratuit' : formatPrice(v.shippingCost)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     {shippingCost === 0 && shippingZone?.freeShippingThreshold && (
                       <p className="text-xs text-green-600 font-medium">
                         ✓ Free shipping on orders over {formatPrice(shippingZone.freeShippingThreshold)}
@@ -474,6 +501,7 @@ export default function CheckoutPage() {
                             },
                             shippingCost,
                             shippingZone: shippingZone?._id,
+                            shippingBreakdown: shippingBreakdown.length > 0 ? shippingBreakdown : undefined,
                             notes: formData.notes,
                           };
                           const res = await fetch('/api/payments/paypal/create-order', {

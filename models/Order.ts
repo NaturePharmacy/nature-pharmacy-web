@@ -26,6 +26,14 @@ export interface IOrder extends Document {
     postalCode: string;
   };
   shippingZone?: mongoose.Types.ObjectId;
+  shippingBreakdown?: Array<{
+    sellerId: mongoose.Types.ObjectId;
+    sellerName: string;
+    shippingCost: number;
+    zoneId?: mongoose.Types.ObjectId;
+    zoneName?: string;
+  }>;
+  trackingNumber?: string;
   coupon?: {
     code: string;
     discount: number;
@@ -151,6 +159,18 @@ const OrderSchema = new Schema<IOrder>(
     shippingZone: {
       type: Schema.Types.ObjectId,
       ref: 'ShippingZone',
+    },
+    shippingBreakdown: [
+      {
+        sellerId: { type: Schema.Types.ObjectId, ref: 'User' },
+        sellerName: { type: String },
+        shippingCost: { type: Number, default: 0 },
+        zoneId: { type: Schema.Types.ObjectId, ref: 'ShippingZone' },
+        zoneName: { type: String },
+      },
+    ],
+    trackingNumber: {
+      type: String,
     },
     coupon: {
       code: {

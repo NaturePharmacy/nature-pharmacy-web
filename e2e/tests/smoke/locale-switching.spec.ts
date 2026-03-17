@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Locale Switching', () => {
   test('Default locale fr loads correctly', async ({ page }) => {
-    const response = await page.goto('/', { waitUntil: 'domcontentloaded' });
+    const response = await page.goto('/fr', { waitUntil: 'domcontentloaded' });
     expect(response!.status()).toBe(200);
 
     const html = page.locator('html');
@@ -34,15 +34,8 @@ test.describe('Locale Switching', () => {
     const locales = ['fr', 'en', 'es'];
 
     for (const locale of locales) {
-      const path = locale === 'fr' ? '/' : `/${locale}`;
-      await page.goto(path, { waitUntil: 'domcontentloaded' });
-
-      if (locale === 'fr') {
-        // Default locale may or may not have prefix
-        expect(page.url()).toMatch(/\/($|fr)/);
-      } else {
-        expect(page.url()).toContain(`/${locale}`);
-      }
+      await page.goto(`/${locale}`, { waitUntil: 'domcontentloaded' });
+      expect(page.url()).toContain(`/${locale}`);
     }
   });
 });

@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     await connectDB();
 
     const body = await request.json();
-    const { items, shippingAddress, paymentMethod, notes } = body;
+    const { items, shippingAddress, paymentMethod, notes, shippingCost, shippingZone, shippingBreakdown } = body;
 
     // Validation
     if (!items || items.length === 0) {
@@ -157,8 +157,8 @@ export async function POST(request: NextRequest) {
       await product.save();
     }
 
-    // Commission already included in product price (basePrice + commission = price)
-    const shippingPrice = itemsPrice > 50 ? 0 : 9.99;
+    // Use shipping cost calculated by the frontend (zone-based, multi-vendor)
+    const shippingPrice = typeof shippingCost === 'number' && shippingCost >= 0 ? shippingCost : 0;
     const taxPrice = 0;
     const totalPrice = itemsPrice + shippingPrice;
 
@@ -174,6 +174,8 @@ export async function POST(request: NextRequest) {
       taxPrice,
       totalPrice,
       notes,
+      ...(shippingZone && { shippingZone }),
+      ...(shippingBreakdown && { shippingBreakdown }),
     });
 
     const populatedOrder = await Order.findById(order._id)

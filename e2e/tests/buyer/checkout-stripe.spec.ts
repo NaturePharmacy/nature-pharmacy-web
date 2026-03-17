@@ -6,7 +6,9 @@ import { ProductDetailPage } from '../../page-objects/product-detail.page';
 import { TestData } from '../../helpers/test-data-factory';
 import { mockStripeCheckout } from '../../mocks/stripe.mock';
 
+// Stripe n'est pas activé dans le checkout (seulement PayPal + COD)
 test.describe('Buyer Checkout - Stripe', () => {
+  test.skip(true, 'Stripe non activé dans le checkout actuel');
   test.beforeEach(async ({ buyerPage }) => {
     await mockStripeCheckout(buyerPage);
 

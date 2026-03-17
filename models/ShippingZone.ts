@@ -14,8 +14,9 @@ export interface IShippingZone extends Document {
   };
   countries: string[]; // ISO country codes
   regions?: string[]; // Specific regions/cities
-  shippingCost: number; // Base shipping cost
-  freeShippingThreshold?: number; // Minimum order amount for free shipping
+  shippingCost: number; // Base shipping cost (in `currency` below)
+  currency: string; // ISO 4217 currency code (e.g. 'USD', 'XOF')
+  freeShippingThreshold?: number; // Minimum order amount for free shipping (in `currency`)
   estimatedDeliveryDays: {
     min: number;
     max: number;
@@ -51,6 +52,11 @@ const ShippingZoneSchema = new Schema<IShippingZone>(
       type: Number,
       required: true,
       min: 0,
+    },
+    currency: {
+      type: String,
+      default: 'USD',
+      uppercase: true,
     },
     freeShippingThreshold: {
       type: Number,

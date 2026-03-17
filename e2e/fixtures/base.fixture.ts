@@ -17,6 +17,17 @@ type Fixtures = {
 export const test = base.extend<Fixtures>({
   locale: ['fr', { option: true }],
 
+  // Auto-dismiss cookie consent banner for all base tests
+  page: async ({ page }, use) => {
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem('cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false, preferences: false }));
+        localStorage.setItem('cookie_consent_date', new Date().toISOString());
+      } catch {}
+    });
+    await use(page);
+  },
+
   homePage: async ({ page, locale }, use) => {
     await use(new HomePage(page, locale));
   },

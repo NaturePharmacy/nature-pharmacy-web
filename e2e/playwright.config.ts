@@ -70,11 +70,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: process.env.CI
-      ? 'npm run build && npm run start'
-      : 'npm run start',
-    url: baseURL,
-    reuseExistingServer: !process.env.CI,
+    command: 'npm run start',
+    url: `${baseURL}/api/products`,
+    reuseExistingServer: true,
     timeout: 180_000,
   },
 });

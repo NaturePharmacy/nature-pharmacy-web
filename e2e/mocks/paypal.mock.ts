@@ -49,7 +49,8 @@ export async function mockPayPalCheckout(page: Page): Promise<void> {
             target.innerHTML = '';
             target.appendChild(btn);
           },
-          close: () => {},
+          // close() doit retourner une Promise car @paypal/react-paypal-js appelle .catch() dessus
+          close: () => Promise.resolve(),
         };
       },
       FUNDING: {
@@ -149,7 +150,7 @@ export async function mockPayPalError(page: Page): Promise<void> {
             target.innerHTML = '';
             target.appendChild(btn);
           },
-          close: () => {},
+          close: () => Promise.resolve(),
         };
       },
       FUNDING: { PAYPAL: 'paypal', CARD: 'card' },

@@ -8,6 +8,7 @@ export class CheckoutPage extends BasePage {
   readonly cityInput: Locator;
   readonly stateInput: Locator;
   readonly postalCodeInput: Locator;
+  readonly countrySelect: Locator;
   readonly placeOrderButton: Locator;
 
   constructor(page: Page, locale: string = 'fr') {
@@ -19,6 +20,7 @@ export class CheckoutPage extends BasePage {
     this.cityInput = page.locator('#city, input[name="city"]').first();
     this.stateInput = page.locator('#state, input[name="state"]').first();
     this.postalCodeInput = page.locator('#postalCode, input[name="postalCode"]').first();
+    this.countrySelect = page.locator('#country, select[name="country"]').first();
     this.placeOrderButton = page.locator('button[type="submit"]').first();
   }
 
@@ -49,8 +51,9 @@ export class CheckoutPage extends BasePage {
     await this.phoneInput.fill(address.phone);
     await this.addressInput.fill(address.address);
     await this.cityInput.fill(address.city);
-    // Also fill required fields: state and postalCode
+    // Also fill required fields: state, postalCode, and country
     await this.stateInput.fill('Dakar');
     await this.postalCodeInput.fill(address.postalCode || '12000');
+    await this.countrySelect.selectOption(address.country || 'SN');
   }
 }

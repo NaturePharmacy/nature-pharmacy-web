@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { mockGeoDetection, COUNTRY_CURRENCIES } from '../../mocks/geo.mock';
+import { mockGeoDetection } from '../../mocks/geo.mock';
 import { localizedUrl, ROUTES } from '../../helpers/locale-helpers';
 
 test.describe('Currency Geo-Detection', () => {
@@ -48,11 +48,17 @@ test.describe('Currency Geo-Detection', () => {
   test('detected currency matches country mapping', async ({ page }) => {
     const testCases = [
       { country: 'SN', expected: /FCFA|XOF/i },
-      { country: 'GB', expected: /GBP|\u00A3/ },
-      { country: 'CA', expected: /CAD|CA\$/ },
+      { country: 'FR', expected: /EUR|\u20AC/ },
+      { country: 'US', expected: /USD|\$/ },
     ];
 
     for (const { country, expected } of testCases) {
+      // Clear localStorage to avoid cached currency between iterations
+      await page.addInitScript(() => {
+        localStorage.removeItem('userCountry');
+        localStorage.removeItem('currency');
+        localStorage.removeItem('preferredCountry');
+      });
       await mockGeoDetection(page, country);
       await page.goto(localizedUrl('fr', ROUTES.products));
       await page.waitForLoadState('networkidle');

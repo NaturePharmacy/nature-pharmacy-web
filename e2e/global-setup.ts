@@ -8,19 +8,20 @@ const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 const TEST_USERS = {
   buyer: { email: 'buyer@test.com', password: 'password123' },
   seller: { email: 'seller@test.com', password: 'password123' },
-  admin: { email: 'admin@test.com', password: 'TestAdmin@E2E' },
+  admin: { email: 'admin@test.com', password: 'password123' },
 };
 
-async function waitForServer(url: string, maxRetries = 10): Promise<void> {
+async function waitForServer(_url: string, maxRetries = 20): Promise<void> {
+  const healthUrl = `${BASE_URL}/api/categories`;
   for (let i = 0; i < maxRetries; i++) {
     try {
-      const res = await fetch(url);
+      const res = await fetch(healthUrl, { signal: AbortSignal.timeout(5000) });
       if (res.ok || res.status < 500) return;
     } catch {}
     console.log(`[global-setup] Waiting for server... (${i + 1}/${maxRetries})`);
     await new Promise(r => setTimeout(r, 3000));
   }
-  throw new Error(`Server not available at ${url} after ${maxRetries} retries`);
+  throw new Error(`Server not available at ${healthUrl} after ${maxRetries} retries`);
 }
 
 async function globalSetup(_config: FullConfig) {

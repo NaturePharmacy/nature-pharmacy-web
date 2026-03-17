@@ -230,6 +230,31 @@ nature-pharmacy/
 | 2026-02 | Prix en $ dans dashboard vendeur | Remplacement `$price.toFixed(2)` par `formatPrice()` | `seller/products/page.tsx`, `seller/orders/page.tsx`, `seller/analytics/page.tsx` |
 | 2026-02 | Blob token not found | Token passe explicitement dans `put()` et `del()` | `lib/vercel-blob-upload.ts` |
 | 2026-02 | Favicon Vercel par defaut | Logo Nature Pharmacy dans metadata `icons` | `app/[locale]/layout.tsx` |
+| 2026-03 | Frais livraison hardcodes COD (`> 50 ? 0 : 9.99`) | Lecture `shippingCost` du body, architecture multi-vendeurs | `app/api/orders/route.ts`, `lib/shippingCalculator.ts` |
+
+---
+
+## Systeme de Livraison Multi-Vendeurs (2026-03)
+
+### Architecture
+- **Source unique** : `lib/shippingCalculator.ts` — `calculateMultiVendorShipping(items, buyerCountry)`
+- **Priorite par vendeur** : VendorShippingSettings (pays) → VendorShippingSettings (defaut) → ShippingZone globale → 0
+- **Tous montants** : USD (meme convention que prix produits)
+
+### Modeles
+- `models/VendorShippingSettings.ts` : reglages par vendeur (nouveau modele)
+- `models/Order.ts` : `trackingNumber` + `shippingBreakdown[]` ajoutes
+- `models/ShippingZone.ts` : champ `currency` (ISO 4217, defaut USD) ajoute
+- `models/Product.ts` : `weight` migre `String → Number` (grammes)
+
+### API
+- `POST /api/shipping/calculate` : multi-vendor si `items[]` fourni, sinon legacy single-zone
+- `GET/PUT /api/vendor/shipping` : CRUD reglages livraison vendeur
+- `POST /api/orders` : lit `shippingCost`/`shippingZone`/`shippingBreakdown` du body
+
+### UI
+- Page `/seller/shipping` : vendeur configure ses tarifs
+- Checkout : breakdown par vendeur si panier multi-vendeurs
 
 ---
 
@@ -257,4 +282,4 @@ Ce fichier (`CLAUDE.md`) doit etre mis a jour :
 - Quand de nouvelles variables d'environnement sont ajoutees
 - Quand un pattern de code important est etabli
 
-**Derniere mise a jour** : 2026-02-11
+**Derniere mise a jour** : 2026-03-17

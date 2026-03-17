@@ -22,7 +22,7 @@ export interface IProduct extends Document {
   compareAtPrice?: number;
   stock: number;
   sku?: string;
-  weight?: string;
+  weight?: number; // grams
   dimensions?: {
     length?: number;
     width?: number;
@@ -189,7 +189,8 @@ const ProductSchema = new Schema<IProduct>(
       sparse: true,
     },
     weight: {
-      type: String,
+      type: Number,
+      min: 0,
     },
     dimensions: {
       length: {

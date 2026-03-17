@@ -9,8 +9,9 @@ export class AccountPage extends BasePage {
     super(page, locale);
     // The account page has input[name="name"] for the profile name field
     this.nameInput = page.locator('input[name="name"]').first();
-    // The first submit button on the page is the profile form's "Save Changes" button
-    this.saveButton = page.locator('button[type="submit"]').first();
+    // Use role+name to target the profile "Save Changes" button specifically
+    // (the SearchBar in the header also has a type="submit" button, so .first() would be wrong)
+    this.saveButton = page.getByRole('button', { name: /save changes|enregistrer|guardar/i });
   }
 
   async navigate(): Promise<void> {

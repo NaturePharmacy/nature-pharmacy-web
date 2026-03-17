@@ -66,12 +66,12 @@ test.describe('PayPal — Rendu page checkout', () => {
     await mockPayPalCheckout(buyerPage);
   });
 
-  test('les 3 méthodes de paiement sont disponibles', async ({ buyerPage }) => {
+  test('les méthodes de paiement sont disponibles', async ({ buyerPage }) => {
     const ok = await goToCheckout(buyerPage);
     if (!ok) { test.skip(true, 'Aucun produit disponible'); return; }
 
+    // Le checkout supporte PayPal et COD (Stripe non activé)
     await expect(buyerPage.locator('input[name="paymentMethod"][value="paypal"]')).toBeVisible();
-    await expect(buyerPage.locator('input[name="paymentMethod"][value="stripe"]')).toBeVisible();
     await expect(buyerPage.locator('input[name="paymentMethod"][value="cash_on_delivery"]')).toBeVisible();
   });
 

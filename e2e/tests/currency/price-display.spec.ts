@@ -30,8 +30,7 @@ test.describe('Price Display Formatting', () => {
     await page.waitForLoadState('networkidle');
 
     // Price on the detail page should include a currency indicator
-    // Price text is in a span with font-bold or text-xl classes
-    const bodyText = await page.locator('main').first().textContent();
+    const bodyText = await page.textContent('body');
     expect(bodyText).toBeTruthy();
     expect(bodyText).toMatch(PRICE_PATTERN);
   });

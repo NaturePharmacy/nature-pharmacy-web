@@ -15,6 +15,14 @@ export const test = base.extend<AuthFixtures>({
       storageState: path.join(AUTH_DIR, 'buyer.json'),
     });
     const page = await context.newPage();
+    await page.addInitScript(() => {
+      try {
+        if (!localStorage.getItem('cookie_consent')) {
+          localStorage.setItem('cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false, preferences: false }));
+          localStorage.setItem('cookie_consent_date', new Date().toISOString());
+        }
+      } catch {}
+    });
     await use(page);
     await context.close();
   },
@@ -24,6 +32,14 @@ export const test = base.extend<AuthFixtures>({
       storageState: path.join(AUTH_DIR, 'seller.json'),
     });
     const page = await context.newPage();
+    await page.addInitScript(() => {
+      try {
+        if (!localStorage.getItem('cookie_consent')) {
+          localStorage.setItem('cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false, preferences: false }));
+          localStorage.setItem('cookie_consent_date', new Date().toISOString());
+        }
+      } catch {}
+    });
     await use(page);
     await context.close();
   },
@@ -33,6 +49,14 @@ export const test = base.extend<AuthFixtures>({
       storageState: path.join(AUTH_DIR, 'admin.json'),
     });
     const page = await context.newPage();
+    await page.addInitScript(() => {
+      try {
+        if (!localStorage.getItem('cookie_consent')) {
+          localStorage.setItem('cookie_consent', JSON.stringify({ necessary: true, analytics: false, marketing: false, preferences: false }));
+          localStorage.setItem('cookie_consent_date', new Date().toISOString());
+        }
+      } catch {}
+    });
     await use(page);
     await context.close();
   },

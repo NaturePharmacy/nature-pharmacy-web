@@ -11,7 +11,7 @@ export default function SellerNav({ locale }: SellerNavProps) {
   const t = useTranslations('sellerDashboard');
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
       <Link
         href={`/${locale}/seller/products/new`}
         className="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
@@ -38,6 +38,15 @@ export default function SellerNav({ locale }: SellerNavProps) {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
         {t('viewOrders')}
+      </Link>
+      <Link
+        href={`/${locale}/seller/shipping`}
+        className="bg-white border border-gray-200 text-gray-700 p-4 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12h12l1-12" />
+        </svg>
+        Livraison
       </Link>
       <Link
         href={`/${locale}/account`}
