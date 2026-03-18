@@ -1,16 +1,17 @@
 {
   "name": "Nature Pharmacy",
-  "short_name": "NaturePharm",
-  "description": "Plantes médicinales, phytothérapie et produits naturels",
+  "short_name": "Nature Pharmacy",
+  "id": "/",
+  "description": "Découvrez notre sélection de plantes médicinales, huiles essentielles et cosmétiques naturels certifiés bio. Médecine traditionnelle et bien-être naturel.",
   "start_url": "/fr",
   "scope": "/",
   "display": "standalone",
+  "dir": "ltr",
+  "orientation": "any",
   "background_color": "#ffffff",
   "theme_color": "#16a34a",
-  "orientation": "portrait-primary",
-  "categories": ["shopping", "health"],
   "lang": "fr",
-  "dir": "ltr",
+  "categories": ["shopping", "health"],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -27,6 +28,11 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
     }
   ],
   "screenshots": [
@@ -36,6 +42,22 @@
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Nature Pharmacy"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Produits",
+      "short_name": "Produits",
+      "description": "Parcourir les produits",
+      "url": "/fr/products",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mon compte",
+      "short_name": "Compte",
+      "description": "Accéder à mon compte",
+      "url": "/fr/account",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ]
 }

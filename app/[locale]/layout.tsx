@@ -47,6 +47,7 @@ export async function generateMetadata({
       apple: '/icons/apple-touch-icon.png',
       shortcut: '/favicon-32x32.png',
     },
+    manifest: '/manifest.json',
     appleWebApp: {
       capable: true,
       title: 'Nature Pharmacy',
