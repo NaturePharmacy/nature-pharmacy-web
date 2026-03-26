@@ -18,24 +18,13 @@ function detectPlatform(): Platform {
   return 'other';
 }
 
-function isStandalone(): boolean {
-  if (typeof window === 'undefined') return false;
-  return (
-    window.matchMedia('(display-mode: standalone)').matches ||
-    // @ts-expect-error iOS Safari
-    window.navigator.standalone === true
-  );
-}
-
 export default function PWAInstallButton() {
   const [platform, setPlatform] = useState<Platform>('other');
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [installed, setInstalled] = useState(false);
   const [showIosHint, setShowIosHint] = useState(false);
 
   useEffect(() => {
     setPlatform(detectPlatform());
-    setInstalled(isStandalone());
 
     const handler = (e: Event) => {
       e.preventDefault();
@@ -43,7 +32,6 @@ export default function PWAInstallButton() {
     };
 
     window.addEventListener('beforeinstallprompt', handler);
-    window.addEventListener('appinstalled', () => setInstalled(true));
 
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
@@ -52,11 +40,9 @@ export default function PWAInstallButton() {
     if (!deferredPrompt) return;
     await deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') setInstalled(true);
+    if (outcome === 'accepted') setDeferredPrompt(null);
     setDeferredPrompt(null);
   };
-
-  if (installed) return null;
 
   // Android → bouton téléchargement APK direct
   if (platform === 'android') {
