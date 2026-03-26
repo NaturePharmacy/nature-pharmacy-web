@@ -1,25 +1,18 @@
 import { NextRequest } from 'next/server';
+import connectDB from './mongodb';
+import mongoose from 'mongoose';
 
-interface RateLimitStore {
-  [key: string]: {
-    count: number;
-    resetAt: number;
-  };
-}
+// ── MongoDB-backed store (works on Vercel serverless multi-instance) ─────────
+const rateLimitSchema = new mongoose.Schema({
+  key:     { type: String, required: true, unique: true },
+  count:   { type: Number, default: 0 },
+  resetAt: { type: Date,   required: true },
+});
+rateLimitSchema.index({ resetAt: 1 }, { expireAfterSeconds: 0 }); // TTL auto-cleanup
 
-// In-memory store (for development and single-instance deployments)
-// For production with multiple instances, use Redis or similar
-const store: RateLimitStore = {};
-
-// Clean up expired entries every 5 minutes
-setInterval(() => {
-  const now = Date.now();
-  Object.keys(store).forEach(key => {
-    if (store[key].resetAt < now) {
-      delete store[key];
-    }
-  });
-}, 5 * 60 * 1000);
+const RateLimitModel =
+  mongoose.models.RateLimit ||
+  mongoose.model('RateLimit', rateLimitSchema);
 
 export interface RateLimitConfig {
   /**
@@ -99,43 +92,34 @@ export async function rateLimit(
     skip,
   } = config;
 
-  // Skip rate limiting if condition is met
   if (skip && skip(request)) {
-    return {
-      success: true,
-      limit,
-      remaining: limit,
-      reset: Date.now() + window * 1000,
-    };
+    return { success: true, limit, remaining: limit, reset: Date.now() + window * 1000 };
   }
 
-  // Generate unique key for this client
   const key = keyGenerator(request);
-  const now = Date.now();
+  const now = new Date();
   const windowMs = window * 1000;
+  const resetAt = new Date(now.getTime() + windowMs);
 
-  // Get or create entry for this key
-  if (!store[key] || store[key].resetAt < now) {
-    store[key] = {
-      count: 0,
-      resetAt: now + windowMs,
-    };
+  try {
+    await connectDB();
+
+    const doc = await RateLimitModel.findOneAndUpdate(
+      { key, resetAt: { $gt: now } },
+      { $inc: { count: 1 }, $setOnInsert: { resetAt } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ) as { count: number; resetAt: Date } | null;
+
+    const count   = doc?.count ?? 1;
+    const docReset = doc?.resetAt ?? resetAt;
+    const remaining = Math.max(0, limit - count);
+    const success   = count <= limit;
+
+    return { success, limit, remaining, reset: docReset.getTime() };
+  } catch {
+    // Fail open en cas d'erreur DB (ne pas bloquer les utilisateurs légitimes)
+    return { success: true, limit, remaining: limit, reset: resetAt.getTime() };
   }
-
-  const entry = store[key];
-
-  // Increment count
-  entry.count++;
-
-  const remaining = Math.max(0, limit - entry.count);
-  const success = entry.count <= limit;
-
-  return {
-    success,
-    limit,
-    remaining,
-    reset: entry.resetAt,
-  };
 }
 
 /**
@@ -204,6 +188,35 @@ export function createRateLimiter(config: RateLimitConfig) {
   return async (request: NextRequest): Promise<RateLimitResult> => {
     return rateLimit(request, config);
   };
+}
+
+/**
+ * Rate limit par clé directe (sans NextRequest) — utile dans NextAuth authorize()
+ */
+export async function checkRateLimit(
+  key: string,
+  limit: number,
+  windowMs: number
+): Promise<{ success: boolean; reset: number }> {
+  const now = new Date();
+  const resetAt = new Date(now.getTime() + windowMs);
+
+  try {
+    await connectDB();
+
+    const doc = await RateLimitModel.findOneAndUpdate(
+      { key, resetAt: { $gt: now } },
+      { $inc: { count: 1 }, $setOnInsert: { resetAt } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ) as { count: number; resetAt: Date } | null;
+
+    const count = doc?.count ?? 1;
+    const docReset = doc?.resetAt ?? resetAt;
+
+    return { success: count <= limit, reset: docReset.getTime() };
+  } catch {
+    return { success: true, reset: resetAt.getTime() };
+  }
 }
 
 /**
