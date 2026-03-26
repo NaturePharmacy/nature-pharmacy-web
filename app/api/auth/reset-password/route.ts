@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
-import { rateLimit, getClientIp, RateLimitPresets } from '@/lib/ratelimit';
+import { rateLimit, getClientIp, RateLimitPresets } from '@/lib/rateLimit';
 
 // POST /api/auth/reset-password - Reset password with token
 export async function POST(request: NextRequest) {

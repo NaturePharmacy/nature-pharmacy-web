@@ -4,7 +4,7 @@ import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import Referral from '@/models/Referral';
 import { sendEmail, generateVerificationEmail } from '@/lib/email';
-import { rateLimit, getClientIp, RateLimitPresets } from '@/lib/ratelimit';
+import { rateLimit, getClientIp, RateLimitPresets } from '@/lib/rateLimit';
 
 export async function POST(request: NextRequest) {
   // Rate limiting : 5 inscriptions / heure par IP

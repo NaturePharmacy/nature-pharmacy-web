@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendEmail, generatePasswordResetEmail } from '@/lib/email';
-import { rateLimit, RateLimitPresets } from '@/lib/ratelimit';
+import { rateLimit, RateLimitPresets } from '@/lib/rateLimit';
 
 // POST /api/auth/forgot-password - Request password reset
 export async function POST(request: NextRequest) {
