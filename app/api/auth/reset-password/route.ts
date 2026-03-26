@@ -2,9 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import { rateLimit, getClientIp, RateLimitPresets } from '@/lib/ratelimit';
 
 // POST /api/auth/reset-password - Reset password with token
 export async function POST(request: NextRequest) {
+  // Rate limiting : 5 tentatives / 15 min par IP
+  const rl = await rateLimit(request, {
+    ...RateLimitPresets.AUTH,
+    keyGenerator: (req) => `reset-password:${getClientIp(req)}`,
+  });
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: 'Trop de tentatives. Réessayez dans 15 minutes.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.reset - Date.now()) / 1000)) } }
+    );
+  }
+
   try {
     const { token, password } = await request.json();
 

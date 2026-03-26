@@ -3,11 +3,27 @@ import crypto from 'crypto';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendEmail, generatePasswordResetEmail } from '@/lib/email';
+import { rateLimit, RateLimitPresets } from '@/lib/ratelimit';
 
 // POST /api/auth/forgot-password - Request password reset
 export async function POST(request: NextRequest) {
+  // Lire le body une seule fois
+  const body = await request.json();
+  const { email, locale = 'fr' } = body;
+
+  // Rate limiting : 3 demandes / heure par email (avant de chercher en DB)
+  const rl = await rateLimit(request, {
+    ...RateLimitPresets.EMAIL,
+    keyGenerator: () => `forgot-password:${(email || '').toLowerCase().trim()}`,
+  });
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: locale === 'fr' ? 'Trop de tentatives. Réessayez dans une heure.' : 'Too many attempts. Try again in an hour.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.reset - Date.now()) / 1000)) } }
+    );
+  }
+
   try {
-    const { email, locale = 'fr' } = await request.json();
 
     if (!email) {
       return NextResponse.json(

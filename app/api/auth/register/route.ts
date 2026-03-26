@@ -4,8 +4,22 @@ import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import Referral from '@/models/Referral';
 import { sendEmail, generateVerificationEmail } from '@/lib/email';
+import { rateLimit, getClientIp, RateLimitPresets } from '@/lib/ratelimit';
 
 export async function POST(request: NextRequest) {
+  // Rate limiting : 5 inscriptions / heure par IP
+  const rl = await rateLimit(request, {
+    ...RateLimitPresets.EMAIL,
+    limit: 5,
+    keyGenerator: (req) => `register:${getClientIp(req)}`,
+  });
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: 'Trop de tentatives. Réessayez dans une heure.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.reset - Date.now()) / 1000)) } }
+    );
+  }
+
   try {
     const body = await request.json();
     const { name, email, password, role, referralCode, locale = 'fr' } = body;

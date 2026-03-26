@@ -2,6 +2,7 @@ import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import { checkRateLimit } from '@/lib/ratelimit';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -14,6 +15,16 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Email and password are required');
+        }
+
+        // Rate limiting : 10 tentatives / 15 min par email
+        const rl = await checkRateLimit(
+          `login:${credentials.email.toLowerCase().trim()}`,
+          10,
+          15 * 60 * 1000
+        );
+        if (!rl.success) {
+          throw new Error('Trop de tentatives de connexion. Réessayez dans 15 minutes.');
         }
 
         try {
