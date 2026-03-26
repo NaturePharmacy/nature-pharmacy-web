@@ -1,3 +1,4 @@
+import { escapeRegex } from '@/lib/security';
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Blog from '@/models/Blog';
@@ -26,9 +27,9 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       query.$or = [
-        { 'title.fr': { $regex: search, $options: 'i' } },
-        { 'title.en': { $regex: search, $options: 'i' } },
-        { 'title.es': { $regex: search, $options: 'i' } },
+        { 'title.fr': { $regex: escapeRegex(search), $options: 'i' } },
+        { 'title.en': { $regex: escapeRegex(search), $options: 'i' } },
+        { 'title.es': { $regex: escapeRegex(search), $options: 'i' } },
         { tags: { $in: [new RegExp(search, 'i')] } },
       ];
     }

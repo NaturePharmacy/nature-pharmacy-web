@@ -1,3 +1,4 @@
+import { escapeRegex } from '@/lib/security';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -36,8 +37,8 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       query.$or = [
-        { comment: { $regex: search, $options: 'i' } },
-        { title: { $regex: search, $options: 'i' } },
+        { comment: { $regex: escapeRegex(search), $options: 'i' } },
+        { title: { $regex: escapeRegex(search), $options: 'i' } },
       ];
     }
 

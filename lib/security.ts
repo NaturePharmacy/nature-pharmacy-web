@@ -431,3 +431,12 @@ export class AttackDetector {
     return { suspicious: false };
   }
 }
+
+
+/**
+ * Échappe les caractères spéciaux regex pour éviter les attaques ReDoS.
+ * À utiliser avant tout $regex MongoDB avec une valeur utilisateur.
+ */
+export function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\]/g, '\$&');
+}

@@ -1,3 +1,4 @@
+import { escapeRegex } from '@/lib/security';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      query.orderNumber = { $regex: search, $options: 'i' };
+      query.orderNumber = { $regex: escapeRegex(search), $options: 'i' };
     }
 
     const skip = (page - 1) * limit;
