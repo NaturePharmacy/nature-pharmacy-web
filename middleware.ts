@@ -17,8 +17,10 @@ export function middleware(request: NextRequest) {
     pathname.startsWith('/images/') ||
     pathname === '/robots.txt' ||
     pathname === '/sitemap.xml' ||
+    pathname === '/manifest.json' ||
+    pathname === '/manifest.webmanifest' ||
     // Skip static image files in public folder
-    /\.(jpeg|jpg|png|gif|svg|ico|webp|avif)$/i.test(pathname)
+    /\.(jpeg|jpg|png|gif|svg|ico|webp|avif|json|webmanifest)$/i.test(pathname)
   ) {
     return NextResponse.next();
   }
@@ -62,6 +64,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Match all paths except static files and images
-    '/((?!_next/static|_next/image|favicon.ico|images/|.*\\.(?:jpeg|jpg|png|gif|svg|ico|webp|avif)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|images/|manifest\\.json|manifest\\.webmanifest|.*\\.(?:jpeg|jpg|png|gif|svg|ico|webp|avif|json|webmanifest)$).*)',
   ],
 };
