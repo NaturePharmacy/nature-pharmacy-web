@@ -438,5 +438,5 @@ export class AttackDetector {
  * À utiliser avant tout $regex MongoDB avec une valeur utilisateur.
  */
 export function escapeRegex(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\]/g, '\$&');
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
