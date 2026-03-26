@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Error sending reset email:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to send reset email' },
+      { error: 'Failed to send reset email' },
       { status: 500 }
     );
   }

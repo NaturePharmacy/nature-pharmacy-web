@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
   } catch (error: any) {
     console.error('Error fetching settings:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch settings', details: error.message },
+      { error: 'Failed to fetch settings' },
       { status: 500 }
     );
   }
@@ -56,11 +56,25 @@ export async function PUT(request: NextRequest) {
     // Get the first settings document or create if doesn't exist
     let settings = await Settings.findOne();
 
+    // Whitelist des champs modifiables (prévient prototype pollution / injection)
+    const ALLOWED_FIELDS = [
+      'storeName', 'storeDescription', 'contactEmail', 'contactPhone',
+      'supportEmail', 'address', 'defaultCurrency', 'currencySymbol',
+      'currencyPosition', 'defaultLanguage', 'taxEnabled', 'taxRate',
+      'taxLabel', 'pricesIncludeTax', 'freeShippingThreshold',
+      'freeShippingEnabled', 'paymentMethods', 'emailNotifications',
+      'orderSettings', 'maintenanceMode', 'commissionRate',
+      'socialLinks', 'seoSettings', 'logo', 'favicon',
+    ];
+    const safeData: Record<string, unknown> = {};
+    for (const field of ALLOWED_FIELDS) {
+      if (field in data) safeData[field] = data[field];
+    }
+
     if (!settings) {
-      settings = await Settings.create(data);
+      settings = await Settings.create(safeData);
     } else {
-      // Update existing settings
-      Object.assign(settings, data);
+      Object.assign(settings, safeData);
       await settings.save();
     }
 
@@ -71,7 +85,7 @@ export async function PUT(request: NextRequest) {
   } catch (error: any) {
     console.error('Error updating settings:', error);
     return NextResponse.json(
-      { error: 'Failed to update settings', details: error.message },
+      { error: 'Failed to update settings' },
       { status: 500 }
     );
   }

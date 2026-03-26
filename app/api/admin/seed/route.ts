@@ -6,7 +6,15 @@ import Settings from '@/models/Settings';
 // POST /api/admin/seed - Create initial admin account and settings
 export async function POST(request: NextRequest) {
   try {
-    // Security check - only allow in development or with special key
+    // Désactivé en production — utiliser uniquement en développement
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json(
+        { error: 'Not available in production.' },
+        { status: 403 }
+      );
+    }
+
+    // Security check - only allow with special key
     const authKey = request.headers.get('x-seed-key');
     const expectedKey = process.env.SEED_ADMIN_KEY;
 
@@ -36,9 +44,9 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate password
-    if (password.length < 6) {
+    if (password.length < 8) {
       return NextResponse.json(
-        { error: 'Password must be at least 6 characters' },
+        { error: 'Password must be at least 8 characters' },
         { status: 400 }
       );
     }
@@ -148,7 +156,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Error seeding admin:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to seed admin account' },
+      { error: 'Failed to seed admin account' },
       { status: 500 }
     );
   }
