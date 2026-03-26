@@ -51,15 +51,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Idempotency : ignorer les webhooks déjà traités (doublons PayPal)
+    await connectDB();
+    const alreadyProcessed = await Order.findOne({
+      'paymentDetails.paypalTransmissionId': transmissionId,
+    }).lean();
+    if (alreadyProcessed) {
+      console.log('ℹ️ Webhook already processed:', transmissionId);
+      return NextResponse.json({ received: true, duplicate: true });
+    }
+
     const event = JSON.parse(body);
     console.log('✅ PayPal webhook event received:', event.event_type);
-
-    await connectDB();
 
     // Handle different event types
     switch (event.event_type) {
       case 'PAYMENT.CAPTURE.COMPLETED':
-        await handlePaymentCaptureCompleted(event);
+        await handlePaymentCaptureCompleted(event, transmissionId);
         break;
 
       case 'PAYMENT.CAPTURE.DENIED':
@@ -86,7 +94,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('❌ PayPal webhook handler error:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -148,7 +156,7 @@ async function verifyPayPalWebhook(params: {
 }
 
 // Handle payment capture completed
-async function handlePaymentCaptureCompleted(event: any) {
+async function handlePaymentCaptureCompleted(event: any, transmissionId: string) {
   console.log('💳 PayPal payment captured:', event.resource.id);
 
   const orderId = event.resource.custom_id || event.resource.invoice_id;
@@ -168,13 +176,25 @@ async function handlePaymentCaptureCompleted(event: any) {
       return;
     }
 
+    // Vérification du montant : prévenir la fraude (ex: payer 1$ pour une commande 100$)
+    const paidAmount  = parseFloat(event.resource.amount.value);
+    const expectedAmount = parseFloat(order.totalPrice?.toString() || '0');
+    if (Math.abs(paidAmount - expectedAmount) > 0.05) {
+      console.error(`❌ Amount mismatch: paid ${paidAmount}, expected ${expectedAmount} (order ${orderId})`);
+      order.paymentStatus = 'failed';
+      order.paymentDetails = { failureReason: `Amount mismatch: paid ${paidAmount}, expected ${expectedAmount}` };
+      await order.save();
+      return;
+    }
+
     // Update order payment status
     order.paymentStatus = 'paid';
     order.paymentDetails = {
       paypalCaptureId: event.resource.id,
       paypalOrderId: event.resource.supplementary_data?.related_ids?.order_id,
+      paypalTransmissionId: transmissionId, // idempotency key
       paidAt: new Date(event.resource.create_time),
-      amount: parseFloat(event.resource.amount.value),
+      amount: paidAmount,
       currency: event.resource.amount.currency_code,
     };
 
