@@ -11,11 +11,11 @@ const TEST_USERS = {
   admin: { email: 'admin@test.com', password: 'password123' },
 };
 
-async function waitForServer(_url: string, maxRetries = 20): Promise<void> {
-  const healthUrl = `${BASE_URL}/api/categories`;
+async function waitForServer(_url: string, maxRetries = 30): Promise<void> {
+  const healthUrl = `${BASE_URL}/api/products`;
   for (let i = 0; i < maxRetries; i++) {
     try {
-      const res = await fetch(healthUrl, { signal: AbortSignal.timeout(5000) });
+      const res = await fetch(healthUrl, { signal: AbortSignal.timeout(10000) });
       if (res.ok || res.status < 500) return;
     } catch {}
     console.log(`[global-setup] Waiting for server... (${i + 1}/${maxRetries})`);
@@ -24,17 +24,37 @@ async function waitForServer(_url: string, maxRetries = 20): Promise<void> {
   throw new Error(`Server not available at ${healthUrl} after ${maxRetries} retries`);
 }
 
+async function warmupRoutes(): Promise<void> {
+  // Pre-compile lazy Next.js routes that would otherwise timeout during tests
+  const routes = [
+    '/api/products/000000000000000000000000',
+    '/api/admin/users',
+    '/api/admin/stats',
+    '/api/auth/session',
+  ];
+  console.log('[global-setup] Warming up lazy routes (this may take a few minutes)...');
+  for (const route of routes) {
+    try {
+      await fetch(`${BASE_URL}${route}`, { signal: AbortSignal.timeout(150000) });
+      console.log(`[global-setup] Warmed up ${route}`);
+    } catch {
+      console.log(`[global-setup] Warmup ${route} timed out`);
+    }
+  }
+}
+
 async function globalSetup(_config: FullConfig) {
   if (!fs.existsSync(AUTH_DIR)) {
     fs.mkdirSync(AUTH_DIR, { recursive: true });
   }
 
+  await waitForServer(`${BASE_URL}/api/products`);
+  await warmupRoutes();
+
   const browser = await chromium.launch();
 
   for (const [role, creds] of Object.entries(TEST_USERS)) {
     console.log(`[global-setup] Creating auth state for ${role}...`);
-
-    await waitForServer(`${BASE_URL}/fr/login`);
 
     const context = await browser.newContext();
     const page = await context.newPage();

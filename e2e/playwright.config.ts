@@ -41,7 +41,8 @@ export default defineConfig({
     {
       name: 'api',
       testDir: './tests/api',
-      use: { ...devices['Desktop Chrome'] },
+      timeout: 180_000,
+      use: { ...devices['Desktop Chrome'], actionTimeout: 120_000 },
     },
     {
       name: 'chrome',

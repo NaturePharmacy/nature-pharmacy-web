@@ -74,6 +74,7 @@ const nextConfig: NextConfig = {
       dynamic: 30,
       static: 180,
     },
+    cpus: 1,
   },
   async headers() {
     return [

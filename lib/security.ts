@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
 
 /**
  * Security headers for all responses
@@ -51,7 +50,9 @@ export function getCSPHeader(nonce: string): string {
  * Generate a random nonce for CSP
  */
 export function generateNonce(): string {
-  return crypto.randomBytes(16).toString('base64');
+  const bytes = new Uint8Array(16);
+  globalThis.crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes));
 }
 
 /**
@@ -301,12 +302,11 @@ export function extractBearerToken(request: NextRequest): string | null {
 /**
  * Hash sensitive data (for logging, comparison)
  */
-export function hashData(data: string): string {
-  return crypto
-    .createHash('sha256')
-    .update(data)
-    .digest('hex')
-    .substring(0, 16);
+export async function hashData(data: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const hashBuffer = await globalThis.crypto.subtle.digest('SHA-256', encoder.encode(data));
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16);
 }
 
 /**
