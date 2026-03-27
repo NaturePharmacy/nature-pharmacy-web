@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.naturepharmacy.twa",
+    "sha256_cert_fingerprints": [
+      "A4:B4:5E:DA:AF:3D:7C:6A:C6:BE:C6:A1:86:D2:3B:D7:4F:B5:8B:12:AD:A6:FA:21:83:92:50:88:C5:0C:54:3B"
+    ]
+  }
+}]

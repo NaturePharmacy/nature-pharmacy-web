@@ -79,6 +79,14 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Digital Asset Links — required for TWA/Android verification
+        source: '/.well-known/assetlinks.json',
+        headers: [
+          { key: 'Content-Type', value: 'application/json' },
+          { key: 'Cache-Control', value: 'public, max-age=3600' },
+        ],
+      },
+      {
         // Apply security headers to all routes
         source: '/:path*',
         headers: securityHeaders,

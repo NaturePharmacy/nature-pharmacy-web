@@ -3,7 +3,7 @@
   "short_name": "Nature Pharmacy",
   "id": "/",
   "description": "Découvrez notre sélection de plantes médicinales, huiles essentielles et cosmétiques naturels certifiés bio. Médecine traditionnelle et bien-être naturel.",
-  "start_url": "/fr",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "dir": "ltr",
@@ -40,11 +40,25 @@
   ],
   "screenshots": [
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/screenshots/screen-home.png",
       "type": "image/png",
-      "sizes": "512x512",
+      "sizes": "808x852",
       "form_factor": "narrow",
-      "label": "Nature Pharmacy"
+      "label": "Accueil — Nature Pharmacy"
+    },
+    {
+      "src": "/screenshots/screen-products.png",
+      "type": "image/png",
+      "sizes": "785x862",
+      "form_factor": "narrow",
+      "label": "Catalogue de produits"
+    },
+    {
+      "src": "/screenshots/screen-product-detail.png",
+      "type": "image/png",
+      "sizes": "840x897",
+      "form_factor": "narrow",
+      "label": "Détail produit"
     }
   ],
   "shortcuts": [
