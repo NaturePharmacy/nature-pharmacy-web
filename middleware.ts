@@ -13,14 +13,17 @@ export function middleware(request: NextRequest) {
   if (
     pathname.startsWith('/api/') ||
     pathname.startsWith('/_next/') ||
+    pathname.startsWith('/downloads/') ||
+    pathname.startsWith('/.well-known/') ||
+    pathname.startsWith('/screenshots/') ||
     pathname === '/favicon.ico' ||
     pathname.startsWith('/images/') ||
     pathname === '/robots.txt' ||
     pathname === '/sitemap.xml' ||
     pathname === '/manifest.json' ||
     pathname === '/manifest.webmanifest' ||
-    // Skip static image files in public folder
-    /\.(jpeg|jpg|png|gif|svg|ico|webp|avif|json|webmanifest)$/i.test(pathname)
+    // Skip static files in public folder
+    /\.(jpeg|jpg|png|gif|svg|ico|webp|avif|json|webmanifest|apk|pdf|zip)$/i.test(pathname)
   ) {
     return NextResponse.next();
   }
@@ -63,7 +66,7 @@ export function middleware(request: NextRequest) {
 // Configure which routes the middleware should run on
 export const config = {
   matcher: [
-    // Match all paths except static files and images
-    '/((?!_next/static|_next/image|favicon.ico|images/|manifest\\.json|manifest\\.webmanifest|.*\\.(?:jpeg|jpg|png|gif|svg|ico|webp|avif|json|webmanifest)$).*)',
+    // Match all paths except static files, downloads and well-known
+    '/((?!_next/static|_next/image|favicon.ico|images/|downloads/|screenshots/|\\.well-known/|manifest\\.json|manifest\\.webmanifest|.*\\.(?:jpeg|jpg|png|gif|svg|ico|webp|avif|json|webmanifest|apk|pdf|zip)$).*)',
   ],
 };
