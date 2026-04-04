@@ -8,6 +8,7 @@ import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import FloatingCart from '@/components/cart/FloatingCart';
 import CookieConsent from '@/components/CookieConsent';
 import PWARegister from '@/components/PWARegister';
+import AppInstallBanner from '@/components/AppInstallBanner';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import "../globals.css";
@@ -120,6 +121,7 @@ export default async function RootLayout({
                 <FloatingCart />
                 <CookieConsent />
                 <PWARegister />
+                <AppInstallBanner />
               </CartProvider>
             </CurrencyProvider>
           </NextIntlClientProvider>
